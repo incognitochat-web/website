@@ -33,6 +33,7 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
+      actions: read
       id-token: write
       attestations: write
     steps:
@@ -49,6 +50,11 @@ jobs:
           mkdir -p "$RUNNER_TEMP/bin"
           tar -xzf "$RUNNER_TEMP/$file" -C "$RUNNER_TEMP/bin" hugo
           echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+
+      - name: Fetch the latest app checks
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: scripts/fetch-app-checks.sh data/appcheck.json
 
       - name: Build twice and check
         run: scripts/check.sh public

@@ -1,0 +1,119 @@
+# Checks the live app at https://incognitochat.github.io with the code
+# repository's own scripts/verify-site.sh, from main: every hour all checks
+# but the rebuild, and once a day also a rebuild from source, compared byte
+# for byte. Then redeploys this site, whose Verify page shows the latest
+# result of each (scripts/fetch-app-checks.sh) and links to its log here.
+#
+# A failed check fails the run, so GitHub notifies the maintainers.
+name: Check the app
+
+on:
+  schedule:
+    - cron: '17 * * * *'
+    - cron: '43 3 * * *'
+  workflow_dispatch:
+    inputs:
+      rebuild:
+        description: Also rebuild the app and compare it byte for byte
+        type: boolean
+        default: false
+
+permissions: {}
+
+concurrency:
+  group: check-app
+  cancel-in-progress: false
+
+env:
+  APP_SITE: https://incognitochat.github.io
+  HOSTING_REPO: incognitochat/incognitochat.github.io
+  CODE_REPO: incognitochat/incognitochat
+
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    env:
+      REBUILD: ${{ github.event.schedule == '43 3 * * *' || inputs.rebuild == true }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ${{ env.CODE_REPO }}
+          ref: main
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        if: env.REBUILD == 'true'
+        with:
+          node-version-file: web/.nvmrc
+
+      - name: Run verify-site.sh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          args=("$APP_SITE" "$HOSTING_REPO" --code-repo "$CODE_REPO")
+          if [ "$REBUILD" = true ]; then args+=(--rebuild); mode=rebuild; else mode=hourly; fi
+          # Exit codes: 0 verified, 1 verification failed, 2 couldn't run
+          # (network, API). Only the last is tried again.
+          for try in 1 2; do
+            set +e
+            scripts/verify-site.sh "${args[@]}" 2>&1 | tee "$RUNNER_TEMP/check.log"
+            code=${PIPESTATUS[0]}
+            set -e
+            if [ "$code" = 2 ] && [ "$try" = 1 ]; then
+              echo "Couldn't run the check; trying again in two minutes"
+              sleep 120
+              continue
+            fi
+            break
+          done
+          case $code in
+            0) result=passed ;;
+            1) result=failed ;;
+            *) result=error ;;
+          esac
+          ref=$(sed -n 's/^Built from [^ ]* \(v[0-9.]*\|[0-9a-f]\{40\}\) (commit [0-9a-f]\{40\})$/\1/p' \
+            "$RUNNER_TEMP/check.log" | head -n 1)
+          mkdir -p "$RUNNER_TEMP/result"
+          jq -n --arg mode "$mode" --arg result "$result" --arg ref "$ref" \
+            --arg at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            '{mode: $mode, result: $result, checked_at: $at, ref: $ref}' \
+            | tee "$RUNNER_TEMP/result/app-check.json"
+          echo "RESULT=$result" >> "$GITHUB_ENV"
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: app-check
+          path: ${{ runner.temp }}/result/app-check.json
+          retention-days: 14
+          if-no-files-found: error
+
+      - name: Fail unless verified
+        if: env.RESULT != 'passed'
+        run: |
+          echo "The check didn't pass: ${RESULT:-no result}"
+          exit 1
+
+  publish:
+    name: Show the result on the site
+    needs: check
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Redeploy the site
+        run: gh workflow run deploy.yml --repo "$GITHUB_REPOSITORY" --ref main
+
+      # GitHub turns off scheduled workflows of a public repository after 60
+      # days without activity; re-enabling counts as activity.
+      - name: Keep the schedule on
+        if: github.event.schedule == '43 3 * * *'
+        run: gh api -X PUT "repos/${GITHUB_REPOSITORY}/actions/workflows/check-app.yml/enable"

@@ -23,7 +23,13 @@ From a checkout of [the code](https://github.com/{{< param "codeRepo" >}}), with
 scripts/verify-site.sh {{< param "appOrigin" >}} {{< param "hostingRepo" >}} --rebuild
 ```
 
-It checks that every file served is exactly what the unchanged, reviewed workflow built from a release on `main`, and with `--rebuild` builds that release itself and compares byte for byte. The details, and what it doesn't prove, are in [Verifying the app](https://github.com/{{< param "codeRepo" >}}/blob/main/docs/verifying.md).
+It checks that every file served is exactly what the unchanged, reviewed workflow built from a release on `main`, that the same workflow run deployed it, and that no other site shares the app's address. With `--rebuild` it also builds that release itself and compares byte for byte. The details, and what it doesn't prove, are in [Verifying the app](https://github.com/{{< param "codeRepo" >}}/blob/main/docs/verifying.md).
+
+## Checked automatically
+
+A [scheduled job](https://github.com/{{< param "siteRepo" >}}/blob/main/.github/workflows/check-app.yml) in this site's public repository runs the same script against the live app every hour, and once a day also rebuilds the app and compares it byte for byte. The latest results, each with its full log:
+
+{{< appcheck >}}
 
 ## What this can't prove
 

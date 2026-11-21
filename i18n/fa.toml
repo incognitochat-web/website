@@ -25,3 +25,11 @@ offSignerNote = "نامی که در هر امضا می‌آید، نه یک صف
 offSignerView = "دیدن گردش‌کار"
 offSite = "این وب‌سایت"
 offContact = "ایمیل"
+
+check_hourly = "هر ساعت"
+check_rebuild = "روزانه، با ساخت دوباره از کد"
+check_passed = "موفق"
+check_failed = "ناموفق"
+check_error = "اجرا نشد"
+check_log = "گزارش"
+check_none = "هنوز هیچ بررسی خودکاری اجرا نشده است."
