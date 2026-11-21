@@ -83,6 +83,8 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         with:
           path: public
+          # .well-known/security.txt: hidden folders are left out otherwise.
+          include-hidden-files: true
 
   deploy:
     name: Deploy
