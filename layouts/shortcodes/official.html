@@ -1,0 +1,39 @@
+{{- $p := site.Params -}}
+{{- $ext := `target="_blank" rel="noopener noreferrer"` | safeHTMLAttr -}}
+{{- $new := printf `<span class="visually-hidden"> %s</span>` (i18n "newTab") | safeHTML -}}
+<table class="official">
+  <tbody>
+    <tr>
+      <th scope="row">{{ i18n "offBot" }}</th>
+      <td><a href="https://t.me/{{ $p.botUsername }}" {{ $ext }}><code>@{{ $p.botUsername }}</code>{{ $new }}</a></td>
+    </tr>
+    <tr>
+      <th scope="row">{{ i18n "offApp" }}</th>
+      <td><a href="https://t.me/{{ $p.botUsername }}/{{ $p.appName }}" {{ $ext }}><code>t.me/{{ $p.botUsername }}/{{ $p.appName }}</code>{{ $new }}</a></td>
+    </tr>
+    <tr>
+      <th scope="row">{{ i18n "offOrigin" }}</th>
+      <td><code>{{ $p.appOrigin }}</code></td>
+    </tr>
+    <tr>
+      <th scope="row">{{ i18n "offCode" }}</th>
+      <td><a href="https://github.com/{{ $p.codeRepo }}" {{ $ext }}><code>github.com/<wbr>{{ replace $p.codeRepo "/" "/<wbr>" | safeHTML }}</code>{{ $new }}</a></td>
+    </tr>
+    <tr>
+      <th scope="row">{{ i18n "offHosting" }}</th>
+      <td><a href="https://github.com/{{ $p.hostingRepo }}" {{ $ext }}><code>github.com/<wbr>{{ replace $p.hostingRepo "/" "/<wbr>" | safeHTML }}</code>{{ $new }}</a></td>
+    </tr>
+    <tr>
+      <th scope="row">{{ i18n "offSigner" }}</th>
+      <td><div class="lines"><code class="wrap-anywhere">{{ replace $p.signerIdentity "/" "/<wbr>" | safeHTML }}</code><span class="hint">{{ i18n "offSignerNote" }} <a href="https://github.com/{{ $p.hostingRepo }}/blob/main/.github/workflows/deploy.yml" {{ $ext }}>{{ i18n "offSignerView" }}{{ $new }}</a></span></div></td>
+    </tr>
+    <tr>
+      <th scope="row">{{ i18n "offSite" }}</th>
+      <td><div class="lines"><code>https://incognitochat.me</code><a href="https://github.com/{{ $p.siteRepo }}" {{ $ext }}><code>github.com/<wbr>{{ replace $p.siteRepo "/" "/<wbr>" | safeHTML }}</code>{{ $new }}</a></div></td>
+    </tr>
+    <tr>
+      <th scope="row">{{ i18n "offContact" }}</th>
+      <td><div class="lines"><code>{{ $p.contactEmail }}</code><code>{{ $p.securityEmail }}</code><code>{{ $p.privacyEmail }}</code></div></td>
+    </tr>
+  </tbody>
+</table>

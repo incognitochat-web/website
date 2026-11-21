@@ -1,0 +1,95 @@
+# Builds the site, checks it, and on main publishes it to GitHub Pages.
+#
+# Two builds of the same commit must be byte for byte the same. On main, the
+# workflow also writes manifest.json (the commit, the Hugo version and the
+# SHA-256 of every file) and signs every file and the manifest with Sigstore,
+# so anyone can check that what incognitochat.me serves is this repository's
+# code, unchanged:
+#
+#   gh attestation verify <file> --repo incognitochat-web/website \
+#     --cert-identity https://github.com/incognitochat-web/website/.github/workflows/deploy.yml@refs/heads/main
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  HUGO_VERSION: 0.169.0
+  HUGO_SHA256: 2d2f0bfe357d8cb4cec02f6bb28a3bff34978c8dda44b618029c5eb9d66765a7
+
+jobs:
+  build:
+    name: Build and check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install Hugo
+        run: |
+          file="hugo_${HUGO_VERSION}_linux-amd64.tar.gz"
+          curl -fsSL --proto '=https' -o "$RUNNER_TEMP/$file" \
+            "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/${file}"
+          echo "${HUGO_SHA256}  $RUNNER_TEMP/$file" | sha256sum -c -
+          mkdir -p "$RUNNER_TEMP/bin"
+          tar -xzf "$RUNNER_TEMP/$file" -C "$RUNNER_TEMP/bin" hugo
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+
+      - name: Build twice and check
+        run: scripts/check.sh public
+
+      - name: Write the manifest
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        working-directory: public
+        run: |
+          find . -type f | sed 's|^\./||' | sort | while read -r f; do
+            printf '%s\t%s\n' "$f" "$(sha256sum "$f" | cut -d' ' -f1)"
+          done > "$RUNNER_TEMP/files.tsv"
+          jq -n \
+            --arg repository "$GITHUB_REPOSITORY" --arg commit "$GITHUB_SHA" --arg hugo "$HUGO_VERSION" \
+            --rawfile files "$RUNNER_TEMP/files.tsv" \
+            '{repository: $repository, commit: $commit, hugo: $hugo,
+              files: ($files | split("\n") | map(select(length > 0) | split("\t") | {key: .[0], value: .[1]}) | from_entries)}' \
+            > manifest.json
+          cat manifest.json
+
+      - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        with:
+          subject-path: public/**
+
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        with:
+          path: public
+
+  deploy:
+    name: Deploy
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

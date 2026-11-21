@@ -1,0 +1,5 @@
+{{- /* Links to other sites open in a new tab; links within the site, and mailto:, don't. */ -}}
+{{- $u := urls.Parse .Destination -}}
+{{- $external := and (in (slice "http" "https") $u.Scheme) (ne $u.Host (urls.Parse site.BaseURL).Host) -}}
+<a href="{{ .Destination | safeURL }}"{{ with .Title }} title="{{ . }}"{{ end }}{{ if $external }} target="_blank" rel="noopener noreferrer"{{ end }}>{{ .Text }}{{ if $external }}<span class="visually-hidden"> {{ i18n "newTab" }}</span>{{ end }}</a>
+{{- /* no trailing newline */ -}}

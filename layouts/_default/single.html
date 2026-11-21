@@ -1,0 +1,12 @@
+{{ define "main" }}
+<article class="page">
+  <header class="page-head">
+    <h1>{{ .Title }}</h1>
+    {{ with .Description }}<p class="description">{{ . }}</p>{{ end }}
+    {{ with .Params.updated }}<p class="meta">{{ i18n "updated" }} <time datetime="{{ . }}" dir="ltr">{{ . }}</time></p>{{ end }}
+  </header>
+  <div class="prose">
+    {{ .Content }}
+  </div>
+</article>
+{{ end }}

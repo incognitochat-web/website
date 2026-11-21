@@ -1,0 +1,6 @@
+Contact: https://github.com/incognitochat/incognitochat/security/advisories/new
+Contact: mailto:security@incognitochat.me
+Expires: 2027-05-21T00:00:00Z
+Preferred-Languages: en, fa
+Canonical: https://incognitochat.me/.well-known/security.txt
+Policy: https://incognitochat.me/security/

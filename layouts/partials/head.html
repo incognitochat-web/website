@@ -1,0 +1,16 @@
+<meta charset="utf-8">
+{{/* GitHub Pages can't send headers, so the policy is a <meta>. No script
+     runs on this site at all; frame-ancestors can't be set this way. */}}
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+{{ $title := cond .IsHome site.Title (printf "%s · %s" .Title site.Title) }}
+<title>{{ $title }}</title>
+{{ with .Description | default (i18n "tagline") }}<meta name="description" content="{{ . }}">{{ end }}
+<link rel="canonical" href="{{ .Permalink }}">
+{{ range .AllTranslations }}<link rel="alternate" hreflang="{{ .Language.Locale }}" href="{{ .Permalink }}">
+{{ end }}<link rel="icon" href="{{ "favicon.svg" | relURL }}" type="image/svg+xml">
+<link rel="preload" href="{{ "fonts/inter.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+{{ if eq site.Language.Direction "rtl" }}<link rel="preload" href="{{ "fonts/vazirmatn-arabic.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+{{ end }}<link rel="stylesheet" href="{{ "css/site.css" | relURL }}">

@@ -1,0 +1,50 @@
+baseURL = "https://incognitochat.me/"
+title = "Incognito Chat"
+defaultContentLanguage = "en"
+defaultContentLanguageInSubdir = false
+disableKinds = ["taxonomy", "term", "RSS"]
+enableRobotsTXT = true
+disableHugoGeneratorInject = true
+# Nothing in the output may depend on the build's time, git, or the machine:
+# CI builds twice and fails if the two differ.
+enableGitInfo = false
+buildDrafts = false
+buildFuture = false
+
+[markup.goldmark.renderer]
+unsafe = true # only our own content; needed for small inline SVGs and <abbr>
+
+[markup.goldmark.parser.attribute]
+block = true
+
+[languages.en]
+label = "English"
+locale = "en"
+direction = "ltr"
+weight = 1
+
+[languages.fa]
+label = "فارسی"
+locale = "fa"
+direction = "rtl"
+weight = 2
+
+[sitemap]
+changeFreq = ""
+priority = -1
+
+# Everything about the production deployment lives here, in one place.
+[params]
+  botUsername = "IncognitoChat_app_Bot"
+  appName = "app"
+  appOrigin = "https://incognitochat.github.io"
+  codeRepo = "incognitochat/incognitochat"
+  hostingRepo = "incognitochat/incognitochat.github.io"
+  siteRepo = "incognitochat-web/website"
+  signerIdentity = "https://github.com/incognitochat/incognitochat.github.io/.github/workflows/deploy.yml@refs/heads/main"
+
+  contactEmail = "contact@incognitochat.me"
+  securityEmail = "security@incognitochat.me"
+  privacyEmail = "privacy@incognitochat.me"
+  # Empty until the project key exists.
+

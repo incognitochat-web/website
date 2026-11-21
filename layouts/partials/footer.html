@@ -1,0 +1,32 @@
+{{- $new := printf `<span class="visually-hidden"> %s</span>` (i18n "newTab") | safeHTML -}}
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a class="brand" href="{{ site.Home.RelPermalink }}">
+        <img src="{{ "favicon.svg" | relURL }}" alt="" width="24" height="24">
+        <span>{{ site.Title }}</span>
+      </a>
+      <p>{{ i18n "footerAbout" }}</p>
+      <a class="icon-link footer-github" href="https://github.com/{{ site.Params.codeRepo }}" target="_blank" rel="noopener noreferrer">{{ partial "icon.html" "github" }}<span>{{ site.Params.codeRepo }}</span>{{ $new }}</a>
+    </div>
+    <div class="footer-col">
+      <h2>{{ i18n "footerProject" }}</h2>
+      <ul>
+        {{- range slice "official" "verify" "security" }}
+          {{- with site.GetPage . }}<li><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></li>{{ end }}
+        {{- end }}
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h2>{{ i18n "footerSource" }}</h2>
+      <ul>
+        <li><a href="https://github.com/{{ site.Params.codeRepo }}" target="_blank" rel="noopener noreferrer">{{ i18n "sourceCode" }}{{ $new }}</a></li>
+        <li><a href="https://github.com/{{ site.Params.siteRepo }}" target="_blank" rel="noopener noreferrer">{{ i18n "siteSource" }}{{ $new }}</a></li>
+        <li><a href="https://t.me/{{ site.Params.botUsername }}" target="_blank" rel="noopener noreferrer">@{{ site.Params.botUsername }}{{ $new }}</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container"><p>{{ i18n "footerNote" }}</p></div>
+  </div>
+</footer>

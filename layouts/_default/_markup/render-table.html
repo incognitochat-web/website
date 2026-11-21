@@ -1,0 +1,16 @@
+{{- /* Markdown tables: each cell carries its column's heading, so narrow
+       screens can show a row as a card instead of scrolling sideways. */ -}}
+{{- $heads := slice -}}
+{{- range .THead }}{{ range . }}{{ $heads = $heads | append (.Text | plainify | htmlUnescape) }}{{ end }}{{ end -}}
+<table class="stack">
+  <thead>
+    {{- range .THead }}
+    <tr>{{ range . }}<th scope="col">{{ .Text }}</th>{{ end }}</tr>
+    {{- end }}
+  </thead>
+  <tbody>
+    {{- range .TBody }}
+    <tr>{{ range $i, $c := . }}<td data-label="{{ index $heads $i }}">{{ $c.Text }}</td>{{ end }}</tr>
+    {{- end }}
+  </tbody>
+</table>
