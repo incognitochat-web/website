@@ -129,6 +129,9 @@ code {
   border-radius: 4px;
   direction: ltr;
   unicode-bidi: isolate;
+  /* A long name (a repository, an address) wraps rather than widening the
+     page on a narrow screen. */
+  overflow-wrap: anywhere;
 }
 pre {
   background: var(--bg-subtle);
@@ -417,11 +420,11 @@ table.official .hint { font-size: 0.82rem; color: var(--muted); }
 .footer-grid { display: grid; grid-template-columns: minmax(0, 2fr) repeat(2, minmax(0, 1fr)); gap: 2rem; padding-block: 3rem 2.25rem; }
 .footer-brand .brand { font-size: 1.1rem; }
 .footer-brand p { font-size: 0.9rem; margin: 0.8rem 0 0; max-width: 20rem; }
-.footer-github { margin-top: 1rem; font-size: 0.88rem; color: var(--muted); }
+.footer-github { margin-top: 1rem; font-size: 0.88rem; color: var(--muted); overflow-wrap: anywhere; }
 .footer-github span:not(.visually-hidden) { direction: ltr; unicode-bidi: isolate; }
 .footer-col h2 { font-family: var(--font); font-size: 0.85rem; font-weight: 600; color: var(--text); margin: 0 0 0.75rem; letter-spacing: 0; }
 .footer-col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.45rem; }
-.footer-col a { color: var(--muted); font-size: 0.9rem; text-decoration: none; }
+.footer-col a { color: var(--muted); font-size: 0.9rem; text-decoration: none; overflow-wrap: anywhere; }
 .footer-col a:hover { color: var(--text); }
 .footer-bottom { border-top: 1px solid var(--border); padding-block: 1.3rem; font-size: 0.84rem; }
 .footer-bottom p { margin: 0; }
@@ -473,6 +476,12 @@ table.official .hint { font-size: 0.82rem; color: var(--muted); }
     font-size: 0.8rem;
     font-weight: 600;
   }
+}
+
+/* Phones: one footer column, so the bot's name fits on one line (two
+   columns fit it only from about 450px, in Persian and Arabic). */
+@media (max-width: 480px) {
+  .footer-grid { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (prefers-reduced-motion: reduce) {
