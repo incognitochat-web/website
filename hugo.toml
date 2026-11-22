@@ -83,6 +83,14 @@ weight = 7
 [languages.pt-br.params]
 fonts = ["inter", "newsreader"]
 
+[languages.id]
+label = "Bahasa Indonesia"
+locale = "id"
+direction = "ltr"
+weight = 8
+[languages.id.params]
+fonts = ["inter", "newsreader"]
+
 [sitemap]
 changeFreq = ""
 priority = -1

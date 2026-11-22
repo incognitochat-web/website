@@ -5,7 +5,7 @@ what it is, its official addresses, how to verify the app, the latest
 automatic checks of the app, and security reporting.
 
 It's a static site built with [Hugo](https://gohugo.io/), in English,
-Persian, Russian, Arabic, Dutch, Spanish and Brazilian Portuguese. It has no scripts, no cookies and no analytics, and loads nothing
+Persian, Russian, Arabic, Dutch, Spanish, Brazilian Portuguese and Indonesian. It has no scripts, no cookies and no analytics, and loads nothing
 from anywhere else.
 
 ## How it's published
@@ -60,7 +60,7 @@ Use the Hugo version in the workflow (`HUGO_VERSION`). `scripts/check.sh` also
 needs Python 3.11 or newer (it reads the TOML files).
 
 - Pages are in `content/`: `page.md` for English, `page.<code>.md` for each
-  other language in `hugo.toml` (`fa`, `ru`, `ar`, `nl`, `es`, `pt-br`).
+  other language in `hugo.toml` (`fa`, `ru`, `ar`, `nl`, `es`, `pt-br`, `id`).
 - Every production address is in `hugo.toml` under `[params]`, in one place.
 - Fonts are self-hosted: Inter, Newsreader (headings) and Vazirmatn
   (Persian and Arabic), under the SIL Open Font License
