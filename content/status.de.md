@@ -1,7 +1,7 @@
 ---
 title: "Status"
 linkTitle: "Status"
-description: "Automatische Prüfungen, ob die live laufende App genau der veröffentlichte Code ist: jede Stunde und jeden Tag mit einem Neubau aus dem Quellcode."
+description: "Automatische Prüfungen, ob die live laufende App genau der veröffentlichte Code ist: jede Stunde, und einmal am Tag mit einem Neubau aus dem Quellcode."
 ---
 
 {{< status >}}

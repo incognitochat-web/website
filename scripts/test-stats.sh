@@ -263,6 +263,9 @@ jq -e '(.months | length) == 2 and .months[0].month == "2026-11" and .months[1].
 # the 1st: a day before either started shows "—" for it, and each first
 # day, whole but only partly counted, is marked.
 build "$work/gap.json" "$work/out5" "2026-11-21T05" "2026-11-01T05"
+# German writes a day with a full stop: "21. November".
+de5=$(cat "$work/out5/de/stats/index.html")
+[[ $de5 == *'Gesendete Nachrichten: gezählt ab 21. November'* ]] || fail "German day isn't written as 21. November"
 grep -qz '<td dir="ltr">2026-11-21 \*</td>\s*<td>24</td>\s*<td>0</td>\s*<td>0.0</td>' "$work/out5/stats/index.html" \
   || fail "the day messages started being counted isn't marked"
 grep -qz '<td dir="ltr">2026-11-01 \*</td>\s*<td>24</td>\s*<td>—</td>\s*<td>0.0</td>' "$work/out5/stats/index.html" \
