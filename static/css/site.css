@@ -108,7 +108,7 @@ html[dir="rtl"] { font-size: 106.25%; }
    ğ, ş or İ: Russian and Turkish text use the system's fonts throughout,
    so Latin words in Russian (Telegram) don't switch fonts mid-line, and
    Turkish words don't switch fonts mid-word. */
-:lang(ru), :lang(tr) {
+:lang(ru), :lang(tr), :lang(uk) {
   --font: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
   --serif-text: Georgia, "Times New Roman", "Noto Serif", serif;
 }

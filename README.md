@@ -5,7 +5,7 @@ what it is, its official addresses, how to verify the app, the latest
 automatic checks of the app, and security reporting.
 
 It's a static site built with [Hugo](https://gohugo.io/), in English,
-Persian, Russian, Arabic, Dutch, Spanish, Brazilian Portuguese, Indonesian and Turkish. It has no scripts, no cookies and no analytics, and loads nothing
+Persian, Russian, Arabic, Dutch, Spanish, Brazilian Portuguese, Indonesian, Turkish and Ukrainian. It has no scripts, no cookies and no analytics, and loads nothing
 from anywhere else.
 
 ## How it's published
@@ -63,13 +63,13 @@ Use the Hugo version in the workflow (`HUGO_VERSION`). `scripts/check.sh` also
 needs Python 3.11 or newer (it reads the TOML files).
 
 - Pages are in `content/`: `page.md` for English, `page.<code>.md` for each
-  other language in `hugo.toml` (`fa`, `ru`, `ar`, `nl`, `es`, `pt-br`, `id`, `tr`).
+  other language in `hugo.toml` (`fa`, `ru`, `ar`, `nl`, `es`, `pt-br`, `id`, `tr`, `uk`).
 - Every production address is in `hugo.toml` under `[params]`, in one place.
 - Fonts are self-hosted: Inter, Newsreader (headings) and Vazirmatn
   (Persian and Arabic), under the SIL Open Font License
   (`static/fonts/LICENSE-*`). Inter and Newsreader are subsets with no
-  Cyrillic, nor Turkish's ğ, ş and İ, so Russian and Turkish text use the
-  system's fonts.
+  Cyrillic, nor Turkish's ğ, ş and İ, so Russian, Turkish and Ukrainian text
+  use the system's fonts.
 - `static/.well-known/security.txt` must be renewed before its `Expires`
   date; the check fails 30 days ahead.
 

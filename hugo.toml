@@ -101,6 +101,16 @@ weight = 9
 # have no ğ, ş or İ. The site's name and numbers use Newsreader.
 fonts = ["newsreader"]
 
+[languages.uk]
+label = "Українська"
+locale = "uk"
+direction = "ltr"
+weight = 10
+[languages.uk.params]
+# Ukrainian text uses the system's fonts (site.css); the site's name and
+# numbers use Newsreader.
+fonts = ["newsreader"]
+
 [sitemap]
 changeFreq = ""
 priority = -1
