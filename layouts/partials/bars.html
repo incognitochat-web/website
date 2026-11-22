@@ -1,0 +1,48 @@
+{{- /* An hourly bar chart, drawn at build time: one bar per hour, a light line
+     at each midnight, the day's date under it, and each hour's value as the
+     bar's tooltip. Input: dict "hours" (data/stats.json's hours), "key"
+     (accounts, messages or media_bytes), "label" (what it counts, for the
+     chart's name), "mib" (show bytes as MiB), "from" (the first hour
+     counted, yyyy-mm-ddThh; earlier ones weren't). An hour not counted has
+     no bar and "—" as its tooltip. No script: the tooltips are SVG titles. */ -}}
+{{- $hours := .hours -}}
+{{- $key := .key -}}
+{{- $mib := .mib | default false -}}
+{{- $from := .from | default "" -}}
+{{- $w := 700.0 -}}
+{{- $h := 120.0 -}}
+{{- $n := len $hours -}}
+{{- $max := 0.0 -}}
+{{- range $hours }}{{ $raw := index . $key }}{{ if and (ne $raw nil) (ge .t $from) }}{{ if gt (float $raw) $max }}{{ $max = float $raw }}{{ end }}{{ end }}{{ end -}}
+{{- $scale := cond (gt $max 0.0) $max 1.0 -}}
+{{- $step := div $w (cond (gt $n 0) (float $n) 1.0) -}}
+{{- $bar := math.Max 1.0 (sub $step 1.0) -}}
+<figure class="chart" dir="ltr">
+  <svg viewBox="0 0 {{ $w }} {{ add $h 26 }}" role="img" aria-label="{{ .label }}">
+    <line class="axis" x1="0" y1="{{ $h }}" x2="{{ $w }}" y2="{{ $h }}"/>
+    {{- range $i, $p := $hours }}
+    {{- $x := mul (float $i) $step }}
+    {{- if eq (substr $p.t 11 2) "00" }}
+    <line class="midnight" x1="{{ $x }}" y1="0" x2="{{ $x }}" y2="{{ $h }}"/>
+    {{- if lt $x (sub $w 60) }}
+    <text class="tick" x="{{ add $x 3 }}" y="{{ add $h 20 }}">{{ time.Format "1/2" (printf "%s:00:00Z" $p.t) }}</text>
+    {{- end }}
+    {{- end }}
+    {{- $raw := index $p $key }}
+    {{- $counted := and (ne $raw nil) (ge $p.t $from) }}
+    {{- $v := 0.0 }}
+    {{- if $counted }}{{ $v = float $raw }}{{ end }}
+    {{- $bh := mul (div $v $scale) (sub $h 4) }}
+    {{- $shown := "—" }}
+    {{- if $counted }}{{ $shown = cond $mib (printf "%.1f MiB" (div $v 1048576)) (printf "%.0f" $v) }}{{ end }}
+    <g>
+      <title>{{ time.Format "2006-01-02 15:00" (printf "%s:00:00Z" $p.t) }} UTC: {{ $shown }}</title>
+      <rect class="hit" x="{{ $x }}" y="0" width="{{ $step }}" height="{{ $h }}"/>
+      {{- if gt $v 0.0 }}
+      <rect class="bar" x="{{ $x }}" y="{{ sub $h $bh }}" width="{{ $bar }}" height="{{ $bh }}"/>
+      {{- end }}
+    </g>
+    {{- end }}
+  </svg>
+  <figcaption>{{ i18n "stats_peak" }} <span dir="ltr">{{ cond $mib (printf "%.1f MiB" (div $max 1048576)) (printf "%.0f" $max) }}</span></figcaption>
+</figure>

@@ -17,6 +17,11 @@ unsafe = true # only our own content; needed for small inline SVGs and <abbr>
 [markup.goldmark.parser.attribute]
 block = true
 
+# No syntax highlighting: it writes inline styles, which the site's
+# Content-Security-Policy refuses.
+[markup.highlight]
+codeFences = false
+
 [languages.en]
 label = "English"
 locale = "en"
@@ -46,5 +51,11 @@ priority = -1
   contactEmail = "contact@incognitochat.me"
   securityEmail = "security@incognitochat.me"
   privacyEmail = "privacy@incognitochat.me"
-  # Empty until the project key exists.
 
+  # The Stats page shows messages and media from the first hour production
+  # counted them (UTC, yyyy-mm-ddThh): v2.7.0 went live at 03:01 UTC on
+  # 2026-11-22. Earlier hours show as not counted. Empty: "counted from the
+  # next release".
+  [params.statsCountedFrom]
+    messages = "2026-11-22T03"
+    media = "2026-11-22T03"

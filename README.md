@@ -35,6 +35,20 @@ into one status per check; each run uploads that and redeploys this site.
 The deploy fetches the latest results (`scripts/fetch-app-checks.sh`, into
 `data/appcheck.json`, not committed) for the Status page.
 
+## Statistics
+
+[`.github/workflows/stats.yml`](.github/workflows/stats.yml) reads the app's
+hourly counts every hour, and its costs once a day, with read-only AWS roles
+that only this repository's `stats` environment may assume (the code
+repository's `infra/init/stats_reader.tf`, set up by its
+`scripts/bootstrap.sh` with `STATS_REPO`). `scripts/collect-stats.sh` writes
+them into the `data` branch, one file per day of counts and per month of
+costs; the workflow signs each file it writes (Sigstore) and redeploys the
+site. The deploy turns the branch into `data/stats.json`
+(`scripts/build-stats.sh`, not committed) for the Stats page. Messages and
+media show once `params.statsCountedFrom` in `hugo.toml` says from which day
+production counts them.
+
 ## Working on it
 
 ```shell

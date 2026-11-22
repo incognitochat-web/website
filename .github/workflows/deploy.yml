@@ -51,10 +51,36 @@ jobs:
           tar -xzf "$RUNNER_TEMP/$file" -C "$RUNNER_TEMP/bin" hugo
           echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
 
+      - name: Test the statistics pipeline
+        run: scripts/test-stats.sh
+
       - name: Fetch the latest app checks
         env:
           GH_TOKEN: ${{ github.token }}
         run: scripts/fetch-app-checks.sh data/appcheck.json
+
+      # The statistics the stats workflow keeps in the data branch. Until
+      # that branch exists, the Stats page says there are no numbers yet.
+      - name: Fetch the statistics
+        id: stats-fetch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        continue-on-error: true
+        with:
+          ref: data
+          path: .stats-store
+          persist-credentials: false
+
+      # Bad data in the branch mustn't block the site: the page then says
+      # there are no numbers, and the run warns.
+      - name: Build the statistics
+        run: |
+          if [ "${{ steps.stats-fetch.outcome }}" != success ]; then
+            echo "::warning::The data branch couldn't be fetched; the Stats page shows no numbers"
+          fi
+          if ! scripts/build-stats.sh .stats-store data/stats.json; then
+            echo '{}' > data/stats.json
+            echo "::warning::The statistics in the data branch couldn't be read; the Stats page shows none"
+          fi
 
       - name: Build twice and check
         run: scripts/check.sh public
