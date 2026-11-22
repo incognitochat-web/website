@@ -1,0 +1,10 @@
+{{- /* A month ("2026-11") as its name and year in the page's language, as
+     a heading: "November 2026". Hugo gives Russian month names in the
+     genitive (right only after a day, "5 ноября"), so Russian takes the
+     nominative here. */ -}}
+{{- $t := time.AsTime (printf "%s-01T00:00:00Z" .) -}}
+{{- $name := time.Format "January" $t -}}
+{{- if eq site.Language.Lang "ru" -}}
+  {{- $name = index (slice "январь" "февраль" "март" "апрель" "май" "июнь" "июль" "август" "сентябрь" "октябрь" "ноябрь" "декабрь") (sub (int $t.Month) 1) -}}
+{{- end -}}
+{{- i18n "stats_month" (dict "Month" (strings.FirstUpper $name) "Year" $t.Year) -}}

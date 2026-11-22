@@ -121,10 +121,12 @@ if run counts "$linked" 2>/dev/null; then fail "a linked folder was written thro
 jq -e '.last24.accounts == 5 and .last24.messages == 7 and .last24.media_bytes == 2113536' "$work/stats.json" >/dev/null \
   || fail "last 24 hours: $(jq -c .last24 "$work/stats.json")"
 jq -e '.hours | length == 168' "$work/stats.json" >/dev/null || fail "not 168 hours"
-jq -e '.costs.services == ["AWS WAF", "AmazonCloudWatch", "<b>AWS Lambda</b>", "Amazon DynamoDB", "Other"]' "$work/stats.json" >/dev/null \
-  || fail "services: $(jq -c .costs.services "$work/stats.json")"
-jq -e '.costs.days[-1].values == [1, 0.5, 0.25, 0.125, 0.125] and .costs.days[-1].dev == 0.03' "$work/stats.json" >/dev/null \
-  || fail "a day's costs: $(jq -c '.costs.days[-1]' "$work/stats.json")"
+# Yesterday's costs, in its month: that month's biggest four, then Other.
+ym=${yesterday:0:7}
+jq -e --arg m "$ym" '.months[] | select(.month == $m) | .services == ["AWS WAF", "AmazonCloudWatch", "<b>AWS Lambda</b>", "Amazon DynamoDB", "Other"]' "$work/stats.json" >/dev/null \
+  || fail "services: $(jq -c --arg m "$ym" '.months[] | select(.month == $m) | .services' "$work/stats.json")"
+jq -e --arg m "$ym" --arg y "$yesterday" '.months[] | select(.month == $m) | .days[] | select(.date == $y) | .values == [1, 0.5, 0.25, 0.125, 0.125] and .total == 2 and .dev == 0.03' "$work/stats.json" >/dev/null \
+  || fail "a day's costs: $(jq -c --arg m "$ym" --arg y "$yesterday" '.months[] | select(.month == $m) | .days[] | select(.date == $y)' "$work/stats.json")"
 
 # What build-stats.sh refuses: counts that aren't whole numbers, dates that
 # don't exist or that Hugo can't read (year 1000), and a store with a link
@@ -160,13 +162,13 @@ cp "$work/real.json" "$b/stats/hourly/x.json"
 [ "$(cat "$work/name.json")" = '{}' ] || fail "a file named other than yyyy-mm-dd.json was read"
 
 # The site, with the numbers and with none.
-build() { # stats.json output-dir messages-counted-from [media-counted-from]
+build() { # stats.json output-dir messages-counted-from [media-counted-from] [accounts-counted-from]
   rm -rf "$work/site"
   cp -r "$root" "$work/site"
   rm -rf "$work/site/public" "$work/site/data/stats.json" "$work/site/.git" "$work/site/.stats-store"
   mkdir -p "$work/site/data"
   cp "$1" "$work/site/data/stats.json"
-  sed -i "s/^    messages = \".*\"/    messages = \"$3\"/; s/^    media = \".*\"/    media = \"${4-$3}\"/" "$work/site/hugo.toml"
+  sed -i "s/^    messages = \".*\"/    messages = \"$3\"/; s/^    media = \".*\"/    media = \"${4-$3}\"/; s/^    accounts = \".*\"/    accounts = \"${5-2000-01-01T00}\"/" "$work/site/hugo.toml"
   hugo --quiet --source "$work/site" --destination "$2" >/dev/null
 }
 build "$work/stats.json" "$work/out" "2026-01-01T00"
@@ -179,7 +181,9 @@ grep -q 'AWS WAF' "$page" || fail "no service in the legend"
 grep -q '&lt;b&gt;AWS Lambda&lt;/b&gt;' "$page" || fail "a service name isn't escaped"
 if grep -q '<b>AWS Lambda</b>' "$page"; then fail "a service name was written as HTML"; fi
 grep -q 'class="seg so"' "$page" || fail "no Other segment"
-grep -q 'Table view: by hour' "$page" || fail "no hourly table"
+grep -q 'Table: day by day' "$page" || fail "no day-by-day table"
+grep -q "class=\"month newest\" id=\"m-$(jq -r '.months[0].month' "$work/stats.json")\"" "$page" || fail "the newest month isn't the one shown"
+grep -q 'class="month-nav"' "$page" || fail "no month links"
 latest=$(jq -r .latest "$work/stats.json")
 upto=$(date -u -d "${latest:0:10} ${latest:11:2}:00 + 1 hour" +'%Y-%m-%d %H:00 UTC')
 grep -q "$upto" "$page" || fail "'Up to' isn't the end of the latest hour ($upto)"
@@ -198,9 +202,6 @@ build "$work/stats.json" "$work/out1" "$from"
 before=$(date -u -d "$end - 3 hours" +'%Y-%m-%d %H:00')
 grep -q "$before UTC: —" "$work/out1/stats/index.html" || fail "an hour before counting started isn't shown as not counted"
 
-# The hourly table too.
-grep -qz "<td dir=\"ltr\">$before</td>\s*<td>0</td>\s*<td>—</td>\s*<td>—</td>" "$work/out1/stats/index.html" \
-  || fail "the hourly table shows an hour before counting started as counted"
 
 build "$work/stats.json" "$work/out2" ""
 grep -q 'Counted from the next app release' "$work/out2/stats/index.html" || fail "messages shown before they're counted"
@@ -213,9 +214,16 @@ for day in 2026-11-01 2026-11-21; do
   jq -n --arg d "$day" '{date: $d, accounts: [range(24) | 1], messages: [range(24) | 0], media_bytes: [range(24) | 0]}' \
     >"$gap/stats/hourly/$day.json"
 done
+# A day stored but never counted (every hour null): not counted, not 0.
+jq -n '{date: "2026-11-10", accounts: [range(24) | null], messages: [range(24) | null], media_bytes: [range(24) | null]}' \
+  >"$gap/stats/hourly/2026-11-10.json"
 "$root/scripts/build-stats.sh" "$gap" "$work/gap.json" >/dev/null
 jq -e '(.hours | length) == 168 and .hours[0].t == "2026-11-15T00" and .hours[0].accounts == null and .hours[-1].t == "2026-11-21T23"' \
   "$work/gap.json" >/dev/null || fail "a gap isn't kept: $(jq -c '[.hours[0], .hours[-1]]' "$work/gap.json")"
+# By month: every day up to the last one counted, uncounted days null.
+jq -e '(.months | length) == 1 and .months[0].month == "2026-11" and (.months[0].days | length) == 21
+  and .months[0].days[1].accounts == null and .months[0].days[9].accounts == null and .months[0].totals.accounts == 48 and .months[0].totals.production == null' \
+  "$work/gap.json" >/dev/null || fail "a month's days: $(jq -c '.months[0] | {month, n: (.days | length), totals}' "$work/gap.json")"
 # By day, messages counted from mid-day on the 21st, media from mid-day on
 # the 1st: a day before either started shows "—" for it, and each first
 # day, whole but only partly counted, is marked.
@@ -224,6 +232,13 @@ grep -qz '<td dir="ltr">2026-11-21 \*</td>\s*<td>24</td>\s*<td>0</td>\s*<td>0.0<
   || fail "the day messages started being counted isn't marked"
 grep -qz '<td dir="ltr">2026-11-01 \*</td>\s*<td>24</td>\s*<td>—</td>\s*<td>0.0</td>' "$work/out5/stats/index.html" \
   || fail "the day media started being counted isn't marked, or messages before it are shown as counted"
+# The month's totals say from when each was counted.
+grep -q 'Messages sent: counted from 21 November, 05:00 UTC' "$work/out5/stats/index.html" || fail "no note on when messages started being counted"
+grep -q 'Media: counted from 1 November, 05:00 UTC' "$work/out5/stats/index.html" || fail "no note on when media started being counted"
+grep -q '>48</p>' "$work/out5/stats/index.html" || fail "the month's accounts tile isn't 48"
+# Accounts counted only from a later month: this month shows "—" for them.
+build "$work/gap.json" "$work/out6" "2026-11-21T05" "2026-11-01T05" "2026-12-01T00"
+if grep -q '>48</p>' "$work/out6/stats/index.html"; then fail "accounts shown for a month before they were counted"; fi
 
 # Costs only, from last month into this one: shown, with both months, and
 # the test environment, never read, as a dash.
@@ -235,16 +250,20 @@ echo '{"month":"2026-02","days":{"2026-02-01":{"AWS Lambda":1}}}' >"$costs/stats
 mkdir -p "$costs/stats/costs/dev"
 echo '{"month":"2025-06","days":{"2025-06-01":0.5}}' >"$costs/stats/costs/dev/2025-06.json"
 "$root/scripts/build-stats.sh" "$costs" "$work/costs.json" >/dev/null
-jq -e '.costs.month == {name: "2026-02", production: 1, dev: null} and .costs.previous == {name: "2026-01", production: 2, dev: null} and all(.costs.days[]; .dev == null)' \
-  "$work/costs.json" >/dev/null || fail "month totals: $(jq -c '[.costs.month, .costs.previous]' "$work/costs.json")"
+jq -e '[.months[].month] == ["2026-02", "2026-01", "2025-06"]
+  and .months[0].totals.production == 1 and .months[0].totals.dev == null
+  and .months[1].totals.production == 2 and .months[1].totals.dev == null
+  and .months[2].totals.production == null and .months[2].totals.dev == 0.5
+  and all(.months[0, 1].days[]; .dev == null)' \
+  "$work/costs.json" >/dev/null || fail "month totals: $(jq -c '[.months[] | {month, totals}]' "$work/costs.json")"
 # Read for last month only: this month's unknown, not $0.
 costs2=$work/costs2
 cp -r "$costs" "$costs2"
 rm "$costs2"/stats/costs/dev/*
 echo '{"month":"2026-01","days":{"2026-01-31":0.5}}' >"$costs2/stats/costs/dev/2026-01.json"
 "$root/scripts/build-stats.sh" "$costs2" "$work/costs2.json" >/dev/null
-jq -e '.costs.month.dev == null and .costs.previous.dev == 0.5 and [.costs.days[].dev] == [0.5, null]' "$work/costs2.json" >/dev/null \
-  || fail "test-environment costs known for last month only: $(jq -c '[.costs.month, .costs.previous, [.costs.days[].dev]]' "$work/costs2.json")"
+jq -e '.months[0].totals.dev == null and .months[1].totals.dev == 0.5 and .months[1].days[-1].dev == 0.5 and .months[0].days[0].dev == null' "$work/costs2.json" >/dev/null \
+  || fail "test-environment costs known for last month only: $(jq -c '[.months[] | {month, totals}]' "$work/costs2.json")"
 # Read this month, but not for its latest day (its run failed): that day is unknown, not $0.
 costs3=$work/costs3
 cp -r "$costs" "$costs3"
@@ -252,14 +271,25 @@ rm "$costs3"/stats/costs/dev/*
 echo '{"month":"2026-01","days":{"2026-01-31":0}}' >"$costs3/stats/costs/dev/2026-01.json"
 echo '{"month":"2026-02","days":{}}' >"$costs3/stats/costs/dev/2026-02.json"
 "$root/scripts/build-stats.sh" "$costs3" "$work/costs3.json" >/dev/null
-jq -e '[.costs.days[].dev] == [0, null]' "$work/costs3.json" >/dev/null \
-  || fail "a day the test environment wasn't read for: $(jq -c '[.costs.days[].dev]' "$work/costs3.json")"
+jq -e '.months[1].days[-1].dev == 0 and .months[0].days[0].dev == null and .months[0].totals.dev == null' "$work/costs3.json" >/dev/null \
+  || fail "a day the test environment wasn't read for: $(jq -c '[.months[1].days[-1].dev, .months[0].days[0].dev]' "$work/costs3.json")"
 build "$work/costs.json" "$work/out4" "2026-01-01T00"
 # shellcheck disable=SC2016 # a literal dollar sign
 grep -qF '$1.00' "$work/out4/stats/index.html" || fail "costs alone aren't shown"
 if grep -q 'No numbers yet' "$work/out4/stats/index.html"; then fail "costs alone are hidden"; fi
 grep -q 'tile-value" dir="ltr">—' "$work/out4/stats/index.html" || fail "an unread test environment isn't a dash"
-grep -q 'Last month, production' "$work/out4/stats/index.html" || fail "last month's tile says both"
+grep -q 'href="#m-2026-01"' "$work/out4/stats/index.html" || fail "no link to an earlier month"
+grep -q 'class="month newest" id="m-2026-02"' "$work/out4/stats/index.html" || fail "the newest month isn't shown first"
+
+# Only the newest 13 months are shown.
+many=$work/many
+mkdir -p "$many/stats/costs/production"
+for m in 2025-01 2025-02 2025-03 2025-04 2025-05 2025-06 2025-07 2025-08 2025-09 2025-10 2025-11 2025-12 2026-01 2026-02 2026-03; do
+  echo "{\"month\":\"$m\",\"days\":{\"$m-01\":{\"AWS Lambda\":1}}}" >"$many/stats/costs/production/$m.json"
+done
+"$root/scripts/build-stats.sh" "$many" "$work/many.json" >/dev/null
+jq -e '(.months | length) == 13 and .months[0].month == "2026-03" and .months[-1].month == "2025-03"' "$work/many.json" >/dev/null \
+  || fail "not the newest 13 months: $(jq -c '[.months[].month]' "$work/many.json")"
 
 echo '{}' >"$work/empty.json"
 build "$work/empty.json" "$work/out3" ""

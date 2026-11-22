@@ -1,7 +1,7 @@
 ---
 title: "Statistik"
 linkTitle: "Statistik"
-description: "Seberapa banyak layanan ini dipakai, jam demi jam, dan berapa biaya menjalankannya. Angka sebenarnya, termasuk yang kecil."
+description: "Seberapa banyak layanan ini dipakai, bulan demi bulan, dan berapa biaya menjalankannya. Angka sebenarnya."
 ---
 
 {{< stats >}}

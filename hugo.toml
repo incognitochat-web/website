@@ -123,6 +123,9 @@ priority = -1
   # counted them (UTC, yyyy-mm-ddThh): v2.7.0 went live at 03:01 UTC on
   # 2026-11-22. Earlier hours show as not counted. Empty: "counted from the
   # next release".
+  # The first whole hour each metric was counted in production (UTC): accounts
+  # since v2.4.0 (deployed 2026-11-18 22:14), messages and media since v2.7.0.
   [params.statsCountedFrom]
+    accounts = "2026-11-18T23"
     messages = "2026-11-22T03"
     media = "2026-11-22T03"

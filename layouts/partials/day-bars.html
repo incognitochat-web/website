@@ -1,0 +1,45 @@
+{{- /* A month's daily bar chart, drawn at build time: one slot per day of
+     the month, the day's number under every seventh, each day's value as
+     its bar's tooltip. Input: dict "days" (a month's days from
+     data/stats.json), "key" (accounts, messages or media_bytes), "label"
+     (what it counts, for the chart's name), "mib" (show bytes as MiB),
+     "from" (the first hour counted, yyyy-mm-ddThh; earlier days weren't).
+     A day not counted has no bar and "—" as its tooltip. No script: the
+     tooltips are SVG titles. */ -}}
+{{- $days := .days -}}
+{{- $key := .key -}}
+{{- $mib := .mib | default false -}}
+{{- $fromDay := substr (.from | default "") 0 10 -}}
+{{- $w := 700.0 -}}
+{{- $h := 120.0 -}}
+{{- $max := 0.0 -}}
+{{- range $days }}{{ $raw := index . $key }}{{ if and (ne $raw nil) (ge .date $fromDay) }}{{ if gt (float $raw) $max }}{{ $max = float $raw }}{{ end }}{{ end }}{{ end -}}
+{{- $scale := cond (gt $max 0.0) $max 1.0 -}}
+{{- $step := div $w 31.0 -}}
+{{- $bar := math.Max 2.0 (sub $step 4.0) -}}
+<figure class="chart" dir="ltr">
+  <svg viewBox="0 0 {{ $w }} {{ add $h 26 }}" role="img" aria-label="{{ .label }}">
+    <line class="axis" x1="0" y1="{{ $h }}" x2="{{ $w }}" y2="{{ $h }}"/>
+    {{- range $i, $d := $days }}
+    {{- $x := add (mul (float $i) $step) 2 }}
+    {{- if eq (mod $i 7) 0 }}
+    <text class="tick" x="{{ $x }}" y="{{ add $h 20 }}">{{ int (strings.TrimLeft "0" (substr $d.date 8 2)) }}</text>
+    {{- end }}
+    {{- $raw := index $d $key }}
+    {{- $counted := and (ne $raw nil) (ge $d.date $fromDay) }}
+    {{- $v := 0.0 }}
+    {{- if $counted }}{{ $v = float $raw }}{{ end }}
+    {{- $bh := mul (div $v $scale) (sub $h 4) }}
+    {{- $shown := "—" }}
+    {{- if $counted }}{{ $shown = cond $mib (printf "%.1f MiB" (div $v 1048576)) (printf "%.0f" $v) }}{{ end }}
+    <g>
+      <title>{{ $d.date }}: {{ $shown }}</title>
+      <rect class="hit" x="{{ sub $x 2 }}" y="0" width="{{ $step }}" height="{{ $h }}"/>
+      {{- if gt $v 0.0 }}
+      <rect class="bar" x="{{ $x }}" y="{{ sub $h $bh }}" width="{{ $bar }}" height="{{ $bh }}"/>
+      {{- end }}
+    </g>
+    {{- end }}
+  </svg>
+  <figcaption dir="{{ site.Language.Direction | default "ltr" }}">{{ i18n "stats_peak" }} <span dir="ltr">{{ cond $mib (printf "%.1f MiB" (div $max 1048576)) (printf "%.0f" $max) }}</span></figcaption>
+</figure>
