@@ -5,7 +5,7 @@ description: "Como relatar uma vulnerabilidade no Incognito Chat."
 updated: "2026-11-21"
 ---
 
-Encontrou um jeito de ler as mensagens de alguém, ligar um remetente à conta dele ou qualquer outra coisa que quebre o que o app promete? Por favor, conte para a gente em particular primeiro.
+Encontrou um jeito de ler as mensagens de alguém, ligar um remetente à conta dele ou qualquer outra coisa que quebre o que o app promete? Por favor, nos conte em particular primeiro.
 
 ## Como relatar
 

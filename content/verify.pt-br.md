@@ -17,7 +17,7 @@ A criptografia só protege você se o app que você usa for o código publicado.
 
 ## Verifique você mesmo
 
-A partir de uma cópia do [código](https://github.com/{{< param "codeRepo" >}}), com o GitHub CLI logado:
+A partir de uma cópia do [código](https://github.com/{{< param "codeRepo" >}}), com o GitHub CLI autenticado:
 
 ```shell
 scripts/verify-site.sh {{< param "appOrigin" >}} {{< param "hostingRepo" >}} --rebuild

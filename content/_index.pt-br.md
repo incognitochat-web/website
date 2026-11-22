@@ -32,7 +32,7 @@ features:
     - title: "Criptografia de ponta a ponta"
       text: "Cada mensagem e cada anexo é criptografado no seu dispositivo. Só as duas pessoas de um chat conseguem lê-los."
     - title: "Nenhum registro de quem fala com quem"
-      text: "As mensagens passam por caixas de entrada aleatórias, nunca por conta. Nada do que fica guardado diz quem escreveu para quem, nem quem é o remetente."
+      text: "As mensagens passam por caixas de entrada aleatórias, e não por contas. Nada do que fica guardado diz quem escreveu para quem, nem quem é o remetente."
     - title: "Sem login para enviar"
       text: "Cada mensagem gasta um token anônimo, então dá para limitar abusos sem descobrir quem envia."
     - title: "Os chats ficam no seu dispositivo"
