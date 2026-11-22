@@ -56,9 +56,11 @@
 {{- $what := slice }}
 {{- range $metrics }}{{ if and (eq (index $state .) "part") (eq (index $starts .) $f) }}{{ $what = $what | append (index $labels .) }}{{ end }}{{ end }}
 {{- $t := time.AsTime (printf "%s:00:00Z" $f) }}
+{{- /* French writes the first of a month "1er novembre". */}}
+{{- $dm := cond (and (eq site.Language.Lang "fr") (eq $t.Day 1)) "2er January" $dayMonth }}
 {{- /* The time is kept left to right as one piece ("03:00 UTC"), also in
      Persian and Arabic; the strings are the site's own, so safe as HTML. */}}
-<p class="stats-note">* {{ i18n "stats_counted_from" (dict "What" (delimit $what $comma) "When" (printf "%s%s<span dir=\"ltr\">%s UTC</span>" (time.Format $dayMonth $t) $comma ($t.Format "15:04"))) | safeHTML }}</p>
+<p class="stats-note">* {{ i18n "stats_counted_from" (dict "What" (delimit $what $comma) "When" (printf "%s%s<span dir=\"ltr\">%s UTC</span>" (time.Format $dm $t) $comma ($t.Format "15:04"))) | safeHTML }}</p>
 {{- end }}
 
 {{- range $metrics }}
@@ -83,7 +85,7 @@
       {{- $partial := and (gt .hours 0) (lt .hours 24) }}
       {{- range $metrics }}{{ if eq $d.date (substr (index $starts .) 0 10) }}{{ $partial = true }}{{ end }}{{ end }}
       <tr>
-        <td dir="ltr">{{ .date }}{{ if $partial }} *{{ end }}</td>
+        <td><time datetime="{{ .date }}">{{ (time.AsTime .date "UTC").Day }}</time>{{ if $partial }} *{{ end }}</td>
         {{- range $metrics }}
         {{- $v := index $d . }}
         {{- $f := index $starts . }}

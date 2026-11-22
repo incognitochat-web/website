@@ -12,6 +12,7 @@ root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 fail() { echo "FAIL: $*" >&2; exit 1; }
+nbsp=$(printf '\302\240') # U+00A0, whatever the locale
 
 # The checks below compare hours and days the scripts and this test each
 # work out from the clock: in an hour's last minute, wait for the next one.
@@ -230,7 +231,23 @@ build "$work/big.json" "$work/out-big" "2026-01-01T00"
 en_big=$(cat "$work/out-big/costs/index.html") ru_big=$(cat "$work/out-big/ru/costs/index.html")
 # shellcheck disable=SC2016 # a literal dollar sign
 [[ $en_big == *'>$1,234.50</p>'* ]] || fail "English thousands aren't written as \$1,234.50"
-[[ $ru_big == *$'>$1\u00a0234,50</p>'* ]] || fail "Russian thousands aren't written as \$1 234,50, with a no-break space"
+[[ $ru_big == *">1${nbsp}234,50${nbsp}\$</p>"* ]] || fail "Russian thousands aren't written as 1 234,50 \$, with no-break spaces"
+# The dollar sign after the amount, after a no-break space, in German,
+# Spanish, French, Polish, Russian and Ukrainian: in tiles, tables, chart
+# tooltips, captions and legends alike.
+for l in de es fr pl ru uk; do
+  c=$(cat "$work/out/$l/costs/index.html")
+  [[ $c == *"dir=\"ltr\">2,00${nbsp}\$</p>"* ]] || fail "$l costs aren't written as 2,00 \$"
+  sign_first='\$[0-9]'
+  if [[ $c =~ $sign_first ]]; then fail "a $l cost is written with the sign first: ${BASH_REMATCH[0]}"; fi
+done
+# The dollar sign first in English, Dutch, Brazilian Portuguese, Indonesian
+# and Turkish, and in Persian and Arabic (Western digits, kept left to right).
+for want in fa:'$2.00' ar:'$2.00' pt-br:'$2,00' id:'$2,00' tr:'$2,00'; do
+  l=${want%%:*} amount=${want#*:}
+  tile=$(cat "$work/out/$l/costs/index.html")
+  [[ $tile == *"dir=\"ltr\">$amount</p>"* ]] || fail "$l costs aren't written as $amount, left to right"
+done
 
 # Counted from an hour: earlier hours show as not counted, not as 0.
 from=$(date -u -d "$end - 2 hours" +%Y-%m-%dT%H)
@@ -270,13 +287,21 @@ build "$work/gap.json" "$work/out5" "2026-11-21T05" "2026-11-01T05"
 # German writes a day with a full stop: "21. November".
 de5=$(cat "$work/out5/de/stats/index.html")
 [[ $de5 == *'Gesendete Nachrichten: gezählt ab 21. November'* ]] || fail "German day isn't written as 21. November"
-grep -qz '<td dir="ltr">2026-11-21 \*</td>\s*<td>24</td>\s*<td>0</td>\s*<td>0.0</td>' "$work/out5/stats/index.html" \
+grep -qz '<td><time datetime="2026-11-21">21</time> \*</td>\s*<td>24</td>\s*<td>0</td>\s*<td>0.0</td>' "$work/out5/stats/index.html" \
   || fail "the day messages started being counted isn't marked"
-grep -qz '<td dir="ltr">2026-11-01 \*</td>\s*<td>24</td>\s*<td>—</td>\s*<td>0.0</td>' "$work/out5/stats/index.html" \
+grep -qz '<td><time datetime="2026-11-01">1</time> \*</td>\s*<td>24</td>\s*<td>—</td>\s*<td>0.0</td>' "$work/out5/stats/index.html" \
   || fail "the day media started being counted isn't marked, or messages before it are shown as counted"
 # The month's totals say from when each was counted.
 grep -q 'Messages sent: counted from 21 November, <span dir="ltr">05:00 UTC</span>' "$work/out5/stats/index.html" || fail "no note on when messages started being counted"
 grep -q 'Media: counted from 1 November, <span dir="ltr">05:00 UTC</span>' "$work/out5/stats/index.html" || fail "no note on when media started being counted"
+grep -q 'comptage depuis le 21 novembre, <span dir="ltr">05:00 UTC</span>' "$work/out5/fr/stats/index.html" || fail "a French day other than the 1st isn't written as 21 novembre"
+grep -q 'a partir del 1 de noviembre, <span dir="ltr">05:00 UTC</span>' "$work/out5/es/stats/index.html" || fail "a Spanish 1st isn't written as 1 de noviembre"
+grep -q 'comptage depuis le 1er novembre, <span dir="ltr">05:00 UTC</span>' "$work/out5/fr/stats/index.html" || fail "the French 1st isn't written as 1er novembre"
+# Stats' table: the 10th and 20th keep their zero.
+grep -q '<td><time datetime="2026-11-10">10</time></td>' "$work/out5/stats/index.html" || fail "the Stats table's 10 isn't 10"
+grep -q '<td><time datetime="2026-11-20">20</time></td>' "$work/out5/stats/index.html" || fail "the Stats table's 20 isn't 20"
+# The day-by-day tables keep each day on one line, also on a phone.
+grep -q '^\.table-view td:first-child { white-space: nowrap; }' "$root/static/css/site.css" || fail "the tables' days may wrap"
 # Ukrainian month headings are nominative, unlike after a day.
 grep -q '<h2>Листопад 2026</h2>' "$work/out5/uk/stats/index.html" || fail "Ukrainian month headings aren't nominative"
 grep -q 'з 1 листопада, <span dir="ltr">05:00 UTC</span>' "$work/out5/uk/stats/index.html" || fail "a Ukrainian day isn't followed by its month in the genitive"
@@ -293,6 +318,20 @@ nov=$(sed -n '/id="m-2026-11"/,/<\/section>/p' "$work/out5/stats/index.html")
 grep -q 'href="#m-2026-11" aria-current="true"' <<<"$nov" || fail "November's links don't mark November"
 # The hourly chart's dates are short, to fit on a phone.
 grep -q '>16 Nov</text>' "$work/out5/stats/index.html" || fail "the hourly chart's dates aren't short"
+grep -q '>16 nov.</text>' "$work/out5/fr/stats/index.html" || fail "the French hourly chart's dates aren't 16 nov."
+grep -q '>16 نوفمبر</text>' "$work/out5/ar/stats/index.html" || fail "the Arabic hourly chart's dates don't have the month's full name"
+# German writes them with a full stop: "16. Nov.".
+grep -q '>16\. Nov\.</text>' "$work/out5/de/stats/index.html" || fail "the German hourly chart's dates aren't 16. Nov."
+# French writes the first of a month "1er": a week across 1 November.
+first=$work/first
+mkdir -p "$first/stats/hourly"
+jq -n '{date: "2026-11-02", accounts: [range(24) | 1], messages: [range(24) | 0], media_bytes: [range(24) | 0]}' >"$first/stats/hourly/2026-11-02.json"
+"$root/scripts/build-stats.sh" "$first" "$work/first.json" >/dev/null
+build "$work/first.json" "$work/out11" "2026-01-01T00"
+fr11=$(cat "$work/out11/fr/stats/index.html")
+[[ $fr11 == *'>1er nov.</text>'* ]] || fail "the French chart's 1 November isn't 1er nov."
+[[ $fr11 == *'>31 oct.</text>'* ]] || fail "a French chart date other than the 1st changed"
+grep -q '>1 Nov</text>' "$work/out11/stats/index.html" || fail "the English chart's 1 November changed"
 # Counting that starts at a month's first hour counts the whole month: no "*".
 build "$work/gap.json" "$work/out7" "2026-11-21T05" "2026-11-21T05" "2026-11-01T00"
 grep -q '>48</p>' "$work/out7/stats/index.html" || fail "a start at the month's first hour marks the month as partly counted"
@@ -353,6 +392,30 @@ grep -qF '>$0.00</p><p class="tile-name">Production' <<<"$dec" || fail "a month 
 grep -qF 'legend-amount">$1.00<' "$work/out4/costs/index.html" || fail "the legend does not give a service's month total"
 grep -q 'class="month newest" id="c-2026-02"' "$work/out4/costs/index.html" || fail "the newest month isn't shown first"
 grep -q 'datetime="2026-02-01"' "$work/out4/costs/index.html" || fail "Costs isn't 'up to' the newest day production's costs were read"
+# The tables give the day of the month (the month is the heading above),
+# the full date machine-readable.
+grep -q '<td><time datetime="2026-01-31">31</time></td>' "$work/out4/costs/index.html" || fail "the Costs table's days aren't the day of the month"
+# The 10th, 20th and 30th keep their zero.
+tens=$work/tens
+mkdir -p "$tens/stats/costs/production"
+echo '{"month":"2026-03","days":{"2026-03-10":{"A":1},"2026-03-20":{"A":1},"2026-03-30":{"A":1}}}' >"$tens/stats/costs/production/2026-03.json"
+"$root/scripts/build-stats.sh" "$tens" "$work/tens.json" >/dev/null
+build "$work/tens.json" "$work/out12" "2026-01-01T00"
+tens_page=$(cat "$work/out12/costs/index.html")
+for d in 10 20 30; do
+  [[ $tens_page == *"<td><time datetime=\"2026-03-$d\">$d</time></td>"* ]] || fail "the Costs table's $d isn't $d"
+done
+# Each day is read as UTC, whatever time zone Hugo is given: in Havana,
+# 8 March 2026 starts at 01:00, and read there the 8th would show as 7.
+havana=$work/havana
+mkdir -p "$havana/stats/costs/production"
+echo '{"month":"2026-03","days":{"2026-03-08":{"A":1}}}' >"$havana/stats/costs/production/2026-03.json"
+mkdir -p "$havana/stats/hourly"
+jq -n '{date: "2026-03-08", accounts: [range(24) | 1], messages: [range(24) | 0], media_bytes: [range(24) | 0]}' >"$havana/stats/hourly/2026-03-08.json"
+"$root/scripts/build-stats.sh" "$havana" "$work/havana.json" >/dev/null
+HUGO_TIMEZONE=America/Havana build "$work/havana.json" "$work/out13" "2026-01-01T00"
+grep -q '<td><time datetime="2026-03-08">8</time></td>' "$work/out13/costs/index.html" || fail "a day shifts with Hugo's time zone"
+grep -q '<td><time datetime="2026-03-08">8</time>' "$work/out13/stats/index.html" || fail "a Stats day shifts with Hugo's time zone"
 # A month with the test environment's costs only is on Costs, production "—".
 dev6=$(sed -n '/id="c-2025-06"/,/<\/section>/p' "$work/out4/costs/index.html")
 grep -qF 'tile-value" dir="ltr">—</p><p class="tile-name">Production' <<<"$dev6" || fail "a month with test-environment costs only isn't on Costs"
@@ -390,6 +453,10 @@ grep -qF '</span>B <span class="legend-amount">$0.00<' "$work/out9/costs/index.h
 legend=$(grep -o '</span>[A-Za-z]* <span class="legend-amount">[^<]*' "$work/out8/costs/index.html" | sed 's/<[^>]*>//g' | tr '\n' ',')
 # shellcheck disable=SC2016 # literal dollar signs
 [ "$legend" = 'A $6.00,B $4.00,C $3.00,D $2.00,Other $2.00,' ] || fail "the legend's services and totals: $legend"
+# The sign after the amount in the legend and the chart's tooltips too.
+fr8=$(cat "$work/out8/fr/costs/index.html")
+[[ $fr8 == *"</span>A <span class=\"legend-amount\">6,00${nbsp}\$<"* ]] || fail "the French legend isn't written as 6,00 \$"
+[[ $fr8 == *"<title>2026-04-01: 15,50${nbsp}\$"* ]] || fail "the French chart's tooltip isn't written as 15,50 \$"
 
 # Only the newest 13 months are shown.
 many=$work/many

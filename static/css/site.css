@@ -434,6 +434,8 @@ table.official .hint { font-size: 0.82rem; color: var(--muted); }
 .table-view { margin: 0 0 2rem; }
 .table-view summary { cursor: pointer; color: var(--text-2); font-size: 0.92rem; }
 .table-view table { font-variant-numeric: tabular-nums; }
+/* The day ("22 *") on one line, also on a phone. */
+.table-view td:first-child { white-space: nowrap; }
 .prose .table-view .table-note { font-size: 0.82rem; color: var(--muted); margin-top: -0.8rem; }
 
 /* Footer */
@@ -515,6 +517,8 @@ table.official .hint { font-size: 0.82rem; color: var(--muted); }
    columns fit it only from about 450px, in Persian and Arabic). */
 @media (max-width: 480px) {
   .footer-grid { grid-template-columns: minmax(0, 1fr); }
+  /* Narrower cells, so the four columns of Stats' table fit a phone. */
+  .table-view th, .table-view td { padding-inline: 0.4rem; }
   /* Only the globe: with a long name ("Português (Brasil)") the tools
      wouldn't fit beside the site's name. Screen readers still hear it. */
   .lang-current {

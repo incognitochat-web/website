@@ -24,8 +24,8 @@
 {{ partial "month-nav.html" (dict "months" $months "current" $m.month "prefix" "c") }}
 <h2>{{ partial "month-name.html" $m.month }}</h2>
 <div class="tiles">
-  <div class="tile"><p class="tile-value" dir="ltr">{{ if ne $m.totals.production nil }}${{ lang.FormatNumber 2 (float $m.totals.production) }}{{ else }}—{{ end }}</p><p class="tile-name">{{ i18n "stats_cost_prod" }}</p></div>
-  <div class="tile"><p class="tile-value" dir="ltr">{{ if ne $m.totals.dev nil }}${{ lang.FormatNumber 2 (float $m.totals.dev) }}{{ else }}—{{ end }}</p><p class="tile-name">{{ i18n "stats_cost_dev" }}</p></div>
+  <div class="tile"><p class="tile-value" dir="ltr">{{ if ne $m.totals.production nil }}{{ partial "money.html" $m.totals.production }}{{ else }}—{{ end }}</p><p class="tile-name">{{ i18n "stats_cost_prod" }}</p></div>
+  <div class="tile"><p class="tile-value" dir="ltr">{{ if ne $m.totals.dev nil }}{{ partial "money.html" $m.totals.dev }}{{ else }}—{{ end }}</p><p class="tile-name">{{ i18n "stats_cost_dev" }}</p></div>
 </div>
 
 {{- if ne $m.totals.production nil }}
@@ -43,9 +43,9 @@
     <tbody>
       {{- range sort $m.days "date" "desc" }}
       <tr>
-        <td dir="ltr">{{ .date }}</td>
-        <td dir="ltr">{{ if ne .total nil }}${{ lang.FormatNumber 2 (float .total) }}{{ else }}—{{ end }}</td>
-        <td dir="ltr">{{ if ne .dev nil }}${{ lang.FormatNumber 2 (float .dev) }}{{ else }}—{{ end }}</td>
+        <td><time datetime="{{ .date }}">{{ (time.AsTime .date "UTC").Day }}</time></td>
+        <td dir="ltr">{{ if ne .total nil }}{{ partial "money.html" .total }}{{ else }}—{{ end }}</td>
+        <td dir="ltr">{{ if ne .dev nil }}{{ partial "money.html" .dev }}{{ else }}—{{ end }}</td>
       </tr>
       {{- end }}
     </tbody>

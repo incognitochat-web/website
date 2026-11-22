@@ -1,0 +1,8 @@
+{{- /* An amount in US dollars, written the page's language's way: "$2.36",
+     or "2,36 $" (a no-break space) in the languages that write the sign
+     after the amount: German, Spanish, French, Polish, Russian and
+     Ukrainian. Persian and Arabic keep "$2.36", inside a left-to-right
+     span where they're used. Not lang.FormatCurrency: it changes the sign
+     ("US$", "$US", "USD") and prints its raw pattern for Persian. */ -}}
+{{- $n := lang.FormatNumber 2 (float .) -}}
+{{- if in (slice "de" "es" "fr" "pl" "ru" "uk") site.Language.Lang }}{{ printf "%s\u00a0$" $n }}{{ else }}{{ printf "$%s" $n }}{{ end -}}

@@ -5,8 +5,11 @@
      chart's name), "mib" (show bytes as MiB), "from" (the first hour
      counted, yyyy-mm-ddThh; earlier ones weren't). An hour not counted has
      no bar and "—" as its tooltip. No script: the tooltips are SVG titles.
-     Dates under midnights are short ("16 Nov") to fit on a phone; Hugo has
+     Dates under midnights are short ("16 Nov") to fit on a phone: German
+     with a full stop ("16. Nov."), French "1er" on the first. Hugo has
      no short Arabic month names, and the full ones fit. */ -}}
+{{- $lang := site.Language.Lang -}}
+{{- $tick := cond (eq $lang "ar") "2 January" (cond (eq $lang "de") "2. Jan" "2 Jan") -}}
 {{- $hours := .hours -}}
 {{- $key := .key -}}
 {{- $mib := .mib | default false -}}
@@ -27,7 +30,7 @@
     {{- if eq (substr $p.t 11 2) "00" }}
     <line class="midnight" x1="{{ $x }}" y1="0" x2="{{ $x }}" y2="{{ $h }}"/>
     {{- if lt $x (sub $w 100) }}
-    <text class="tick" x="{{ add $x 3 }}" y="{{ add $h 20 }}">{{ time.Format (cond (eq site.Language.Lang "ar") "2 January" "2 Jan") (printf "%s:00:00Z" $p.t) }}</text>
+    <text class="tick" x="{{ add $x 3 }}" y="{{ add $h 20 }}">{{ time.Format (cond (and (eq $lang "fr") (eq (substr $p.t 8 2) "01")) "2er Jan" $tick) (printf "%s:00:00Z" $p.t) }}</text>
     {{- end }}
     {{- end }}
     {{- $raw := index $p $key }}
