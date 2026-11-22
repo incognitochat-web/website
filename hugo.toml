@@ -127,6 +127,17 @@ weight = 12
 [languages.de.params]
 fonts = ["inter", "newsreader"]
 
+[languages.pl]
+label = "Polski"
+locale = "pl"
+direction = "ltr"
+weight = 13
+[languages.pl.params]
+# Polish text uses the system's fonts (site.css): Inter and Newsreader
+# have no ą, ć, ę, ł, ń, ś, ź or ż. The site's name and numbers use
+# Newsreader.
+fonts = ["newsreader"]
+
 [sitemap]
 changeFreq = ""
 priority = -1
