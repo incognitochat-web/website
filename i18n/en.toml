@@ -59,6 +59,8 @@ st_rebuild = "Rebuilt from source"
 st_rebuild_desc = "Building the code again gives the same files, byte for byte."
 
 stats_none = "No numbers yet: the first come with the next hourly run."
+stats_see_costs = "What running the service costs:"
+costs_none = "No costs yet: the first come with the next daily run."
 stats_asof = "Up to"
 stats_last24 = "The last 24 hours"
 stats_months = "Months"

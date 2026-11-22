@@ -59,6 +59,8 @@ st_rebuild = "Recompilado a partir do código-fonte"
 st_rebuild_desc = "Compilar o código de novo gera os mesmos arquivos, byte a byte."
 
 stats_none = "Ainda não há números: os primeiros chegam com a próxima execução de hora em hora."
+stats_see_costs = "Quanto custa manter o serviço no ar:"
+costs_none = "Ainda não há números de custos: os primeiros chegam com a próxima execução diária."
 stats_asof = "Até"
 stats_last24 = "As últimas 24 horas"
 stats_months = "Meses"

@@ -1,0 +1,16 @@
+{{- /* The month links above a month on the Stats and Costs pages: one link
+     per month, the shown one marked. Input: dict "months" (the months, as
+     data/stats.json's month objects, newest first), "current" (the month
+     shown, yyyy-mm), "prefix" (the sections' id prefix: "m" on Stats, "c"
+     on Costs). Nothing for a single month. */ -}}
+{{- if gt (len .months) 1 }}
+{{- $current := .current }}
+{{- $prefix := .prefix }}
+<nav class="month-nav" aria-label="{{ i18n "stats_months" }}">
+  <ul>
+    {{- range .months }}
+    <li><a href="#{{ $prefix }}-{{ .month }}"{{ if eq .month $current }} aria-current="true"{{ end }}>{{ partial "month-name.html" .month }}</a></li>
+    {{- end }}
+  </ul>
+</nav>
+{{- end }}
