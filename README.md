@@ -59,10 +59,13 @@ scripts/check.sh       # every page and string in every language; builds twice, 
 Use the Hugo version in the workflow (`HUGO_VERSION`). `scripts/check.sh` also
 needs Python 3.11 or newer (it reads the TOML files).
 
-- Pages are in `content/` (`page.md` for English, `page.fa.md` for Persian).
+- Pages are in `content/`: `page.md` for English, `page.<code>.md` for each
+  other language in `hugo.toml` (`fa`, `ru`, `ar`).
 - Every production address is in `hugo.toml` under `[params]`, in one place.
 - Fonts are self-hosted: Inter, Newsreader (headings) and Vazirmatn
-  (Persian), under the SIL Open Font License (`static/fonts/LICENSE-*`).
+  (Persian and Arabic), under the SIL Open Font License
+  (`static/fonts/LICENSE-*`). Inter and Newsreader are Latin-only subsets,
+  so Russian text uses the system's fonts.
 - `static/.well-known/security.txt` must be renewed before its `Expires`
   date; the check fails 30 days ahead.
 
