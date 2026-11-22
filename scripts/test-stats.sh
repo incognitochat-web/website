@@ -410,9 +410,12 @@ done
 havana=$work/havana
 mkdir -p "$havana/stats/costs/production"
 echo '{"month":"2026-03","days":{"2026-03-08":{"A":1}}}' >"$havana/stats/costs/production/2026-03.json"
+mkdir -p "$havana/stats/hourly"
+jq -n '{date: "2026-03-08", accounts: [range(24) | 1], messages: [range(24) | 0], media_bytes: [range(24) | 0]}' >"$havana/stats/hourly/2026-03-08.json"
 "$root/scripts/build-stats.sh" "$havana" "$work/havana.json" >/dev/null
 HUGO_TIMEZONE=America/Havana build "$work/havana.json" "$work/out13" "2026-01-01T00"
 grep -q '<td><time datetime="2026-03-08">8</time></td>' "$work/out13/costs/index.html" || fail "a day shifts with Hugo's time zone"
+grep -q '<td><time datetime="2026-03-08">8</time>' "$work/out13/stats/index.html" || fail "a Stats day shifts with Hugo's time zone"
 # A month with the test environment's costs only is on Costs, production "—".
 dev6=$(sed -n '/id="c-2025-06"/,/<\/section>/p' "$work/out4/costs/index.html")
 grep -qF 'tile-value" dir="ltr">—</p><p class="tile-name">Production' <<<"$dev6" || fail "a month with test-environment costs only isn't on Costs"
