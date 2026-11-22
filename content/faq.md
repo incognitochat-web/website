@@ -9,7 +9,7 @@ updated: "2026-11-22"
 
 ### Does the person I write to find out who I am?
 
-No. They see a label like **🦊 K3F9**, the same each time you write through their link, and nothing else about you: not your name, username or phone number. Photos lose hidden details such as location before they're sent, and videos most of them. A file sent "as a file" goes as it is, with its name and anything in it.
+No. They see a label like **🦊 K3F9**, the same each time you write through their link, and nothing else about you: not your name, username or phone number. Photos lose hidden details such as location before they're sent, and videos most of them. Anything sent with **File**, and music and GIFs, go as they are, with their names and anything in them.
 
 ### Can you read my messages?
 
@@ -35,11 +35,11 @@ Whoever controls the bot decides which page Telegram opens, and Telegram offers 
 
 ### Someone watching live {#live}
 
-Whoever runs the servers, or Amazon, who hosts them, could watch requests as they happen and link people by timing and IP address: a message arriving, then a notice, then a reply or a "seen". Telegram could link people by timing too. A copy of the stored data doesn't show this, but with the server's keys, records kept for up to a day show some of it. Even with the enclave, timing and IP addresses would still show.
+Whoever runs the servers, or Amazon, who hosts them, could watch requests as they happen and link people by timing and IP address: a message arriving, then a notice, then a reply or a "seen". Telegram could link people by timing too. A copy of the stored data doesn't show this, but with the server's keys, records kept for about a day show some of it. Even with the enclave, timing and IP addresses would still show.
 
 ### Your own device
 
-The app runs inside Telegram, on your phone or computer. Anyone who can use your unlocked device, or malware on it, can read your chats, as with any app. The Telegram app itself could too. A backup or copy of your device holds your keys along with your chats.
+The app runs inside Telegram, on your phone or computer. Anyone who can use your unlocked device, or malware on it, can read your chats, as with any app. The Telegram app itself could too. A copy of the app's storage on your device, such as a forensic copy of your phone, can open your chats and use your account.
 
 ### Screenshots
 
@@ -61,15 +61,15 @@ Yes. Deleting a message removes it for both sides by default, read or not. You c
 
 ### Can I use it on another phone or computer?
 
-One device at a time. Setting up on another device replaces your account: you get a new link, which people need to reach you, and your old chats stay on the old device, readable but closed. Nothing moves and nothing is backed up, so if you lose your phone, its chats are gone. Set up again on a new one: that ends the old account at once.
+One device at a time. Setting up on another device replaces your account: you get a new link, which people need to reach you, and your old chats stay on the old device, read-only. Nothing moves and nothing is backed up, so if you lose your phone, its chats are gone. Set up again on a new one: that ends the old account at once.
 
 ### How do I delete my account?
 
-On the **My link** tab, tap **Delete account**. The server deletes everything it holds for you within minutes, then the app clears your device. Attachments you sent stay for the other side to fetch until they expire, within 30 days.
+On the **My link** tab, tap **Delete account**. While the app stays open, the server deletes what it holds for you within minutes, then the app deletes your chats and keys from this device. Attachments you sent stay for the other side to fetch until they expire, within 30 days.
 
 ### How long is anything kept?
 
-On the server: encrypted messages until your device has them, attachments until they're deleted, at most 30 days for both. Your account (your link, the scrambled Telegram ID, and the month you last opened the app) stays until you delete it, or until the app goes unopened for 12 months. On your device: your chats, until you delete them. You choose how long attachments stay (forever, a month or a week) in **Data and storage**.
+On the server: encrypted messages until your device has them, attachments until they're deleted, at most 30 days for both. Your account (including your link, the scrambled Telegram ID, and the month you last opened the app) stays until you delete it, or until the app goes unopened for 12 months. On your device: your chats, until you delete them. You choose how long attachments stay (forever, a month or a week) in **Data and storage**.
 
 ## The project
 
