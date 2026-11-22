@@ -56,3 +56,9 @@
 {{- end }}
 </div>
 {{- end }}
+
+{{- /* Once the Donate page is published (Hugo skips a draft, so no link
+     until then). */}}
+{{- with site.GetPage "donate" }}
+<p class="stats-more">{{ i18n "costs_see_donate" }} <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></p>
+{{- end }}
