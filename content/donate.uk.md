@@ -3,8 +3,6 @@ title: "Пожертви"
 linkTitle: "Пожертви"
 description: "Incognito Chat безкоштовний і без реклами. Пожертви допомагають оплачувати його роботу, а кожна пожертва й кожна витрата публічні."
 updated: "2026-11-22"
-# Unpublished until Open Source Collective accepts the collective.
-draft: true
 ---
 
 Реклами немає, і продавати нам нічого, тож пожертви допомагають оплачувати сервіс: сервери й сховище в Amazon Web Services, а також домен. GitHub розміщує застосунок і цей сайт безкоштовно.

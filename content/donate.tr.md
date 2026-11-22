@@ -3,8 +3,6 @@ title: "Bağış yapın"
 linkTitle: "Bağış"
 description: "Incognito Chat ücretsiz ve reklamsız. Bağışlar hizmetin çalışma masraflarının karşılanmasına yardımcı oluyor; her bağış ve her harcama herkese açık."
 updated: "2026-11-22"
-# Unpublished until Open Source Collective accepts the collective.
-draft: true
 ---
 
 Reklam yok, satacak bir şeyimiz de yok; bu yüzden bağışlar hizmetin masraflarını karşılamaya yardımcı oluyor: Amazon Web Services üzerindeki sunucular ve depolama, ayrıca alan adı. Uygulamayı ve bu siteyi GitHub ücretsiz olarak barındırıyor.

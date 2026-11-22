@@ -3,8 +3,6 @@ title: "Spenden"
 linkTitle: "Spenden"
 description: "Incognito Chat ist kostenlos und ohne Werbung. Spenden helfen, den Betrieb zu bezahlen, und jede Spende und jede Ausgabe ist öffentlich."
 updated: "2026-11-22"
-# Unpublished until Open Source Collective accepts the collective.
-draft: true
 ---
 
 Es gibt keine Werbung und wir verkaufen nichts, daher helfen Spenden, den Dienst zu bezahlen: die Server und den Speicherplatz bei Amazon Web Services sowie die Domain. GitHub hostet die App und diese Website kostenlos.

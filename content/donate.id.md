@@ -3,8 +3,6 @@ title: "Donasi"
 linkTitle: "Donasi"
 description: "Incognito Chat gratis dan tanpa iklan. Donasi membantu membiayai operasionalnya, dan setiap donasi dan setiap pengeluaran terbuka untuk publik."
 updated: "2026-11-22"
-# Unpublished until Open Source Collective accepts the collective.
-draft: true
 ---
 
 Karena tidak ada iklan dan tidak ada yang kami jual, donasi membantu membiayai layanan ini: server dan penyimpanan di Amazon Web Services, serta domainnya. GitHub menyediakan hosting untuk aplikasi dan situs ini secara gratis.
