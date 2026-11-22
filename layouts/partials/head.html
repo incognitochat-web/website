@@ -10,8 +10,7 @@
 {{ with .Description | default (i18n "tagline") }}<meta name="description" content="{{ . }}">{{ end }}
 <link rel="canonical" href="{{ .Permalink }}">
 {{ range .AllTranslations }}<link rel="alternate" hreflang="{{ .Language.Locale }}" href="{{ .Permalink }}">
-{{ end }}<link rel="icon" href="{{ "favicon.svg" | relURL }}" type="image/svg+xml">
-<link rel="preload" href="{{ "fonts/inter.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
-{{ if ne site.Language.Direction "rtl" }}<link rel="preload" href="{{ "fonts/newsreader.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
-{{ end }}{{ if eq site.Language.Direction "rtl" }}<link rel="preload" href="{{ "fonts/vazirmatn-arabic.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+{{ end }}{{/* For readers in other languages, and search engines: the English page. */}}{{ range .AllTranslations }}{{ if eq .Language.Lang "en" }}<link rel="alternate" hreflang="x-default" href="{{ .Permalink }}">
+{{ end }}{{ end }}<link rel="icon" href="{{ "favicon.svg" | relURL }}" type="image/svg+xml">
+{{ range site.Params.fonts }}<link rel="preload" href="{{ printf "fonts/%s.woff2" . | relURL }}" as="font" type="font/woff2" crossorigin>
 {{ end }}<link rel="stylesheet" href="{{ "css/site.css" | relURL }}">

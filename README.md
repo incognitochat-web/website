@@ -53,10 +53,11 @@ production counts them.
 
 ```shell
 hugo server            # http://localhost:1313
-scripts/check.sh       # builds twice, compares, checks security.txt
+scripts/check.sh       # every page and string in every language; builds twice, compares; security.txt
 ```
 
-Use the Hugo version in the workflow (`HUGO_VERSION`).
+Use the Hugo version in the workflow (`HUGO_VERSION`). `scripts/check.sh` also
+needs Python 3.11 or newer (it reads the TOML files).
 
 - Pages are in `content/` (`page.md` for English, `page.fa.md` for Persian).
 - Every production address is in `hugo.toml` under `[params]`, in one place.

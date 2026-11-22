@@ -178,6 +178,15 @@ pre code { background: none; padding: 0; font-size: inherit; }
 .nav a[aria-current="page"] { color: var(--text); text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 0.45em; }
 .lang-switch { color: var(--text-2); font-size: 0.9rem; text-decoration: none; }
 .lang-switch:hover { color: var(--text); }
+/* With three languages or more: a menu (no script), each named in itself. */
+.lang-menu { position: relative; }
+.lang-menu summary { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--text-2); font-size: 0.9rem; cursor: pointer; list-style: none; }
+.lang-menu summary::-webkit-details-marker { display: none; }
+.lang-menu summary:hover, .lang-menu[open] summary { color: var(--text); }
+.lang-menu ul { position: absolute; inset-inline-end: 0; top: calc(100% + 0.5rem); z-index: 10; margin: 0; padding: 0.35rem 0; list-style: none; min-width: 10rem; background: var(--bg); border: 1px solid var(--border); border-radius: 0.5rem; box-shadow: 0 6px 24px rgb(0 0 0 / 0.08); }
+.lang-menu li a { display: block; padding: 0.4rem 0.9rem; color: var(--text-2); font-size: 0.93rem; text-decoration: none; }
+.lang-menu li a:hover { color: var(--text); background: var(--accent-soft); }
+.lang-menu li a[aria-current="true"] { color: var(--text); font-weight: 600; }
 .header-tools { display: flex; align-items: center; gap: 1.1rem; }
 .icon-link { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--text-2); text-decoration: none; }
 .icon-link:hover { color: var(--text); }
@@ -279,7 +288,9 @@ pre code { background: none; padding: 0; font-size: inherit; }
 .steps li:first-child { padding-top: 0.2rem; }
 .steps li:last-child { border-bottom: 0; }
 .steps li::before { content: counter(step); font-family: var(--serif); font-size: 1.5rem; line-height: 1.2; color: var(--accent); }
-[dir="rtl"] .steps li::before { content: counter(step, persian); font-family: var(--font); font-size: 1.3rem; }
+[dir="rtl"] .steps li::before { font-family: var(--font); font-size: 1.3rem; }
+/* Persian digits for Persian only; other languages count in Western digits. */
+:lang(fa) .steps li::before { content: counter(step, persian); }
 .steps h3, .item h3 { font-size: 1.02rem; margin: 0 0 0.3rem; font-weight: 600; }
 .steps p, .item p { margin: 0; color: var(--text-2); font-size: 0.97rem; }
 .steps strong { color: var(--text); font-weight: 600; white-space: nowrap; }
@@ -307,7 +318,7 @@ pre code { background: none; padding: 0; font-size: inherit; }
 .prose ul, .prose ol { padding-inline-start: 1.3rem; }
 .prose li { margin-block: 0.35rem; }
 .prose li::marker { color: var(--muted); }
-[dir="rtl"] .prose ol { list-style-type: persian; }
+:lang(fa) .prose ol { list-style-type: persian; }
 .prose table { border-collapse: collapse; width: 100%; margin: 1.25rem 0 1.75rem; font-size: 0.9rem; line-height: 1.55; }
 .prose th, .prose td { border-bottom: 1px solid var(--border); padding: 0.75rem 0.6rem; text-align: start; vertical-align: top; }
 .prose thead th { color: var(--muted); font-weight: 600; font-size: 0.85rem; border-bottom-color: var(--border-strong); }
