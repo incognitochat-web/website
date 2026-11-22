@@ -10,6 +10,7 @@
 {{- /* Ukrainian too: "5 листопада", but "Листопад 2026". */ -}}
 {{- if eq site.Language.Lang "uk" -}}
   {{- $name = index (slice "січень" "лютий" "березень" "квітень" "травень" "червень" "липень" "серпень" "вересень" "жовтень" "листопад" "грудень") (sub (int $t.Month) 1) -}}
+{{- end -}}
 {{- /* Polish too: Hugo gives "listopada", a heading needs "listopad". */ -}}
 {{- if eq site.Language.Lang "pl" -}}
   {{- $name = index (slice "styczeń" "luty" "marzec" "kwiecień" "maj" "czerwiec" "lipiec" "sierpień" "wrzesień" "październik" "listopad" "grudzień") (sub (int $t.Month) 1) -}}
