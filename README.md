@@ -68,8 +68,8 @@ needs Python 3.11 or newer (it reads the TOML files).
 - Fonts are self-hosted: Inter, Newsreader (headings) and Vazirmatn
   (Persian and Arabic), under the SIL Open Font License
   (`static/fonts/LICENSE-*`). Inter and Newsreader are subsets with no
-  Cyrillic, nor Turkish's ğ, ş and İ, so Russian, Turkish and Ukrainian text
-  use the system's fonts.
+  Cyrillic, nor Turkish's ğ, ş and İ, nor Polish's ą, ć, ę, ł, ń, ś, ź and
+  ż, so Russian, Ukrainian, Turkish and Polish text use the system's fonts.
 - `static/.well-known/security.txt` must be renewed before its `Expires`
   date; the check fails 30 days ahead.
 
