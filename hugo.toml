@@ -111,6 +111,14 @@ weight = 10
 # numbers use Newsreader.
 fonts = ["newsreader"]
 
+[languages.fr]
+label = "Français"
+locale = "fr"
+direction = "ltr"
+weight = 11
+[languages.fr.params]
+fonts = ["inter", "newsreader"]
+
 [sitemap]
 changeFreq = ""
 priority = -1

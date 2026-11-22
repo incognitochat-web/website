@@ -208,6 +208,7 @@ grep -q '<h1>Estatísticas</h1>' "$work/out/pt-br/stats/index.html" || fail "no 
 grep -q '<h1>Statistik</h1>' "$work/out/id/stats/index.html" || fail "no Indonesian Stats page"
 grep -q '<h1>İstatistikler</h1>' "$work/out/tr/stats/index.html" || fail "no Turkish Stats page"
 grep -q '<h1>Статистика</h1>' "$work/out/uk/stats/index.html" || fail "no Ukrainian Stats page"
+grep -q '<h1>Statistiques</h1>' "$work/out/fr/stats/index.html" || fail "no French Stats page"
 
 # Numbers are written the page's language's way: a decimal point in English,
 # a comma in Dutch (and Russian, Spanish, Portuguese, Indonesian, Turkish).
