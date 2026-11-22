@@ -231,6 +231,13 @@ en_big=$(cat "$work/out-big/costs/index.html") ru_big=$(cat "$work/out-big/ru/co
 # shellcheck disable=SC2016 # a literal dollar sign
 [[ $en_big == *'>$1,234.50</p>'* ]] || fail "English thousands aren't written as \$1,234.50"
 [[ $ru_big == *$'>$1\u00a0234,50</p>'* ]] || fail "Russian thousands aren't written as \$1 234,50, with a no-break space"
+# The dollar sign first in English, Dutch, Brazilian Portuguese, Indonesian
+# and Turkish, and in Persian and Arabic (Western digits, kept left to right).
+for want in fa:'$2.00' ar:'$2.00' pt-br:'$2,00' id:'$2,00' tr:'$2,00'; do
+  l=${want%%:*} amount=${want#*:}
+  tile=$(cat "$work/out/$l/costs/index.html")
+  [[ $tile == *"dir=\"ltr\">$amount</p>"* ]] || fail "$l costs aren't written as $amount, left to right"
+done
 
 # Counted from an hour: earlier hours show as not counted, not as 0.
 from=$(date -u -d "$end - 2 hours" +%Y-%m-%dT%H)
@@ -277,6 +284,8 @@ grep -qz '<td dir="ltr">2026-11-01 \*</td>\s*<td>24</td>\s*<td>—</td>\s*<td>0.
 # The month's totals say from when each was counted.
 grep -q 'Messages sent: counted from 21 November, <span dir="ltr">05:00 UTC</span>' "$work/out5/stats/index.html" || fail "no note on when messages started being counted"
 grep -q 'Media: counted from 1 November, <span dir="ltr">05:00 UTC</span>' "$work/out5/stats/index.html" || fail "no note on when media started being counted"
+grep -q 'comptage depuis le 21 novembre, <span dir="ltr">05:00 UTC</span>' "$work/out5/fr/stats/index.html" || fail "a French day other than the 1st isn't written as 21 novembre"
+grep -q 'a partir del 1 de noviembre, <span dir="ltr">05:00 UTC</span>' "$work/out5/es/stats/index.html" || fail "a Spanish 1st isn't written as 1 de noviembre"
 # Ukrainian month headings are nominative, unlike after a day.
 grep -q '<h2>Листопад 2026</h2>' "$work/out5/uk/stats/index.html" || fail "Ukrainian month headings aren't nominative"
 grep -q 'з 1 листопада, <span dir="ltr">05:00 UTC</span>' "$work/out5/uk/stats/index.html" || fail "a Ukrainian day isn't followed by its month in the genitive"
@@ -293,6 +302,8 @@ nov=$(sed -n '/id="m-2026-11"/,/<\/section>/p' "$work/out5/stats/index.html")
 grep -q 'href="#m-2026-11" aria-current="true"' <<<"$nov" || fail "November's links don't mark November"
 # The hourly chart's dates are short, to fit on a phone.
 grep -q '>16 Nov</text>' "$work/out5/stats/index.html" || fail "the hourly chart's dates aren't short"
+grep -q '>16 nov.</text>' "$work/out5/fr/stats/index.html" || fail "the French hourly chart's dates aren't 16 nov."
+grep -q '>16 نوفمبر</text>' "$work/out5/ar/stats/index.html" || fail "the Arabic hourly chart's dates don't have the month's full name"
 # Counting that starts at a month's first hour counts the whole month: no "*".
 build "$work/gap.json" "$work/out7" "2026-11-21T05" "2026-11-21T05" "2026-11-01T00"
 grep -q '>48</p>' "$work/out7/stats/index.html" || fail "a start at the month's first hour marks the month as partly counted"
