@@ -48,7 +48,7 @@ roadmap:
     - title: "A server that proves what it runs"
       text: "We plan to move the server into an attested enclave: a sealed part of the machine whose code anyone can check. Then you wouldn't have to take our word for what the server does, and not even we could tell which Telegram account owns a link."
     - title: "Numbers nobody can fake"
-      text: "The [Stats page](stats/) shows accounts created, messages sent and media volume per hour, and what running the service costs, published automatically and signed. Once the enclave is live, it will count and sign them itself, so nobody can fake them, not even us."
+      text: "The [Stats page](stats/) shows accounts created, messages sent and media volume per hour, and the [Costs page](costs/) what running the service costs, all published automatically and signed. Once the enclave is live, it will count and sign them itself, so nobody can fake them, not even us."
 
 verify:
   title: "Check it yourself"

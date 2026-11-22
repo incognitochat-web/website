@@ -11,11 +11,11 @@
 <p class="stats-empty">{{ i18n "costs_none" }}</p>
 {{- else }}
 
-{{- /* Up to the newest day read. */}}
+{{- /* Up to the newest day production's costs were read. */}}
 {{- $last := "" }}
-{{- range (index $months 0).days }}{{ if or (ne .total nil) (ne .dev nil) }}{{ $last = .date }}{{ end }}{{ end }}
+{{- range $months }}{{ range .days }}{{ if and (ne .total nil) (gt .date $last) }}{{ $last = .date }}{{ end }}{{ end }}{{ end }}
 {{- with $last }}
-<p class="stats-asof">{{ i18n "stats_asof" }} <time datetime="{{ . }}" dir="ltr">{{ . }}</time></p>
+<p class="stats-asof">{{ i18n "costs_asof" }} <time datetime="{{ . }}" dir="ltr">{{ . }}</time></p>
 {{- end }}
 
 <div class="months">

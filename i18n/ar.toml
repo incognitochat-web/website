@@ -62,6 +62,7 @@ stats_none = "لا أرقام بعد: ستظهر أولاها مع التشغي�
 stats_see_costs = "كم يكلّف تشغيل الخدمة:"
 costs_none = "لا أرقام للتكاليف بعد: ستظهر أولاها مع التشغيل اليومي التالي."
 stats_asof = "حتى"
+costs_asof = "حتى"
 stats_last24 = "آخر 24 ساعة"
 stats_months = "الأشهر"
 stats_month = "{{ .Month }} {{ .Year }}"

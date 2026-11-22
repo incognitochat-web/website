@@ -1,7 +1,7 @@
 ---
 title: "Biaya"
 linkTitle: "Biaya"
-description: "Berapa biaya menjalankan Incognito Chat, bulan demi bulan, berdasarkan tagihan AWS. Angka sebenarnya."
+description: "Berapa biaya menjalankan Incognito Chat, bulan demi bulan, seperti yang dilaporkan AWS. Angka sebenarnya."
 ---
 
 {{< costs >}}

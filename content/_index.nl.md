@@ -48,7 +48,7 @@ roadmap:
     - title: "Een server die bewijst wat hij draait"
       text: "We zijn van plan de server te verhuizen naar een geattesteerde enclave: een afgesloten deel van de machine waarvan iedereen de code kan controleren. Dan zou je ons niet meer op ons woord hoeven te geloven over wat de server doet, en zouden zelfs wij niet kunnen zien welk Telegram-account bij een link hoort."
     - title: "Cijfers die niemand kan vervalsen"
-      text: "De pagina [Statistieken](stats/) toont per uur het aantal aangemaakte accounts en verstuurde berichten en de hoeveelheid media, en wat het draaien van de dienst kost, automatisch gepubliceerd en ondertekend. Zodra de enclave draait, gaat die ze zelf tellen en ondertekenen, zodat niemand ze kan vervalsen, ook wij niet."
+      text: "De pagina [Statistieken](stats/) toont per uur het aantal aangemaakte accounts en verstuurde berichten en de hoeveelheid media, en de pagina [Kosten](costs/) wat het draaien van de dienst kost, alles automatisch gepubliceerd en ondertekend. Zodra de enclave draait, gaat die ze zelf tellen en ondertekenen, zodat niemand ze kan vervalsen, ook wij niet."
 
 verify:
   title: "Controleer het zelf"

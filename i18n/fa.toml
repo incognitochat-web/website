@@ -62,6 +62,7 @@ stats_none = "هنوز عددی نیست: اولین‌ها با اجرای سا
 stats_see_costs = "اداره‌ی سرویس چقدر هزینه دارد:"
 costs_none = "هنوز عددی از هزینه‌ها نیست: اولین‌ها با اجرای روزانه‌ی بعدی می‌آیند."
 stats_asof = "تا"
+costs_asof = "تا"
 stats_last24 = "۲۴ ساعت گذشته"
 stats_months = "ماه‌ها"
 stats_month = "{{ .Month }} {{ .Year }}"

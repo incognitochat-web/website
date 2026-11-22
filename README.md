@@ -45,9 +45,10 @@ repository's `infra/init/stats_reader.tf`, set up by its
 them into the `data` branch, one file per day of counts and per month of
 costs; the workflow signs each file it writes (Sigstore) and redeploys the
 site. The deploy turns the branch into `data/stats.json`
-(`scripts/build-stats.sh`, not committed) for the Stats page (usage) and the
-Costs page: the newest 13 months, one shown at a time. Each count shows from the hour
-`params.statsCountedFrom` in `hugo.toml` says production first counted it.
+(`scripts/build-stats.sh`, not committed) for the Stats page (usage) and
+the Costs page: the newest 13 months, one shown at a time. Each count shows
+from the hour `params.statsCountedFrom` in `hugo.toml` says production
+first counted it.
 What each number counts, and how to check the signed files, is in
 [`docs/statistics.md`](docs/statistics.md).
 

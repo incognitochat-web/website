@@ -2,7 +2,7 @@
 # Tests the statistics pipeline end to end, offline: collect-stats.sh
 # against a stand-in AWS CLI with known answers (and its refusals), a second
 # run that must change nothing, build-stats.sh (and what it refuses), then
-# Hugo, and checks what the Stats page shows, with numbers, with costs only,
+# Hugo, and checks what the Stats and Costs pages show, with numbers, with costs only,
 # and with none. Touches nothing but a temporary folder. Needs hugo and jq.
 #
 #   scripts/test-stats.sh
@@ -182,7 +182,7 @@ cpage=$work/out/costs/index.html
 grep -q 'AWS WAF' "$cpage" || fail "no service in the legend"
 grep -q '&lt;b&gt;AWS Lambda&lt;/b&gt;' "$cpage" || fail "a service name isn't escaped"
 if grep -q '<b>AWS Lambda</b>' "$cpage"; then fail "a service name was written as HTML"; fi
-if grep -q 'legend-amount\|AWS WAF' "$page"; then fail "costs on the Stats page"; fi
+if grep -q 'legend-amount\|AWS WAF\|tile-name">Production\|tile-name">Test environment' "$page"; then fail "costs on the Stats page"; fi
 grep -q 'class="stats-more">What running the service costs: <a href="/costs/">Costs</a>' "$page" || fail "the Stats page doesn't link to Costs"
 grep -q 'class="seg so"' "$cpage" || fail "no Other segment"
 grep -q 'Table: day by day' "$page" || fail "no day-by-day table"
@@ -313,6 +313,22 @@ grep -qF '>$0.00</p><p class="tile-name">Production' <<<"$dec" || fail "a month 
 # shellcheck disable=SC2016 # a literal dollar sign
 grep -qF 'legend-amount">$1.00<' "$work/out4/costs/index.html" || fail "the legend does not give a service's month total"
 grep -q 'class="month newest" id="c-2026-02"' "$work/out4/costs/index.html" || fail "the newest month isn't shown first"
+grep -q 'datetime="2026-02-01"' "$work/out4/costs/index.html" || fail "Costs isn't 'up to' the newest day production's costs were read"
+# A month with the test environment's costs only is on Costs, production "—".
+dev6=$(sed -n '/id="c-2025-06"/,/<\/section>/p' "$work/out4/costs/index.html")
+grep -qF 'tile-value" dir="ltr">—</p><p class="tile-name">Production' <<<"$dev6" || fail "a month with test-environment costs only isn't on Costs"
+
+# Counts in one month, costs in another: each page lists only its own.
+mixed=$work/mixed
+mkdir -p "$mixed/stats/hourly" "$mixed/stats/costs/production"
+jq -n '{date: "2026-11-01", accounts: [range(24) | 1], messages: [range(24) | 0], media_bytes: [range(24) | 0]}' >"$mixed/stats/hourly/2026-11-01.json"
+echo '{"month":"2026-10","days":{"2026-10-31":{"AWS Lambda":1}}}' >"$mixed/stats/costs/production/2026-10.json"
+"$root/scripts/build-stats.sh" "$mixed" "$work/mixed.json" >/dev/null
+build "$work/mixed.json" "$work/out10" "2026-01-01T00"
+grep -q 'id="m-2026-11"' "$work/out10/stats/index.html" || fail "a month with counts isn't on Stats"
+if grep -q 'id="m-2026-10"' "$work/out10/stats/index.html"; then fail "a month with costs alone is on Stats"; fi
+grep -q 'id="c-2026-10"' "$work/out10/costs/index.html" || fail "a month with costs isn't on Costs"
+if grep -q 'id="c-2026-11"' "$work/out10/costs/index.html"; then fail "a month with counts alone is on Costs"; fi
 
 # A month with six services: the four biggest by name, the rest as Other,
 # each with its month total in the legend, in that order.

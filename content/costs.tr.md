@@ -1,7 +1,7 @@
 ---
 title: "Maliyetler"
 linkTitle: "Maliyetler"
-description: "Incognito Chat hizmetini çalıştırmanın ay ay ne kadara mal olduğu, AWS faturalarına göre. Gerçek sayılar."
+description: "Incognito Chat hizmetini çalıştırmanın ay ay maliyeti, AWS verilerine göre. Gerçek rakamlar."
 ---
 
 {{< costs >}}

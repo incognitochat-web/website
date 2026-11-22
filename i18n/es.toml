@@ -62,6 +62,7 @@ stats_none = "Aún no hay cifras: las primeras llegarán con la próxima ejecuci
 stats_see_costs = "Cuánto cuesta mantener el servicio:"
 costs_none = "Aún no hay cifras de costos: las primeras llegarán con la próxima ejecución diaria."
 stats_asof = "Datos hasta el"
+costs_asof = "Datos hasta el"
 stats_last24 = "Las últimas 24 horas"
 stats_months = "Meses"
 stats_month = "{{ .Month }} de {{ .Year }}"

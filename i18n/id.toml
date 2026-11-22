@@ -62,6 +62,7 @@ stats_none = "Belum ada angka: yang pertama muncul pada proses per jam berikutny
 stats_see_costs = "Berapa biaya menjalankan layanan ini:"
 costs_none = "Belum ada angka biaya: yang pertama muncul pada proses harian berikutnya."
 stats_asof = "Hingga"
+costs_asof = "Hingga"
 stats_last24 = "24 jam terakhir"
 stats_months = "Bulan"
 stats_month = "{{ .Month }} {{ .Year }}"

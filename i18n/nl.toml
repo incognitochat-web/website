@@ -62,6 +62,7 @@ stats_none = "Nog geen cijfers: de eerste verschijnen na de volgende run, die el
 stats_see_costs = "Wat het kost om de dienst te draaien:"
 costs_none = "Nog geen kostencijfers: de eerste verschijnen na de volgende run, die elke dag draait."
 stats_asof = "Tot"
+costs_asof = "Tot"
 stats_last24 = "De afgelopen 24 uur"
 stats_months = "Maanden"
 stats_month = "{{ .Month }} {{ .Year }}"

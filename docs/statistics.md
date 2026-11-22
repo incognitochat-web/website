@@ -1,4 +1,4 @@
-# The Stats page: what's counted, and where the numbers come from
+# The Stats and Costs pages: what's counted, and where the numbers come from
 
 How the numbers on [incognitochat.me/stats](https://incognitochat.me/stats/)
 (usage) and [incognitochat.me/costs](https://incognitochat.me/costs/) are

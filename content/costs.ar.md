@@ -1,7 +1,7 @@
 ---
 title: "التكاليف"
 linkTitle: "التكاليف"
-description: "كلفة تشغيل Incognito Chat، شهرًا بشهر، من فواتير AWS. أرقام حقيقية."
+description: "كلفة تشغيل Incognito Chat، شهرًا بشهر، وفق بيانات AWS. أرقام حقيقية."
 ---
 
 {{< costs >}}
