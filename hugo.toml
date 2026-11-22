@@ -59,6 +59,14 @@ weight = 4
 [languages.ar.params]
 fonts = ["inter", "vazirmatn-arabic"]
 
+[languages.nl]
+label = "Nederlands"
+locale = "nl"
+direction = "ltr"
+weight = 5
+[languages.nl.params]
+fonts = ["inter", "newsreader"]
+
 [sitemap]
 changeFreq = ""
 priority = -1
