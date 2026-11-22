@@ -297,6 +297,9 @@ grep -q 'Media: counted from 1 November, <span dir="ltr">05:00 UTC</span>' "$wor
 grep -q 'comptage depuis le 21 novembre, <span dir="ltr">05:00 UTC</span>' "$work/out5/fr/stats/index.html" || fail "a French day other than the 1st isn't written as 21 novembre"
 grep -q 'a partir del 1 de noviembre, <span dir="ltr">05:00 UTC</span>' "$work/out5/es/stats/index.html" || fail "a Spanish 1st isn't written as 1 de noviembre"
 grep -q 'comptage depuis le 1er novembre, <span dir="ltr">05:00 UTC</span>' "$work/out5/fr/stats/index.html" || fail "the French 1st isn't written as 1er novembre"
+# Stats' table: the 10th and 20th keep their zero.
+grep -q '<td><time datetime="2026-11-10">10</time></td>' "$work/out5/stats/index.html" || fail "the Stats table's 10 isn't 10"
+grep -q '<td><time datetime="2026-11-20">20</time></td>' "$work/out5/stats/index.html" || fail "the Stats table's 20 isn't 20"
 # The day-by-day tables keep each day on one line, also on a phone.
 grep -q '^\.table-view td:first-child { white-space: nowrap; }' "$root/static/css/site.css" || fail "the tables' days may wrap"
 # Ukrainian month headings are nominative, unlike after a day.
@@ -402,6 +405,14 @@ tens_page=$(cat "$work/out12/costs/index.html")
 for d in 10 20 30; do
   [[ $tens_page == *"<td><time datetime=\"2026-03-$d\">$d</time></td>"* ]] || fail "the Costs table's $d isn't $d"
 done
+# Each day is read as UTC, whatever time zone Hugo is given: in Havana,
+# 8 March 2026 starts at 01:00, and read there the 8th would show as 7.
+havana=$work/havana
+mkdir -p "$havana/stats/costs/production"
+echo '{"month":"2026-03","days":{"2026-03-08":{"A":1}}}' >"$havana/stats/costs/production/2026-03.json"
+"$root/scripts/build-stats.sh" "$havana" "$work/havana.json" >/dev/null
+HUGO_TIMEZONE=America/Havana build "$work/havana.json" "$work/out13" "2026-01-01T00"
+grep -q '<td><time datetime="2026-03-08">8</time></td>' "$work/out13/costs/index.html" || fail "a day shifts with Hugo's time zone"
 # A month with the test environment's costs only is on Costs, production "—".
 dev6=$(sed -n '/id="c-2025-06"/,/<\/section>/p' "$work/out4/costs/index.html")
 grep -qF 'tile-value" dir="ltr">—</p><p class="tile-name">Production' <<<"$dev6" || fail "a month with test-environment costs only isn't on Costs"

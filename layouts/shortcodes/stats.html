@@ -85,7 +85,7 @@
       {{- $partial := and (gt .hours 0) (lt .hours 24) }}
       {{- range $metrics }}{{ if eq $d.date (substr (index $starts .) 0 10) }}{{ $partial = true }}{{ end }}{{ end }}
       <tr>
-        <td><time datetime="{{ .date }}">{{ (time.AsTime .date).Day }}</time>{{ if $partial }} *{{ end }}</td>
+        <td><time datetime="{{ .date }}">{{ (time.AsTime .date "UTC").Day }}</time>{{ if $partial }} *{{ end }}</td>
         {{- range $metrics }}
         {{- $v := index $d . }}
         {{- $f := index $starts . }}
