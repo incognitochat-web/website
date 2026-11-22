@@ -2,7 +2,7 @@
 title: "Oficjalne adresy"
 linkTitle: "Oficjalne adresy"
 description: "Jedyny prawdziwy bot, adres aplikacji i miejsce, gdzie jest kod. Wszystko inne to nie my."
-updated: "2026-11-21"
+updated: "2026-11-23"
 ---
 
 To jedyne oficjalne adresy Incognito Chat. **Wszystko inne to nie my**, nawet jeśli nazwa jest bardzo podobna: kopiom bota ani aplikacji nie można powierzać swoich wiadomości.

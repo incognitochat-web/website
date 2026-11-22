@@ -146,7 +146,7 @@ priority = -1
 
 # Everything about the production deployment lives here, in one place.
 [params]
-  botUsername = "IncognitoChat_app_Bot"
+  botUsername = "IncognitoChat_app"
   appName = "app"
   appOrigin = "https://incognitochat.github.io"
   codeRepo = "incognitochat/incognitochat"

@@ -2,7 +2,7 @@
 title: "Offizielle Adressen"
 linkTitle: "Offiziell"
 description: "Der einzige echte Bot, die Adresse der App und wo der Code liegt. Alles andere ist nicht von uns."
-updated: "2026-11-21"
+updated: "2026-11-23"
 ---
 
 Das sind die einzigen offiziellen Adressen von Incognito Chat. **Alles andere ist nicht von uns**, wie ähnlich der Name auch sein mag: Kopien des Bots oder der App kannst du deine Nachrichten nicht anvertrauen.

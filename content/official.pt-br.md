@@ -2,7 +2,7 @@
 title: "Endereços oficiais"
 linkTitle: "Endereços oficiais"
 description: "O único bot verdadeiro, o endereço do app e onde fica o código. Qualquer outra coisa não é nossa."
-updated: "2026-11-21"
+updated: "2026-11-23"
 ---
 
 Estes são os únicos endereços oficiais do Incognito Chat. **Qualquer outro não é nosso**, por mais parecido que seja o nome: não dá para confiar suas mensagens a cópias do bot ou do app.
