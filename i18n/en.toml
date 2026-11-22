@@ -1,5 +1,6 @@
 skip = "Skip to content"
 nav = "Main"
+language = "Language"
 tagline = "Anonymous messages, end-to-end encrypted, inside Telegram"
 openInTelegram = "Open in Telegram"
 readSource = "Read the source"

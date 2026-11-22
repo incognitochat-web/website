@@ -22,17 +22,24 @@ block = true
 [markup.highlight]
 codeFences = false
 
+# Each language: its name in itself, locale, direction, order, and the
+# fonts its pages preload (static/fonts/<name>.woff2). scripts/check.sh
+# fails if a page or an i18n key is missing in one of them.
 [languages.en]
 label = "English"
 locale = "en"
 direction = "ltr"
 weight = 1
+[languages.en.params]
+fonts = ["inter", "newsreader"]
 
 [languages.fa]
 label = "فارسی"
 locale = "fa"
 direction = "rtl"
 weight = 2
+[languages.fa.params]
+fonts = ["inter", "vazirmatn-arabic"]
 
 [sitemap]
 changeFreq = ""

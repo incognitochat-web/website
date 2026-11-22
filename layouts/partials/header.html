@@ -15,8 +15,20 @@
     </nav>
     <div class="header-tools">
       <a class="icon-link" href="https://github.com/{{ site.Params.codeRepo }}" target="_blank" rel="noopener noreferrer" title="{{ i18n "githubTitle" }}" aria-label="{{ i18n "githubTitle" }} {{ i18n "newTab" }}">{{ partial "icon.html" "github" }}</a>
+      {{- if gt (len hugo.Sites) 2 }}
+      {{- /* A menu of every language, each named in itself; the globe says what it is to readers of any of them. */}}
+      <details class="lang-menu">
+        <summary aria-label="{{ i18n "language" }}">{{ partial "icon.html" "globe" }}<span lang="{{ site.Language.Locale }}">{{ site.Language.Label }}</span></summary>
+        <ul>
+          {{- range .AllTranslations }}
+          <li><a href="{{ .RelPermalink }}" hreflang="{{ .Language.Locale }}" lang="{{ .Language.Locale }}"{{ if eq .Language.Lang site.Language.Lang }} aria-current="true"{{ end }}>{{ .Language.Label }}</a></li>
+          {{- end }}
+        </ul>
+      </details>
+      {{- else }}
       {{- range .Translations }}
       <a class="lang-switch" href="{{ .RelPermalink }}" hreflang="{{ .Language.Locale }}" lang="{{ .Language.Locale }}">{{ .Language.Label }}</a>
+      {{- end }}
       {{- end }}
     </div>
   </div>
