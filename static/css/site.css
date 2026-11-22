@@ -478,9 +478,10 @@ table.official .hint { font-size: 0.82rem; color: var(--muted); }
   }
 }
 
-/* The narrowest phones: one footer column, so the bot's name fits. */
-@media (max-width: 400px) {
-  .footer-grid { grid-template-columns: 1fr; }
+/* Phones: one footer column, so the bot's name fits on one line (two
+   columns fit it only from about 450px, in Persian and Arabic). */
+@media (max-width: 480px) {
+  .footer-grid { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (prefers-reduced-motion: reduce) {
