@@ -112,7 +112,8 @@ jq -n -S \
       date: $d,
       values: ([$named[] as $n | ($s[$n] // 0)] + [([$s | to_entries[] | select(.key as $k | $named | index($k) | not) | .value] | add // 0)] | map(round4)),
       total: ([$s[]] | add // 0 | round4),
-      dev: (if devknown($d[0:7]) then ($devdays[$d] // 0) | round4 else null end)
+      # A dev file holds every day it read: a day missing from it was not read.
+      dev: (if $devdays | has($d) then $devdays[$d] | round4 else null end)
     })) as $costs
   | ($costdays[-1] // "" | .[0:7]) as $month
   | (if $month == "" then "" else ($month + "-01" | strptime("%Y-%m-%d") | mktime - 86400 | strftime("%Y-%m")) end) as $previous

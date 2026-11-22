@@ -238,6 +238,15 @@ echo '{"month":"2026-01","days":{"2026-01-31":0.5}}' >"$costs2/stats/costs/dev/2
 "$root/scripts/build-stats.sh" "$costs2" "$work/costs2.json" >/dev/null
 jq -e '.costs.month.dev == null and .costs.previous.dev == 0.5 and [.costs.days[].dev] == [0.5, null]' "$work/costs2.json" >/dev/null \
   || fail "test-environment costs known for last month only: $(jq -c '[.costs.month, .costs.previous, [.costs.days[].dev]]' "$work/costs2.json")"
+# Read this month, but not for its latest day (its run failed): that day is unknown, not $0.
+costs3=$work/costs3
+cp -r "$costs" "$costs3"
+rm "$costs3"/stats/costs/dev/*
+echo '{"month":"2026-01","days":{"2026-01-31":0}}' >"$costs3/stats/costs/dev/2026-01.json"
+echo '{"month":"2026-02","days":{}}' >"$costs3/stats/costs/dev/2026-02.json"
+"$root/scripts/build-stats.sh" "$costs3" "$work/costs3.json" >/dev/null
+jq -e '[.costs.days[].dev] == [0, null]' "$work/costs3.json" >/dev/null \
+  || fail "a day the test environment wasn't read for: $(jq -c '[.costs.days[].dev]' "$work/costs3.json")"
 build "$work/costs.json" "$work/out4" "2026-01-01T00"
 # shellcheck disable=SC2016 # a literal dollar sign
 grep -qF '$1.00' "$work/out4/stats/index.html" || fail "costs alone aren't shown"
