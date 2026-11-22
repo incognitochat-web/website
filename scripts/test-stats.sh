@@ -207,6 +207,7 @@ grep -q '<h1>Estadísticas</h1>' "$work/out/es/stats/index.html" || fail "no Spa
 grep -q '<h1>Estatísticas</h1>' "$work/out/pt-br/stats/index.html" || fail "no Brazilian Portuguese Stats page"
 grep -q '<h1>Statistik</h1>' "$work/out/id/stats/index.html" || fail "no Indonesian Stats page"
 grep -q '<h1>İstatistikler</h1>' "$work/out/tr/stats/index.html" || fail "no Turkish Stats page"
+grep -q '<h1>Статистика</h1>' "$work/out/uk/stats/index.html" || fail "no Ukrainian Stats page"
 
 # Numbers are written the page's language's way: a decimal point in English,
 # a comma in Dutch (and Russian, Spanish, Portuguese, Indonesian, Turkish).
@@ -267,6 +268,9 @@ grep -qz '<td dir="ltr">2026-11-01 \*</td>\s*<td>24</td>\s*<td>—</td>\s*<td>0.
 # The month's totals say from when each was counted.
 grep -q 'Messages sent: counted from 21 November, <span dir="ltr">05:00 UTC</span>' "$work/out5/stats/index.html" || fail "no note on when messages started being counted"
 grep -q 'Media: counted from 1 November, <span dir="ltr">05:00 UTC</span>' "$work/out5/stats/index.html" || fail "no note on when media started being counted"
+# Ukrainian month headings are nominative, unlike after a day.
+grep -q '<h2>Листопад 2026</h2>' "$work/out5/uk/stats/index.html" || fail "Ukrainian month headings aren't nominative"
+grep -q 'з 1 листопада, <span dir="ltr">05:00 UTC</span>' "$work/out5/uk/stats/index.html" || fail "a Ukrainian day isn't followed by its month in the genitive"
 grep -q '>48</p>' "$work/out5/stats/index.html" || fail "the month's accounts tile isn't 48"
 # Counts alone: Costs has no months.
 grep -q 'No costs yet' "$work/out5/costs/index.html" || fail "months with counts alone are on the Costs page"

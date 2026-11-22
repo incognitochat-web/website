@@ -7,4 +7,8 @@
 {{- if eq site.Language.Lang "ru" -}}
   {{- $name = index (slice "январь" "февраль" "март" "апрель" "май" "июнь" "июль" "август" "сентябрь" "октябрь" "ноябрь" "декабрь") (sub (int $t.Month) 1) -}}
 {{- end -}}
+{{- /* Ukrainian too: "5 листопада", but "Листопад 2026". */ -}}
+{{- if eq site.Language.Lang "uk" -}}
+  {{- $name = index (slice "січень" "лютий" "березень" "квітень" "травень" "червень" "липень" "серпень" "вересень" "жовтень" "листопад" "грудень") (sub (int $t.Month) 1) -}}
+{{- end -}}
 {{- i18n "stats_month" (dict "Month" (strings.FirstUpper $name) "Year" $t.Year) -}}
