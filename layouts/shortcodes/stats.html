@@ -46,7 +46,7 @@
   {{- range $metrics }}
   {{- $v := index $m.totals . }}
   {{- $st := index $state . }}
-  <div class="tile"><p class="tile-value">{{ if or (eq $st "no") (eq $v nil) }}—{{ else }}{{ if eq . "media_bytes" }}<span dir="ltr">{{ printf "%.1f" (div (float $v) 1048576) }} MiB</span>{{ else }}{{ lang.FormatNumber 0 $v }}{{ end }}{{ if eq $st "part" }}*{{ end }}{{ end }}</p><p class="tile-name">{{ index $labels . }}</p></div>
+  <div class="tile"><p class="tile-value">{{ if or (eq $st "no") (eq $v nil) }}—{{ else }}{{ if eq . "media_bytes" }}<span dir="ltr">{{ lang.FormatNumber 1 (div (float $v) 1048576) }} MiB</span>{{ else }}{{ lang.FormatNumber 0 $v }}{{ end }}{{ if eq $st "part" }}*{{ end }}{{ end }}</p><p class="tile-name">{{ index $labels . }}</p></div>
   {{- end }}
 </div>
 {{- /* When counting began this month: one line per start, naming what. */}}
@@ -87,7 +87,7 @@
         {{- range $metrics }}
         {{- $v := index $d . }}
         {{- $f := index $starts . }}
-        <td>{{ if or (eq $f "") (eq $v nil) (lt $d.date (substr $f 0 10)) }}—{{ else if eq . "media_bytes" }}{{ printf "%.1f" (div (float $v) 1048576) }}{{ else }}{{ lang.FormatNumber 0 $v }}{{ end }}</td>
+        <td>{{ if or (eq $f "") (eq $v nil) (lt $d.date (substr $f 0 10)) }}—{{ else if eq . "media_bytes" }}{{ lang.FormatNumber 1 (div (float $v) 1048576) }}{{ else }}{{ lang.FormatNumber 0 $v }}{{ end }}</td>
         {{- end }}
       </tr>
       {{- end }}
@@ -103,7 +103,7 @@
   {{- range $metrics }}
   {{- $f := index $starts . }}
   {{- $v := index $s.last24 . }}
-  <div class="tile"><p class="tile-value">{{ if eq $f "" }}—{{ else if eq . "media_bytes" }}<span dir="ltr">{{ printf "%.1f" (div (float $v) 1048576) }} MiB</span>{{ else }}{{ lang.FormatNumber 0 $v }}{{ end }}</p><p class="tile-name">{{ index $labels . }}</p></div>
+  <div class="tile"><p class="tile-value">{{ if eq $f "" }}—{{ else if eq . "media_bytes" }}<span dir="ltr">{{ lang.FormatNumber 1 (div (float $v) 1048576) }} MiB</span>{{ else }}{{ lang.FormatNumber 0 $v }}{{ end }}</p><p class="tile-name">{{ index $labels . }}</p></div>
   {{- end }}
 </div>
 <h3>{{ i18n "stats_hourly" }}</h3>

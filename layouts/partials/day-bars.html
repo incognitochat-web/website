@@ -31,7 +31,7 @@
     {{- if $counted }}{{ $v = float $raw }}{{ end }}
     {{- $bh := mul (div $v $scale) (sub $h 4) }}
     {{- $shown := "—" }}
-    {{- if $counted }}{{ $shown = cond $mib (printf "%.1f MiB" (div $v 1048576)) (printf "%.0f" $v) }}{{ end }}
+    {{- if $counted }}{{ $shown = cond $mib (printf "%s MiB" (lang.FormatNumber 1 (div $v 1048576))) (lang.FormatNumber 0 $v) }}{{ end }}
     <g>
       <title>{{ $d.date }}: {{ $shown }}</title>
       <rect class="hit" x="{{ sub $x 2 }}" y="0" width="{{ $step }}" height="{{ $h }}"/>
@@ -41,5 +41,5 @@
     </g>
     {{- end }}
   </svg>
-  <figcaption dir="{{ site.Language.Direction | default "ltr" }}">{{ i18n "stats_peak" }} <span dir="ltr">{{ cond $mib (printf "%.1f MiB" (div $max 1048576)) (printf "%.0f" $max) }}</span></figcaption>
+  <figcaption dir="{{ site.Language.Direction | default "ltr" }}">{{ i18n "stats_peak" }} <span dir="ltr">{{ cond $mib (printf "%s MiB" (lang.FormatNumber 1 (div $max 1048576))) (lang.FormatNumber 0 $max) }}</span></figcaption>
 </figure>
