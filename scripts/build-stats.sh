@@ -145,6 +145,9 @@ jq -n -S \
       | {
           month: $m,
           services: ($named + (if $other then ["Other"] else [] end)),
+          # The total of each service that month, in the same order (Other last).
+          service_totals: ([range(0; ($named | length) + (if $other then 1 else 0 end)) as $j
+            | [$days[] | .values // [] | .[$j] // 0] | add // 0 | round4]),
           days: $days,
           totals: {
             hours: ($days | map(.hours) | add // 0),

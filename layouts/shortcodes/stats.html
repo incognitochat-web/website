@@ -23,14 +23,6 @@
 <p class="stats-asof">{{ i18n "stats_asof" }} <time datetime="{{ $end.Format "2006-01-02T15:04:05Z07:00" }}" dir="ltr">{{ $end.Format "2006-01-02 15:04 UTC" }}</time></p>
 {{- end }}
 
-<nav class="month-nav" aria-label="{{ i18n "stats_months" }}">
-  <ul>
-    {{- range $months }}
-    <li><a href="#m-{{ .month }}">{{ partial "month-name.html" .month }}</a></li>
-    {{- end }}
-  </ul>
-</nav>
-
 <div class="months">
 {{- range $i, $m := $months }}
 {{- $monthStart := printf "%s-01T00" $m.month }}
@@ -44,6 +36,17 @@
   {{- $state = merge $state (dict . $st) }}
 {{- end }}
 <section class="month{{ if eq $i 0 }} newest{{ end }}" id="m-{{ $m.month }}">
+{{- /* The month links in every month, so they're right above the month
+     picked, with that month marked. */}}
+{{- if gt (len $months) 1 }}
+<nav class="month-nav" aria-label="{{ i18n "stats_months" }}">
+  <ul>
+    {{- range $months }}
+    <li><a href="#m-{{ .month }}"{{ if eq .month $m.month }} aria-current="true"{{ end }}>{{ partial "month-name.html" .month }}</a></li>
+    {{- end }}
+  </ul>
+</nav>
+{{- end }}
 <h2>{{ partial "month-name.html" $m.month }}</h2>
 <div class="tiles">
   {{- range $metrics }}
@@ -61,7 +64,9 @@
 {{- $what := slice }}
 {{- range $metrics }}{{ if and (eq (index $state .) "part") (eq (index $starts .) $f) }}{{ $what = $what | append (index $labels .) }}{{ end }}{{ end }}
 {{- $t := time.AsTime (printf "%s:00:00Z" $f) }}
-<p class="stats-note">* {{ i18n "stats_counted_from" (dict "What" (delimit $what $comma) "When" (printf "%s%s%s UTC" (time.Format $dayMonth $t) $comma ($t.Format "15:04"))) }}</p>
+{{- /* The time is kept left to right as one piece ("03:00 UTC"), also in
+     Persian and Arabic; the strings are the site's own, so safe as HTML. */}}
+<p class="stats-note">* {{ i18n "stats_counted_from" (dict "What" (delimit $what $comma) "When" (printf "%s%s<span dir=\"ltr\">%s UTC</span>" (time.Format $dayMonth $t) $comma ($t.Format "15:04"))) | safeHTML }}</p>
 {{- end }}
 
 {{- range $metrics }}
