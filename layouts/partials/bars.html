@@ -44,5 +44,5 @@
     </g>
     {{- end }}
   </svg>
-  <figcaption>{{ i18n "stats_peak" }} <span dir="ltr">{{ cond $mib (printf "%.1f MiB" (div $max 1048576)) (printf "%.0f" $max) }}</span></figcaption>
+  <figcaption dir="{{ site.Language.Direction | default "ltr" }}">{{ i18n "stats_peak" }} <span dir="ltr">{{ cond $mib (printf "%.1f MiB" (div $max 1048576)) (printf "%.0f" $max) }}</span></figcaption>
 </figure>

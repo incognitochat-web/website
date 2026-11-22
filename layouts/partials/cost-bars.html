@@ -33,7 +33,7 @@
     </g>
     {{- end }}
   </svg>
-  <figcaption>{{ i18n "stats_peak" }} <span dir="ltr">${{ printf "%.2f" $max }}</span></figcaption>
+  <figcaption dir="{{ site.Language.Direction | default "ltr" }}">{{ i18n "stats_peak" }} <span dir="ltr">${{ printf "%.2f" $max }}</span></figcaption>
 </figure>
 <ul class="legend" dir="ltr">
   {{- range $j, $s := $c.services }}

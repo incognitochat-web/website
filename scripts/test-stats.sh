@@ -184,6 +184,8 @@ latest=$(jq -r .latest "$work/stats.json")
 upto=$(date -u -d "${latest:0:10} ${latest:11:2}:00 + 1 hour" +'%Y-%m-%d %H:00 UTC')
 grep -q "$upto" "$page" || fail "'Up to' isn't the end of the latest hour ($upto)"
 grep -q '<h1>آمار</h1>' "$work/out/fa/stats/index.html" || fail "no Persian Stats page"
+grep -q '<h1>Статистика</h1>' "$work/out/ru/stats/index.html" || fail "no Russian Stats page"
+grep -q '<h1>الإحصاءات</h1>' "$work/out/ar/stats/index.html" || fail "no Arabic Stats page"
 
 # Counted from an hour: earlier hours show as not counted, not as 0.
 from=$(date -u -d "$end - 2 hours" +%Y-%m-%dT%H)
