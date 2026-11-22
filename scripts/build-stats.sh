@@ -17,11 +17,22 @@ store=${1:?usage: $0 <store> <output.json>}
 out=${2:?usage: $0 <store> <output.json>}
 mkdir -p "$(dirname "$out")"
 
-# Plain files only: find doesn't follow links, a linked folder included.
-files() { find "$store/$1" -maxdepth 1 -type f -name '*.json' 2>/dev/null | sort; }
-mapfile -t hourly < <(files stats/hourly)
-mapfile -t production < <(files stats/costs/production)
-mapfile -t dev < <(files stats/costs/dev)
+# Plain files only. A link anywhere under stats (stats itself included)
+# could lead outside the store, so the store is refused, and only names
+# collect-stats.sh writes are read (yyyy-mm-dd.json, yyyy-mm.json): nothing
+# with a newline or a path in it.
+if [ -e "$store/stats" ] || [ -L "$store/stats" ]; then
+  if [ -L "$store/stats" ] || [ -n "$(find "$store/stats" -type l -print -quit)" ]; then
+    echo "$store/stats has a link in it; not read" >&2
+    exit 1
+  fi
+fi
+day='[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].json'
+month='[0-9][0-9][0-9][0-9]-[0-9][0-9].json'
+files() { find "$store/$1" -maxdepth 1 -type f -name "$2" 2>/dev/null | sort; }
+mapfile -t hourly < <(files stats/hourly "$day")
+mapfile -t production < <(files stats/costs/production "$month")
+mapfile -t dev < <(files stats/costs/dev "$month")
 if [ ${#hourly[@]} -eq 0 ] && [ ${#production[@]} -eq 0 ] && [ ${#dev[@]} -eq 0 ]; then
   echo '{}' >"$out"
   echo "no statistics in $store"
@@ -45,11 +56,13 @@ jq -n -e \
   --slurpfile hourly <(cat /dev/null ${hourly[@]+"${hourly[@]}"}) \
   --slurpfile production <(cat /dev/null ${production[@]+"${production[@]}"}) \
   --slurpfile dev <(cat /dev/null ${dev[@]+"${dev[@]}"}) '
-  def isdate: type == "string" and test("\\A[0-9]{4}-[0-9]{2}-[0-9]{2}\\z")
+  # Years 2000 to 2099: a week before year 1000 has a 3-digit year, which
+  # Hugo cannot read.
+  def isdate: type == "string" and test("\\A20[0-9]{2}-[0-9]{2}-[0-9]{2}\\z")
     and ((. + "T00:00:00Z" | try fromdateiso8601 catch null) as $t | $t != null and ($t | strftime("%Y-%m-%d")) == .);
   def counts: type == "array" and length == 24 and all(.[]; . == null or (type == "number" and . >= 0 and . == floor and . < 1e15));
   def amount: type == "number" and . > -1e9 and . < 1e9;
-  def month($m): type == "object" and (.month | type == "string" and test("\\A[0-9]{4}-[0-9]{2}\\z")) and .month == $m
+  def month($m): type == "object" and (.month | type == "string" and test("\\A20[0-9]{2}-(0[1-9]|1[0-2])\\z")) and .month == $m
     and (.days | type == "object") and all(.days | keys[]; isdate and startswith($m));
   all($hourly[]; type == "object" and (.date | isdate) and (.accounts | counts) and (.messages | counts) and (.media_bytes | counts))
   and all($production[]; month(.month) and all(.days[]; type == "object" and all(to_entries[]; (.key | type == "string" and length <= 100) and (.value | amount))))
@@ -99,7 +112,8 @@ jq -n -S \
 
   {
     latest: ($known[-1].t // null),
-    dev_known: (($dev | length) > 0),
+    # Whether costs of the test environment were read for the months shown.
+    dev_known: ([$dev[].month] | any(. == $month or . == $previous)),
     hours: $hours,
     last24: {accounts: ($day | map(.accounts) | sum), messages: ($day | map(.messages) | sum), media_bytes: ($day | map(.media_bytes) | sum)},
     days: ($all | group_by(.t[0:10]) | map({date: .[0].t[0:10], hours: (map(select(.accounts != null)) | length),

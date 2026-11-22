@@ -13,6 +13,10 @@ work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 fail() { echo "FAIL: $*" >&2; exit 1; }
 
+# The checks below compare hours and days the scripts and this test each
+# work out from the clock: in an hour's last minute, wait for the next one.
+if [ "$(date -u +%M)" = 59 ]; then sleep $((61 - 10#$(date -u +%S))); fi
+
 # The stand-in: CloudWatch-shaped hours relative to the window asked for
 # (none with STUB_EMPTY=1), and Cost Explorer-shaped days up to the End
 # asked for (today included if asked: the script must not), in two pages.
@@ -90,13 +94,20 @@ jq -e --arg y "$yesterday" '.days[$y] | length == 6' "$store/stats/costs/product
 cp -r "$store" "$work/before2"
 if STUB_EMPTY=1 run counts "$store" 2>/dev/null; then fail "an empty answer overwrote counts"; fi
 diff -r "$work/before2" "$store" >/dev/null || fail "a refused run changed the store"
-# But a quiet week whose only counts are before the window's first hour is fine.
+# But a quiet week whose only count is in the hour before the window is fine.
 quiet=$work/quiet
 mkdir -p "$quiet/stats/hourly"
-jq -n --arg d "${start:0:10}" --argjson h "$((10#${start:11:2}))" \
-  '{date: $d, accounts: [range(24) as $i | if $i < $h then 1 else 0 end], messages: [range(24) | 0], media_bytes: [range(24) | 0]}' \
-  >"$quiet/stats/hourly/${start:0:10}.json"
+pre=$(date -u -d "$start - 1 hour" +%Y-%m-%dT%H)
+jq -n --arg d "${pre:0:10}" --argjson h "$((10#${pre:11:2}))" \
+  '{date: $d, accounts: [range(24) as $i | if $i == $h then 1 else 0 end], messages: [range(24) | 0], media_bytes: [range(24) | 0]}' \
+  >"$quiet/stats/hourly/${pre:0:10}.json"
 STUB_EMPTY=1 run counts "$quiet" || fail "a quiet week was refused"
+# And when a stored file can't be read, it can't tell: refused.
+broken=$work/broken
+cp -r "$quiet" "$broken"
+old=$(date -u -d "$start - 2 days" +%Y-%m-%d)
+echo 'not json' >"$broken/stats/hourly/$old.json"
+if STUB_EMPTY=1 run counts "$broken" 2>/dev/null; then fail "an unreadable stored file let an empty answer through"; fi
 
 # A link in the store is refused, and nothing outside is read or written.
 linked=$work/linked
@@ -116,7 +127,8 @@ jq -e '.costs.days[-1].values == [1, 0.5, 0.25, 0.125, 0.125] and .costs.days[-1
   || fail "a day's costs: $(jq -c '.costs.days[-1]' "$work/stats.json")"
 
 # What build-stats.sh refuses: counts that aren't whole numbers, dates that
-# don't exist; and a link instead of a file isn't read.
+# don't exist or that Hugo can't read (year 1000), and a store with a link
+# anywhere under stats; and it reads no other names.
 for bad in '"x"' '1.5' '-1'; do
   b=$work/bad-count && rm -rf "$b" && mkdir -p "$b/stats/hourly"
   jq -n --argjson v "$bad" '{date: "2026-11-21", accounts: [range(24) | $v], messages: [range(24) | 0], media_bytes: [range(24) | 0]}' >"$b/stats/hourly/2026-11-21.json"
@@ -125,11 +137,25 @@ done
 b=$work/bad-date && mkdir -p "$b/stats/costs/production"
 echo '{"month":"2026-11","days":{"2026-11-31":{"AWS Lambda":1}}}' >"$b/stats/costs/production/2026-11.json"
 if "$root/scripts/build-stats.sh" "$b" "$work/bad.json" >/dev/null 2>&1; then fail "a day that doesn't exist was accepted"; fi
-b=$work/bad-link && mkdir -p "$b/stats/hourly"
+b=$work/bad-year && mkdir -p "$b/stats/hourly"
+jq -n '{date: "1000-01-01", accounts: [range(24) | 1], messages: [range(24) | 0], media_bytes: [range(24) | 0]}' >"$b/stats/hourly/1000-01-01.json"
+if "$root/scripts/build-stats.sh" "$b" "$work/bad.json" >/dev/null 2>&1; then fail "year 1000 was accepted"; fi
 cp "$store/stats/hourly/${end:0:10}.json" "$work/real.json"
-ln -s "$work/real.json" "$b/stats/hourly/${end:0:10}.json"
-"$root/scripts/build-stats.sh" "$b" "$work/link.json" >/dev/null
-[ "$(cat "$work/link.json")" = '{}' ] || fail "a linked file was read"
+mkdir -p "$work/elsewhere/hourly"
+cp "$work/real.json" "$work/elsewhere/hourly/"
+for where in "stats/hourly/${end:0:10}.json" stats/hourly stats; do
+  b=$work/bad-link && rm -rf "$b" && mkdir -p "$b/$(dirname "$where")"
+  case $where in
+    *.json) ln -s "$work/real.json" "$b/$where" ;;
+    stats/hourly) ln -s "$work/elsewhere/hourly" "$b/$where" ;;
+    stats) ln -s "$work/elsewhere" "$b/$where" ;;
+  esac
+  if "$root/scripts/build-stats.sh" "$b" "$work/link.json" >/dev/null 2>&1; then fail "a store with a link at $where was read"; fi
+done
+b=$work/bad-name && rm -rf "$b" && mkdir -p "$b/stats/hourly"
+cp "$work/real.json" "$b/stats/hourly/x.json"
+"$root/scripts/build-stats.sh" "$b" "$work/name.json" >/dev/null
+[ "$(cat "$work/name.json")" = '{}' ] || fail "a file named other than yyyy-mm-dd.json was read"
 
 # The site, with the numbers and with none.
 build() { # stats.json output-dir counted-from
@@ -163,6 +189,10 @@ build "$work/stats.json" "$work/out1" "$from"
 before=$(date -u -d "$end - 3 hours" +'%Y-%m-%d %H:00')
 grep -q "$before UTC: —" "$work/out1/stats/index.html" || fail "an hour before counting started isn't shown as not counted"
 
+# The hourly table too.
+grep -qz "<td dir=\"ltr\">$before</td>\s*<td>0</td>\s*<td>—</td>\s*<td>—</td>" "$work/out1/stats/index.html" \
+  || fail "the hourly table shows an hour before counting started as counted"
+
 build "$work/stats.json" "$work/out2" ""
 grep -q 'Counted from the next app release' "$work/out2/stats/index.html" || fail "messages shown before they're counted"
 
@@ -177,6 +207,13 @@ done
 "$root/scripts/build-stats.sh" "$gap" "$work/gap.json" >/dev/null
 jq -e '(.hours | length) == 168 and .hours[0].t == "2026-11-15T00" and .hours[0].accounts == null and .hours[-1].t == "2026-11-21T23"' \
   "$work/gap.json" >/dev/null || fail "a gap isn't kept: $(jq -c '[.hours[0], .hours[-1]]' "$work/gap.json")"
+# By day, counted from mid-day: the day before shows "—", the first day,
+# whole but only partly counted, is marked.
+build "$work/gap.json" "$work/out5" "2026-11-21T05"
+grep -qz '<td dir="ltr">2026-11-21 \*</td>\s*<td>24</td>\s*<td>0</td>' "$work/out5/stats/index.html" \
+  || fail "the day counting started isn't marked"
+grep -qz '<td dir="ltr">2026-11-01</td>\s*<td>24</td>\s*<td>—</td>\s*<td>—</td>' "$work/out5/stats/index.html" \
+  || fail "a day before counting started is shown as counted"
 
 # Costs only, from last month into this one: shown, with both months, and
 # the test environment, never read, as a dash.
@@ -184,6 +221,9 @@ costs=$work/costs
 mkdir -p "$costs/stats/costs/production"
 echo '{"month":"2026-01","days":{"2026-01-31":{"AWS Lambda":2}}}' >"$costs/stats/costs/production/2026-01.json"
 echo '{"month":"2026-02","days":{"2026-02-01":{"AWS Lambda":1}}}' >"$costs/stats/costs/production/2026-02.json"
+# The test environment read only long before: not known for these months.
+mkdir -p "$costs/stats/costs/dev"
+echo '{"month":"2025-06","days":{"2025-06-01":0.5}}' >"$costs/stats/costs/dev/2025-06.json"
 "$root/scripts/build-stats.sh" "$costs" "$work/costs.json" >/dev/null
 jq -e '.costs.month == {name: "2026-02", production: 1, dev: 0} and .costs.previous == {name: "2026-01", production: 2, dev: 0} and .dev_known == false' \
   "$work/costs.json" >/dev/null || fail "month totals: $(jq -c '[.costs.month, .costs.previous]' "$work/costs.json")"

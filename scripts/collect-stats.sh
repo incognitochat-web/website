@@ -93,15 +93,25 @@ counts() {
   plain stats/hourly
   if jq -e '[.MetricDataResults[].Values | length] | add == 0' "$tmp/metrics.json" >/dev/null; then
     local stored=()
-    mapfile -t stored < <(find "$store/stats/hourly" -maxdepth 1 -type f -name '*.json' 2>/dev/null | sort)
-    if [ ${#stored[@]} -gt 0 ] && jq -se --arg start "${start:0:13}" '
+    mapfile -t stored < <(find "$store/stats/hourly" -maxdepth 1 -type f -name '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].json' 2>/dev/null | sort)
+    # jq -e: 0 if the store has counts there, 1 if not; anything else means
+    # a stored file couldn't be read, and then it can't tell either.
+    local found=1
+    if [ ${#stored[@]} -gt 0 ]; then
+      found=0
+      jq -se --arg start "${start:0:13}" '
         [.[] | .date as $d | (.accounts, .messages, .media_bytes) | to_entries[]
          | select(.value != null and .value > 0)
          | select(($d + "T" + (if .key < 10 then "0" else "" end) + (.key | tostring)) >= $start)] | length > 0' \
-        "${stored[@]}" >/dev/null 2>&1; then
-      echo "No data points in the whole window, but the store has counts there: is the namespace right? Nothing written" >&2
-      exit 1
+        "${stored[@]}" >/dev/null || found=$?
     fi
+    case $found in
+      0) echo "No data points in the whole window, but the store has counts there: is the namespace right? Nothing written" >&2
+         exit 1 ;;
+      1) ;;
+      *) echo "No data points in the whole window, and the stored counts couldn't be read to compare; nothing written" >&2
+         exit 1 ;;
+    esac
   fi
   for ((h = 0; h < 168; h++)); do
     date -u -d "${start} + ${h} hours" +%Y-%m-%dT%H:00:00Z
