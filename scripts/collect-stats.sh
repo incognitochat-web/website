@@ -49,6 +49,21 @@ esac
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
 
+# The store is a checkout anyone with push access to its branch could put
+# links in: refuse a link, or anything but a plain file or folder, on the
+# way to a file this writes, so nothing outside the store is read or
+# overwritten.
+plain() { # path relative to the store
+  local path=$store part
+  for part in ${1//\// }; do
+    path=$path/$part
+    if [ -L "$path" ] || { [ -e "$path" ] && [ ! -f "$path" ] && [ ! -d "$path" ]; }; then
+      echo "$path isn't a plain file or folder; nothing written" >&2
+      exit 1
+    fi
+  done
+}
+
 counts() {
   : "${NAMESPACE:?NAMESPACE, the namespace of the counts, is needed}" "${AWS_REGION:?AWS_REGION is needed}"
   local end start
@@ -71,19 +86,28 @@ counts() {
   # Every hour of the window, with what each metric counted (0 without a
   # data point), grouped by day.
   local day file
-  # No data point at all, where the store has counts: probably the wrong
-  # namespace. Don't overwrite real history with zeros.
-  if jq -e '[.MetricDataResults[].Values | length] | add == 0' "$tmp/metrics.json" >/dev/null &&
-    [ -n "$(find "$store/stats/hourly" -name '*.json' -newermt "$start" 2>/dev/null | head -n 1)" ] &&
-    jq -se --arg start "${start:0:10}" '[.[] | select(.date >= $start) | (.accounts + .messages + .media_bytes)[] | select(. != null and . > 0)] | length > 0' \
-      "$store"/stats/hourly/*.json >/dev/null 2>&1; then
-    echo "No data points in the whole window, but the store has counts there: is the namespace right? Nothing written" >&2
-    exit 1
+  # No data point at all, where the store has counts in those same hours:
+  # probably the wrong namespace. Don't overwrite real history with zeros.
+  # (A namespace wrong from the very first run can't be told from a quiet
+  # week: the store then only gets zeros.)
+  plain stats/hourly
+  if jq -e '[.MetricDataResults[].Values | length] | add == 0' "$tmp/metrics.json" >/dev/null; then
+    local stored=()
+    mapfile -t stored < <(find "$store/stats/hourly" -maxdepth 1 -type f -name '*.json' 2>/dev/null | sort)
+    if [ ${#stored[@]} -gt 0 ] && jq -se --arg start "${start:0:13}" '
+        [.[] | .date as $d | (.accounts, .messages, .media_bytes) | to_entries[]
+         | select(.value != null and .value > 0)
+         | select(($d + "T" + (if .key < 10 then "0" else "" end) + (.key | tostring)) >= $start)] | length > 0' \
+        "${stored[@]}" >/dev/null 2>&1; then
+      echo "No data points in the whole window, but the store has counts there: is the namespace right? Nothing written" >&2
+      exit 1
+    fi
   fi
   for ((h = 0; h < 168; h++)); do
     date -u -d "${start} + ${h} hours" +%Y-%m-%dT%H:00:00Z
   done >"$tmp/hours.txt"
   while read -r day; do
+    plain "stats/hourly/$day.json"
     file=$store/stats/hourly/$day.json
     mkdir -p "$(dirname "$file")"
     [ -f "$file" ] || jq -n --arg day "$day" '{date: $day, accounts: [range(24) | null], messages: [range(24) | null], media_bytes: [range(24) | null]}' >"$file"
@@ -104,10 +128,6 @@ costs() {
   first=$(date -u -d "$(date -u +%Y-%m-01) - 1 month" +%Y-%m-01)
   # Up to yesterday: End is exclusive, and today isn't over.
   end=$(date -u +%Y-%m-%d)
-  if [ "$first" = "$end" ]; then
-    echo "costs ($account): nothing whole yet"
-    return 0
-  fi
   local group=()
   # shellcheck disable=SC2054 # one argument with commas, as the CLI takes it
   [ "$account" = production ] && group=(--group-by Type=DIMENSION,Key=SERVICE)
@@ -130,6 +150,7 @@ costs() {
   jq '{ResultsByTime: (group_by(.TimePeriod.Start) | map({TimePeriod: .[0].TimePeriod, Estimated: (map(.Estimated) | any),
        Total: .[0].Total, Groups: (map(.Groups // []) | add)}))}' "$tmp/results.json" >"$tmp/costs.json"
   while read -r month; do
+    plain "stats/costs/$account/$month.json"
     file=$store/stats/costs/$account/$month.json
     mkdir -p "$(dirname "$file")"
     jq -S --arg month "$month" --arg account "$account" '

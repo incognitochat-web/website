@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Tests the statistics pipeline end to end, offline: collect-stats.sh
-# against a stand-in AWS CLI with known answers, a second run that must
-# change nothing, build-stats.sh, then Hugo, and checks what the Stats page
-# shows; also the page with no numbers yet. Touches nothing but a temporary
-# folder. Needs hugo and jq.
+# against a stand-in AWS CLI with known answers (and its refusals), a second
+# run that must change nothing, build-stats.sh (and what it refuses), then
+# Hugo, and checks what the Stats page shows, with numbers, with costs only,
+# and with none. Touches nothing but a temporary folder. Needs hugo and jq.
 #
 #   scripts/test-stats.sh
 set -euo pipefail
@@ -13,8 +13,9 @@ work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 fail() { echo "FAIL: $*" >&2; exit 1; }
 
-# The stand-in: CloudWatch-shaped hours relative to the window asked for,
-# and Cost Explorer-shaped days.
+# The stand-in: CloudWatch-shaped hours relative to the window asked for
+# (none with STUB_EMPTY=1), and Cost Explorer-shaped days up to the End
+# asked for (today included if asked: the script must not), in two pages.
 mkdir -p "$work/bin"
 cat >"$work/bin/aws" <<'EOF'
 #!/usr/bin/env bash
@@ -22,6 +23,10 @@ args="$*"
 start=$(sed -n 's/.*--start-time \([^ ]*\).*/\1/p' <<<"$args")
 case $args in
   "cloudwatch get-metric-data"*)
+    if [ "${STUB_EMPTY:-}" = 1 ]; then
+      echo '{"MetricDataResults":[{"Id":"accounts","StatusCode":"Complete","Timestamps":[],"Values":[]},{"Id":"messages","StatusCode":"Complete","Timestamps":[],"Values":[]},{"Id":"media_bytes","StatusCode":"Complete","Timestamps":[],"Values":[]}]}'
+      exit 0
+    fi
     t1=$(date -u -d "$start + 3 hours" +%Y-%m-%dT%H:%M:%S+00:00)
     t2=$(date -u -d "$start + 167 hours" +%Y-%m-%dT%H:%M:%SZ)
     cat <<J
@@ -32,12 +37,20 @@ case $args in
 J
     ;;
   "ce get-cost-and-usage"*)
-    d=$(date -u -d yesterday +%Y-%m-%d)
+    end=$(sed -n 's/.*End=\([0-9-]*\).*/\1/p' <<<"$args")
+    today=$(date -u +%Y-%m-%d)
+    y=$(date -u -d yesterday +%Y-%m-%d)
+    tday=''
+    [[ $end > $today ]] && tday=",{\"TimePeriod\":{\"Start\":\"$today\"},\"Estimated\":true,\"Total\":{\"UnblendedCost\":{\"Amount\":\"9\",\"Unit\":\"USD\"}},\"Groups\":[{\"Keys\":[\"AWS Lambda\"],\"Metrics\":{\"UnblendedCost\":{\"Amount\":\"9\",\"Unit\":\"USD\"}}}]}"
     if [[ $args == *SERVICE* ]]; then
-      groups='[{"Keys":["<b>AWS Lambda</b>"],"Metrics":{"UnblendedCost":{"Amount":"0.25","Unit":"USD"}}},{"Keys":["AmazonCloudWatch"],"Metrics":{"UnblendedCost":{"Amount":"0.5","Unit":"USD"}}},{"Keys":["Amazon DynamoDB"],"Metrics":{"UnblendedCost":{"Amount":"0.125","Unit":"USD"}}},{"Keys":["AWS WAF"],"Metrics":{"UnblendedCost":{"Amount":"1","Unit":"USD"}}},{"Keys":["Amazon Simple Storage Service"],"Metrics":{"UnblendedCost":{"Amount":"0.0625","Unit":"USD"}}},{"Keys":["AWS Key Management Service"],"Metrics":{"UnblendedCost":{"Amount":"0.0625","Unit":"USD"}}}]'
-      echo "{\"ResultsByTime\":[{\"TimePeriod\":{\"Start\":\"$d\"},\"Estimated\":true,\"Groups\":$groups}]}"
+      if [[ $args != *--next-page-token* ]]; then
+        # Page one: the day's first groups, and a token for the rest.
+        echo "{\"NextPageToken\":\"page two\",\"ResultsByTime\":[{\"TimePeriod\":{\"Start\":\"$y\"},\"Estimated\":true,\"Groups\":[{\"Keys\":[\"<b>AWS Lambda</b>\"],\"Metrics\":{\"UnblendedCost\":{\"Amount\":\"0.25\",\"Unit\":\"USD\"}}},{\"Keys\":[\"AmazonCloudWatch\"],\"Metrics\":{\"UnblendedCost\":{\"Amount\":\"0.5\",\"Unit\":\"USD\"}}},{\"Keys\":[\"Amazon DynamoDB\"],\"Metrics\":{\"UnblendedCost\":{\"Amount\":\"0.125\",\"Unit\":\"USD\"}}}]}]}"
+      else
+        echo "{\"ResultsByTime\":[{\"TimePeriod\":{\"Start\":\"$y\"},\"Estimated\":true,\"Groups\":[{\"Keys\":[\"AWS WAF\"],\"Metrics\":{\"UnblendedCost\":{\"Amount\":\"1\",\"Unit\":\"USD\"}}},{\"Keys\":[\"Amazon Simple Storage Service\"],\"Metrics\":{\"UnblendedCost\":{\"Amount\":\"0.0625\",\"Unit\":\"USD\"}}},{\"Keys\":[\"AWS Key Management Service\"],\"Metrics\":{\"UnblendedCost\":{\"Amount\":\"0.0625\",\"Unit\":\"USD\"}}}]}$tday]}"
+      fi
     else
-      echo "{\"ResultsByTime\":[{\"TimePeriod\":{\"Start\":\"$d\"},\"Estimated\":true,\"Total\":{\"UnblendedCost\":{\"Amount\":\"0.03\",\"Unit\":\"USD\"}},\"Groups\":[]}]}"
+      echo "{\"ResultsByTime\":[{\"TimePeriod\":{\"Start\":\"$y\"},\"Estimated\":true,\"Total\":{\"UnblendedCost\":{\"Amount\":\"0.03\",\"Unit\":\"USD\"}},\"Groups\":[]}$tday]}"
     fi ;;
   *) echo "stand-in aws: unexpected: $args" >&2; exit 1 ;;
 esac
@@ -51,7 +64,8 @@ run counts "$store"
 run costs production "$store"
 run costs dev "$store"
 
-# Known values land in the right hours, and a second run changes nothing.
+# Known values land in the right hours; a second run (in the same hour)
+# changes nothing.
 end=$(date -u +%Y-%m-%dT%H:00:00Z)
 start=$(date -u -d "$end - 168 hours" +%Y-%m-%dT%H:00:00Z)
 h3=$(date -u -d "$start + 3 hours" +%Y-%m-%dT%H)
@@ -59,7 +73,38 @@ file=$store/stats/hourly/${h3:0:10}.json
 [ "$(jq ".accounts[${h3:11:2} | tonumber]" "$file")" = 2 ] || fail "accounts not in the hour they were counted: $file"
 cp -r "$store" "$work/before"
 run counts "$store"
-diff -r "$work/before" "$store" >/dev/null || fail "a second run changed the store"
+if [ "$(date -u +%Y-%m-%dT%H:00:00Z)" = "$end" ]; then
+  diff -r "$work/before" "$store" >/dev/null || fail "a second run changed the store"
+fi
+
+# Costs: up to yesterday, never today; the two pages' groups put back together.
+today=$(date -u +%Y-%m-%d)
+yesterday=$(date -u -d yesterday +%Y-%m-%d)
+if cat "$store"/stats/costs/*/*.json | jq -e --arg t "$today" 'select(.days | has($t))' >/dev/null; then
+  fail "today's partial day was stored"
+fi
+jq -e --arg y "$yesterday" '.days[$y] | length == 6' "$store/stats/costs/production/${yesterday:0:7}.json" >/dev/null \
+  || fail "the two pages' groups weren't put back together"
+
+# No data point at all where the store has counts: refused, store untouched.
+cp -r "$store" "$work/before2"
+if STUB_EMPTY=1 run counts "$store" 2>/dev/null; then fail "an empty answer overwrote counts"; fi
+diff -r "$work/before2" "$store" >/dev/null || fail "a refused run changed the store"
+# But a quiet week whose only counts are before the window's first hour is fine.
+quiet=$work/quiet
+mkdir -p "$quiet/stats/hourly"
+jq -n --arg d "${start:0:10}" --argjson h "$((10#${start:11:2}))" \
+  '{date: $d, accounts: [range(24) as $i | if $i < $h then 1 else 0 end], messages: [range(24) | 0], media_bytes: [range(24) | 0]}' \
+  >"$quiet/stats/hourly/${start:0:10}.json"
+STUB_EMPTY=1 run counts "$quiet" || fail "a quiet week was refused"
+
+# A link in the store is refused, and nothing outside is read or written.
+linked=$work/linked
+mkdir -p "$linked/stats" "$work/outside"
+echo '{"date":"x"}' >"$work/outside/${end:0:10}.json"
+ln -s "$work/outside" "$linked/stats/hourly"
+if run counts "$linked" 2>/dev/null; then fail "a linked folder was written through"; fi
+[ "$(cat "$work/outside/${end:0:10}.json")" = '{"date":"x"}' ] || fail "a file outside the store changed"
 
 "$root/scripts/build-stats.sh" "$store" "$work/stats.json" >/dev/null
 jq -e '.last24.accounts == 5 and .last24.messages == 7 and .last24.media_bytes == 2113536' "$work/stats.json" >/dev/null \
@@ -70,17 +115,33 @@ jq -e '.costs.services == ["AWS WAF", "AmazonCloudWatch", "<b>AWS Lambda</b>", "
 jq -e '.costs.days[-1].values == [1, 0.5, 0.25, 0.125, 0.125] and .costs.days[-1].dev == 0.03' "$work/stats.json" >/dev/null \
   || fail "a day's costs: $(jq -c '.costs.days[-1]' "$work/stats.json")"
 
+# What build-stats.sh refuses: counts that aren't whole numbers, dates that
+# don't exist; and a link instead of a file isn't read.
+for bad in '"x"' '1.5' '-1'; do
+  b=$work/bad-count && rm -rf "$b" && mkdir -p "$b/stats/hourly"
+  jq -n --argjson v "$bad" '{date: "2026-11-21", accounts: [range(24) | $v], messages: [range(24) | 0], media_bytes: [range(24) | 0]}' >"$b/stats/hourly/2026-11-21.json"
+  if "$root/scripts/build-stats.sh" "$b" "$work/bad.json" >/dev/null 2>&1; then fail "a count of $bad was accepted"; fi
+done
+b=$work/bad-date && mkdir -p "$b/stats/costs/production"
+echo '{"month":"2026-11","days":{"2026-11-31":{"AWS Lambda":1}}}' >"$b/stats/costs/production/2026-11.json"
+if "$root/scripts/build-stats.sh" "$b" "$work/bad.json" >/dev/null 2>&1; then fail "a day that doesn't exist was accepted"; fi
+b=$work/bad-link && mkdir -p "$b/stats/hourly"
+cp "$store/stats/hourly/${end:0:10}.json" "$work/real.json"
+ln -s "$work/real.json" "$b/stats/hourly/${end:0:10}.json"
+"$root/scripts/build-stats.sh" "$b" "$work/link.json" >/dev/null
+[ "$(cat "$work/link.json")" = '{}' ] || fail "a linked file was read"
+
 # The site, with the numbers and with none.
-build() { # stats.json output-dir [messages-from]
+build() { # stats.json output-dir counted-from
   rm -rf "$work/site"
   cp -r "$root" "$work/site"
-  rm -rf "$work/site/public" "$work/site/data/stats.json" "$work/site/.git"
+  rm -rf "$work/site/public" "$work/site/data/stats.json" "$work/site/.git" "$work/site/.stats-store"
   mkdir -p "$work/site/data"
   cp "$1" "$work/site/data/stats.json"
-  HUGO_PARAMS_STATSCOUNTEDFROM_MESSAGES=${3:-} HUGO_PARAMS_STATSCOUNTEDFROM_MEDIA=${3:-} \
-    hugo --quiet --source "$work/site" --destination "$2" >/dev/null
+  sed -i "s/^    messages = \".*\"/    messages = \"$3\"/; s/^    media = \".*\"/    media = \"$3\"/" "$work/site/hugo.toml"
+  hugo --quiet --source "$work/site" --destination "$2" >/dev/null
 }
-build "$work/stats.json" "$work/out" "2026-01-01"
+build "$work/stats.json" "$work/out" "2026-01-01T00"
 page=$work/out/stats/index.html
 grep -q '>5</p>' "$page" || fail "the accounts tile isn't 5"
 grep -q '>7</p>' "$page" || fail "the messages tile isn't 7"
@@ -88,11 +149,21 @@ grep -q '2.0 MiB' "$page" || fail "the media tile isn't 2.0 MiB"
 [ "$(grep -o 'class="bar"' "$page" | wc -l)" -ge 3 ] || fail "too few bars"
 grep -q 'AWS WAF' "$page" || fail "no service in the legend"
 grep -q '&lt;b&gt;AWS Lambda&lt;/b&gt;' "$page" || fail "a service name isn't escaped"
-! grep -q '<b>AWS Lambda</b>' "$page" || fail "a service name was written as HTML"
+if grep -q '<b>AWS Lambda</b>' "$page"; then fail "a service name was written as HTML"; fi
 grep -q 'class="seg so"' "$page" || fail "no Other segment"
+grep -q 'Table view: by hour' "$page" || fail "no hourly table"
+latest=$(jq -r .latest "$work/stats.json")
+upto=$(date -u -d "${latest:0:10} ${latest:11:2}:00 + 1 hour" +'%Y-%m-%d %H:00 UTC')
+grep -q "$upto" "$page" || fail "'Up to' isn't the end of the latest hour ($upto)"
 grep -q '<h1>آمار</h1>' "$work/out/fa/stats/index.html" || fail "no Persian Stats page"
 
-build "$work/stats.json" "$work/out2"
+# Counted from an hour: earlier hours show as not counted, not as 0.
+from=$(date -u -d "$end - 2 hours" +%Y-%m-%dT%H)
+build "$work/stats.json" "$work/out1" "$from"
+before=$(date -u -d "$end - 3 hours" +'%Y-%m-%d %H:00')
+grep -q "$before UTC: —" "$work/out1/stats/index.html" || fail "an hour before counting started isn't shown as not counted"
+
+build "$work/stats.json" "$work/out2" ""
 grep -q 'Counted from the next app release' "$work/out2/stats/index.html" || fail "messages shown before they're counted"
 
 # A gap: the chart still covers the 7 days by the clock, the missing hours
@@ -107,7 +178,8 @@ done
 jq -e '(.hours | length) == 168 and .hours[0].t == "2026-11-15T00" and .hours[0].accounts == null and .hours[-1].t == "2026-11-21T23"' \
   "$work/gap.json" >/dev/null || fail "a gap isn't kept: $(jq -c '[.hours[0], .hours[-1]]' "$work/gap.json")"
 
-# Costs only, from last month into this one: shown, with both months.
+# Costs only, from last month into this one: shown, with both months, and
+# the test environment, never read, as a dash.
 costs=$work/costs
 mkdir -p "$costs/stats/costs/production"
 echo '{"month":"2026-01","days":{"2026-01-31":{"AWS Lambda":2}}}' >"$costs/stats/costs/production/2026-01.json"
@@ -115,13 +187,15 @@ echo '{"month":"2026-02","days":{"2026-02-01":{"AWS Lambda":1}}}' >"$costs/stats
 "$root/scripts/build-stats.sh" "$costs" "$work/costs.json" >/dev/null
 jq -e '.costs.month == {name: "2026-02", production: 1, dev: 0} and .costs.previous == {name: "2026-01", production: 2, dev: 0} and .dev_known == false' \
   "$work/costs.json" >/dev/null || fail "month totals: $(jq -c '[.costs.month, .costs.previous]' "$work/costs.json")"
-build "$work/costs.json" "$work/out4"
+build "$work/costs.json" "$work/out4" "2026-01-01T00"
 # shellcheck disable=SC2016 # a literal dollar sign
 grep -qF '$1.00' "$work/out4/stats/index.html" || fail "costs alone aren't shown"
-! grep -q 'No numbers yet' "$work/out4/stats/index.html" || fail "costs alone are hidden"
+if grep -q 'No numbers yet' "$work/out4/stats/index.html"; then fail "costs alone are hidden"; fi
+grep -q 'tile-value" dir="ltr">—' "$work/out4/stats/index.html" || fail "an unread test environment isn't a dash"
+grep -q 'Last month, production' "$work/out4/stats/index.html" || fail "last month's tile says both"
 
 echo '{}' >"$work/empty.json"
-build "$work/empty.json" "$work/out3"
+build "$work/empty.json" "$work/out3" ""
 grep -q 'No numbers yet' "$work/out3/stats/index.html" || fail "an empty store isn't said so"
 
 echo "ok: statistics pipeline"

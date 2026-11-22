@@ -17,10 +17,11 @@ store=${1:?usage: $0 <store> <output.json>}
 out=${2:?usage: $0 <store> <output.json>}
 mkdir -p "$(dirname "$out")"
 
-shopt -s nullglob
-hourly=("$store"/stats/hourly/*.json)
-production=("$store"/stats/costs/production/*.json)
-dev=("$store"/stats/costs/dev/*.json)
+# Plain files only: find doesn't follow links, a linked folder included.
+files() { find "$store/$1" -maxdepth 1 -type f -name '*.json' 2>/dev/null | sort; }
+mapfile -t hourly < <(files stats/hourly)
+mapfile -t production < <(files stats/costs/production)
+mapfile -t dev < <(files stats/costs/dev)
 if [ ${#hourly[@]} -eq 0 ] && [ ${#production[@]} -eq 0 ] && [ ${#dev[@]} -eq 0 ]; then
   echo '{}' >"$out"
   echo "no statistics in $store"
@@ -36,6 +37,24 @@ recent() { # count files...
 mapfile -t hourly < <(recent 31 ${hourly[@]+"${hourly[@]}"})
 mapfile -t production < <(recent 2 ${production[@]+"${production[@]}"})
 mapfile -t dev < <(recent 2 ${dev[@]+"${dev[@]}"})
+
+# Every file must have the shape collect-stats.sh writes: counts that are
+# whole numbers or null, real dates, amounts that are numbers. Anything else
+# stops here (the deploy then shows no numbers) instead of breaking the page.
+jq -n -e \
+  --slurpfile hourly <(cat /dev/null ${hourly[@]+"${hourly[@]}"}) \
+  --slurpfile production <(cat /dev/null ${production[@]+"${production[@]}"}) \
+  --slurpfile dev <(cat /dev/null ${dev[@]+"${dev[@]}"}) '
+  def isdate: type == "string" and test("\\A[0-9]{4}-[0-9]{2}-[0-9]{2}\\z")
+    and ((. + "T00:00:00Z" | try fromdateiso8601 catch null) as $t | $t != null and ($t | strftime("%Y-%m-%d")) == .);
+  def counts: type == "array" and length == 24 and all(.[]; . == null or (type == "number" and . >= 0 and . == floor and . < 1e15));
+  def amount: type == "number" and . > -1e9 and . < 1e9;
+  def month($m): type == "object" and (.month | type == "string" and test("\\A[0-9]{4}-[0-9]{2}\\z")) and .month == $m
+    and (.days | type == "object") and all(.days | keys[]; isdate and startswith($m));
+  all($hourly[]; type == "object" and (.date | isdate) and (.accounts | counts) and (.messages | counts) and (.media_bytes | counts))
+  and all($production[]; month(.month) and all(.days[]; type == "object" and all(to_entries[]; (.key | type == "string" and length <= 100) and (.value | amount))))
+  and all($dev[]; month(.month) and all(.days[]; amount))
+' >/dev/null || { echo "the statistics in $store don't have the expected shape" >&2; exit 1; }
 
 jq -n -S \
   --slurpfile hourly <(cat /dev/null ${hourly[@]+"${hourly[@]}"}) \
