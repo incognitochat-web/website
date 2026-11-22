@@ -18,7 +18,13 @@ def fail(message):
     print(f"error: {message}", file=sys.stderr)
     sys.exit(1)
 
-site = tomllib.loads(pathlib.Path("hugo.toml").read_text(encoding="utf-8"))
+def toml(path):
+    try:
+        return tomllib.loads(pathlib.Path(path).read_text(encoding="utf-8"))
+    except tomllib.TOMLDecodeError as err:
+        fail(f"{path}: {err}")
+
+site = toml("hugo.toml")
 languages = site.get("languages", {})
 if "en" not in languages or len(languages) < 2:
     fail(f"hugo.toml lists languages {sorted(languages)}: expected en and at least one more")
@@ -29,13 +35,14 @@ for lang, conf in languages.items():
         if not pathlib.Path(f"static/fonts/{font}.woff2").is_file():
             fail(f"{lang} preloads static/fonts/{font}.woff2, which doesn't exist")
 
-pages = sorted(pathlib.Path("content").rglob("*.md"))
-names = {p.relative_to("content").as_posix() for p in pages}
-for page in names:
+names = {p.relative_to("content").as_posix() for p in pathlib.Path("content").rglob("*.md")}
+for page in sorted(names):
     stem, _, _ = page.rpartition(".md")
     base, dot, suffix = stem.rpartition(".")
     if dot and suffix in languages:
-        if suffix == "en" or f"{base}.md" not in names:
+        if suffix == "en":
+            fail(f"content/{page}: name English pages without .en (content/{base}.md)")
+        if f"{base}.md" not in names:
             fail(f"content/{page} has no English page content/{base}.md")
         continue
     for lang in others:
@@ -46,7 +53,7 @@ def keys(lang):
     path = pathlib.Path(f"i18n/{lang}.toml")
     if not path.is_file():
         fail(f"{path} is missing")
-    return set(tomllib.loads(path.read_text(encoding="utf-8")))
+    return set(toml(path))
 
 english = keys("en")
 for lang in others:
