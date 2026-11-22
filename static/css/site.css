@@ -101,6 +101,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 html[dir="rtl"] { font-size: 106.25%; }
+/* Newsreader has no Cyrillic: Russian headings use one serif throughout, so
+   Latin words in them (Telegram) don't switch fonts mid-line. */
+:lang(ru) { --serif: Georgia, "Times New Roman", "Noto Serif", serif; }
 [dir="rtl"] body { line-height: 1.9; font-feature-settings: normal; }
 
 h1, h2 { font-family: var(--serif); font-weight: 500; letter-spacing: -0.015em; color: var(--text); }

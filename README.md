@@ -4,8 +4,8 @@ The website of [Incognito Chat](https://github.com/incognitochat/incognitochat):
 what it is, its official addresses, how to verify the app, the latest
 automatic checks of the app, and security reporting.
 
-It's a static site built with [Hugo](https://gohugo.io/), in English and
-Persian. It has no scripts, no cookies and no analytics, and loads nothing
+It's a static site built with [Hugo](https://gohugo.io/), in English,
+Persian, Russian and Arabic. It has no scripts, no cookies and no analytics, and loads nothing
 from anywhere else.
 
 ## How it's published

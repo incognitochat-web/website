@@ -41,6 +41,22 @@ weight = 2
 [languages.fa.params]
 fonts = ["inter", "vazirmatn-arabic"]
 
+[languages.ru]
+label = "Русский"
+locale = "ru"
+direction = "ltr"
+weight = 3
+[languages.ru.params]
+fonts = ["inter"]
+
+[languages.ar]
+label = "العربية"
+locale = "ar"
+direction = "rtl"
+weight = 4
+[languages.ar.params]
+fonts = ["inter", "vazirmatn-arabic"]
+
 [sitemap]
 changeFreq = ""
 priority = -1
