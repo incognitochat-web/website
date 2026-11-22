@@ -434,6 +434,8 @@ table.official .hint { font-size: 0.82rem; color: var(--muted); }
 .table-view { margin: 0 0 2rem; }
 .table-view summary { cursor: pointer; color: var(--text-2); font-size: 0.92rem; }
 .table-view table { font-variant-numeric: tabular-nums; }
+/* The day ("2026-11-22 *") on one line, also on a phone. */
+.table-view td:first-child { white-space: nowrap; }
 .prose .table-view .table-note { font-size: 0.82rem; color: var(--muted); margin-top: -0.8rem; }
 
 /* Footer */
