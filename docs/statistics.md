@@ -27,15 +27,16 @@ who did what.
 
 Each count starts at the first whole hour production counted it
 (`params.statsCountedFrom` in [`hugo.toml`](../hugo.toml)): accounts from
-2026-11-18 23:00 UTC, when v2.4.0 added the counter, and messages and media
-from 2026-11-22 03:00 UTC (v2.7.0). Earlier days show "—", and the page notes
+2026-11-18 23:00 UTC, the first whole hour after v2.4.0 added the counter
+(deployed at 22:14), and messages and media from 2026-11-22 03:00 UTC, after
+v2.7.0. Earlier days show "—", and the page notes
 the start in the month it falls in.
 
 ## Where the numbers come from
 
 - The app's server counts once a minute, and AWS (CloudWatch) adds the counts
   up by the hour. A [scheduled job](../.github/workflows/stats.yml) in this
-  repository reads them every hour, and the costs once a day, with a role that
+  public repository reads them every hour, and the costs once a day, with a role that
   can only read metrics and costs.
 - An hour's counts are dated by when the server wrote them, which can be much
   later on a quiet server: it writes a minute's counts with its next request,
@@ -54,5 +55,5 @@ the start in the month it falls in.
 - That shows a number came through this public job unchanged. It can't show
   that what AWS holds is true: whoever runs the AWS account could change it.
   Once the server runs in an attested enclave (see the roadmap on the
-  [home page](https://incognitochat.me/#roadmap)), it will count and sign the
+  [home page](https://incognitochat.me/)), it will count and sign the
   numbers itself.

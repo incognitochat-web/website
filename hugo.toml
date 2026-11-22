@@ -119,12 +119,10 @@ priority = -1
   securityEmail = "security@incognitochat.me"
   privacyEmail = "privacy@incognitochat.me"
 
-  # The Stats page shows messages and media from the first hour production
-  # counted them (UTC, yyyy-mm-ddThh): v2.7.0 went live at 03:01 UTC on
-  # 2026-11-22. Earlier hours show as not counted. Empty: "counted from the
-  # next release".
-  # The first whole hour each metric was counted in production (UTC): accounts
-  # since v2.4.0 (deployed 2026-11-18 22:14), messages and media since v2.7.0.
+  # The first whole hour each count was counted in production (UTC,
+  # yyyy-mm-ddThh): accounts since v2.4.0 (deployed 2026-11-18 22:14),
+  # messages and media since v2.7.0 (live 2026-11-22 03:01). Earlier hours
+  # show as not counted; empty: "counted from the next app release".
   [params.statsCountedFrom]
     accounts = "2026-11-18T23"
     messages = "2026-11-22T03"
