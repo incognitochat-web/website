@@ -9,7 +9,7 @@ updated: "2026-11-22"
 
 ### Apakah orang yang saya kirimi pesan akan tahu siapa saya?
 
-Tidak. Dia melihat label seperti **🦊 K3F9**, selalu sama setiap kali Anda menulis lewat tautannya, dan tidak ada keterangan lain tentang Anda: tidak ada nama, nama pengguna, atau nomor telepon Anda. Foto kehilangan data tersembunyi seperti lokasi sebelum dikirim, dan video kehilangan sebagian besarnya. Apa pun yang dikirim lewat **Berkas**, juga musik dan GIF, terkirim apa adanya, beserta nama berkasnya dan apa pun yang ada di dalamnya.
+Tidak. Dia melihat label seperti **🦊 K3F9**, selalu sama setiap kali Anda menulis lewat tautannya, dan tidak ada keterangan lain tentang Anda: tidak ada nama, nama pengguna, atau nomor telepon Anda. Foto dan video yang dikirim sebagai foto atau video kehilangan nama berkas dan data tersembunyi seperti lokasi (untuk video, sebagian besarnya). Apa pun yang dikirim sebagai berkas (lewat **Berkas**, atau saat **Kompres gambar** atau **Kirim sebagai video** dimatikan), begitu juga musik, terkirim apa adanya, beserta nama berkasnya dan apa pun yang ada di dalamnya. GIF terkirim tanpa nama berkasnya, tetapi selebihnya apa adanya.
 
 ### Apakah tim Incognito Chat bisa membaca pesan saya?
 
@@ -35,7 +35,7 @@ Siapa pun yang mengendalikan bot menentukan halaman mana yang dibuka Telegram, d
 
 ### Seseorang yang memantau secara langsung {#live}
 
-Siapa pun yang menjalankan server, atau Amazon, penyedia hosting-nya, bisa saja memantau permintaan secara langsung dan mengaitkan orang-orang lewat kecocokan waktu dan alamat IP: sebuah pesan masuk, lalu notifikasi, lalu balasan atau tanda “Dibaca”. Telegram juga bisa saja mengaitkan orang-orang lewat kecocokan waktu. Salinan data yang tersimpan tidak menunjukkan hal ini, tetapi dengan kunci server, catatan yang disimpan sekitar sehari menunjukkan sebagian darinya. Bahkan dengan enclave, waktu dan alamat IP tetap akan terlihat.
+Siapa pun yang menjalankan server, atau Amazon, penyedia hosting-nya, bisa saja memantau permintaan secara langsung dan mengaitkan orang-orang lewat kecocokan waktu dan alamat IP: sebuah pesan masuk, lalu notifikasi, lalu balasan atau tanda “Dibaca”. Telegram juga bisa saja mengaitkan orang-orang lewat kecocokan waktu. Salinan data yang tersimpan tidak menunjukkan hal ini, tetapi dengan kunci server, catatan yang disimpan hingga sehari, terkadang beberapa hari lebih lama, menunjukkan sebagian darinya. Bahkan dengan enclave, waktu dan alamat IP tetap akan terlihat.
 
 ### Perangkat Anda sendiri
 
@@ -49,11 +49,11 @@ Orang yang Anda kirimi pesan selalu bisa menyalin atau memotret apa yang Anda ki
 
 ### Apakah saya perlu mendaftar?
 
-Tidak. Untuk menulis lewat tautan seseorang, akun Telegram Anda sudah cukup: buka tautannya dan tulis pesan. Untuk saat ini, Anda perlu undangan untuk mendapatkan tautan sendiri.
+Tidak perlu email, nomor telepon, atau kata sandi: buka tautan seseorang di Telegram, ketuk **Siapkan** sekali, lalu tulis pesan. Untuk saat ini, Anda perlu undangan untuk mendapatkan tautan sendiri.
 
 ### Bagaimana jika seseorang mengganggu saya?
 
-Blokir dia: dia tidak diberi tahu, dan apa pun yang dia kirim tidak sampai. Orang yang menyiapkan akun baru akan muncul dengan label baru, jadi Anda mungkin perlu memblokirnya lagi. Anda juga bisa mengganti tautan Anda kapan saja; tautan lama langsung berhenti berfungsi.
+Blokir dia: dia tidak diberi tahu, dan apa pun yang dia kirim tidak sampai. Orang yang menyiapkan akun baru akan muncul dengan label baru, jadi Anda mungkin perlu memblokirnya lagi. Anda juga bisa mengganti tautan Anda kapan saja: obrolan baru tidak bisa lagi dimulai lewat tautan lama, tetapi obrolan yang sudah dimulai tetap berlanjut. Blokir siapa pun di obrolan-obrolan itu yang pesannya tidak ingin Anda terima.
 
 ### Bisakah saya menghapus pesan yang sudah saya kirim?
 
@@ -61,21 +61,21 @@ Bisa. Secara bawaan, pesan yang Anda hapus terhapus di kedua sisi, baik sudah di
 
 ### Bisakah saya memakainya di ponsel atau komputer lain?
 
-Hanya di satu perangkat dalam satu waktu. Menyiapkan akun di perangkat lain akan menggantikan akun Anda: Anda mendapat tautan baru, yang dibutuhkan orang untuk menghubungi Anda, dan obrolan lama Anda tetap ada di perangkat lama, tetapi hanya bisa dibaca. Tidak ada yang dipindahkan dan tidak ada yang dicadangkan, jadi jika ponsel Anda hilang, obrolan di dalamnya ikut hilang. Siapkan lagi di ponsel baru: itu langsung mengakhiri akun lama.
+Hanya di satu perangkat dalam satu waktu. Menyiapkan akun di perangkat lain akan menggantikan akun Anda: tautan lama Anda berhenti berfungsi, dan selama tautan masih memerlukan undangan, Anda perlu undangan baru untuk mendapatkan tautan lagi. Obrolan lama Anda tetap ada di perangkat lama, tetapi hanya bisa dibaca. Tidak ada yang dipindahkan dan tidak ada yang dicadangkan, jadi jika ponsel Anda hilang, atau Telegram atau ponsel itu menghapus data aplikasi ini, obrolan di dalamnya ikut hilang. Siapkan lagi di ponsel baru: itu langsung mengakhiri akun lama.
 
 ### Bagaimana cara menghapus akun saya?
 
-Di tab **Tautan saya**, ketuk **Hapus akun**. Selama aplikasi tetap terbuka, server menghapus apa yang disimpannya untuk Anda dalam beberapa menit, lalu aplikasi menghapus obrolan dan kunci Anda dari perangkat ini. Lampiran yang Anda kirim tetap bisa diambil oleh penerimanya sampai kedaluwarsa, dalam waktu 30 hari.
+Di tab **Tautan saya**, ketuk **Hapus akun**. Selama aplikasi tetap terbuka, server menghapus apa yang disimpannya untuk Anda dalam beberapa menit, lalu aplikasi menghapus obrolan dan kunci Anda dari perangkat ini (di beberapa perangkat, jejaknya bisa tertinggal di berkas penyimpanan aplikasi). Lampiran yang Anda kirim tetap bisa diambil oleh penerimanya sampai kedaluwarsa, dalam waktu 30 hari.
 
 ### Berapa lama data disimpan?
 
-Di server: pesan terenkripsi sampai perangkat Anda menerimanya, lampiran sampai dihapus, paling lama 30 hari untuk keduanya. Akun Anda (termasuk tautan Anda, ID Telegram yang diacak, dan bulan terakhir Anda membuka aplikasi) tetap ada sampai Anda menghapusnya, atau sampai aplikasi tidak dibuka selama 12 bulan. Di perangkat Anda: obrolan Anda, sampai Anda menghapusnya. Anda memilih berapa lama lampiran disimpan (selamanya, sebulan, atau seminggu) di **Data dan penyimpanan**.
+Di server: pesan terenkripsi sampai perangkat Anda menerimanya, lampiran sampai dihapus, paling lama 30 hari untuk keduanya. Akun Anda (termasuk tautan Anda, ID Telegram yang diacak, dan bulan terakhir Anda membuka aplikasi) tetap ada sampai Anda menghapusnya, atau sampai aplikasi tidak dibuka selama 12 bulan. Di perangkat Anda: obrolan Anda, sampai Anda menghapusnya. Anda memilih berapa lama lampiran disimpan (selamanya, sebulan, atau seminggu) di **Data dan penyimpanan**, di tab **Tautan saya**.
 
 ## Tentang proyek ini
 
 ### Apakah gratis? Siapa yang membiayainya?
 
-Gratis, tanpa iklan dan tanpa pelacak, dan dibiayai oleh donasi. Incognito Chat adalah perangkat lunak bebas dengan lisensi AGPL yang dibangun secara terbuka: [kodenya](https://github.com/{{< param "codeRepo" >}}) dan [situs ini](https://github.com/{{< param "siteRepo" >}}) ada di GitHub.
+Gratis, tanpa iklan dan tanpa pelacak. Untuk saat ini, kami yang membayar biaya untuk menjalankannya (lihat [Biaya](/id/costs/)); donasi akan membantu begitu donasi sudah bisa diberikan. Incognito Chat adalah perangkat lunak bebas dengan lisensi AGPL yang dibangun secara terbuka: [kodenya](https://github.com/{{< param "codeRepo" >}}) dan [situs ini](https://github.com/{{< param "siteRepo" >}}) ada di GitHub.
 
 ### Bagaimana saya bisa memeriksa semua ini?
 

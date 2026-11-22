@@ -9,7 +9,7 @@ updated: "2026-11-22"
 
 ### Komt de persoon aan wie ik schrijf te weten wie ik ben?
 
-Nee. De ander ziet een label zoals **🦊 K3F9**, steeds hetzelfde als je via de link van die persoon schrijft, en verder niets over jou: niet je naam, gebruikersnaam of telefoonnummer. Foto's verliezen verborgen gegevens zoals de locatie voordat ze worden verstuurd, en video's het grootste deel daarvan. Alles wat je met **Bestand** stuurt, en ook muziek en GIF's, gaat zoals het is, met de bestandsnaam en alles wat erin zit.
+Nee. De ander ziet een label zoals **🦊 K3F9**, steeds hetzelfde als je via de link van die persoon schrijft, en verder niets over jou: niet je naam, gebruikersnaam of telefoonnummer. Foto's en video's die je als foto of video stuurt, verliezen hun bestandsnaam en verborgen gegevens zoals de locatie (video's het grootste deel daarvan). Alles wat je als bestand stuurt (met **Bestand**, of als **Afbeelding comprimeren** of **Als video sturen** uitstaat), en ook muziek, gaat zoals het is, met de bestandsnaam en alles wat erin zit. GIF's gaan zonder bestandsnaam, maar verder zoals ze zijn.
 
 ### Kunnen jullie mijn berichten lezen?
 
@@ -35,7 +35,7 @@ Wie de bot beheert, bepaalt welke pagina Telegram opent, en Telegram biedt geen 
 
 ### Iemand die live meekijkt {#live}
 
-Wie de servers beheert, of Amazon, waar ze draaien, zou verzoeken live kunnen volgen en mensen aan elkaar kunnen koppelen via timing en IP-adres: een bericht dat binnenkomt, dan een melding, dan een antwoord of een “Gelezen”. Telegram zou mensen ook via timing aan elkaar kunnen koppelen. Een kopie van de opgeslagen gegevens laat dit niet zien, maar met de sleutels van de server is een deel ervan te zien in gegevens die ongeveer een dag worden bewaard. Ook met de enclave zouden timing en IP-adressen nog steeds te zien zijn.
+Wie de servers beheert, of Amazon, waar ze draaien, zou verzoeken live kunnen volgen en mensen aan elkaar kunnen koppelen via timing en IP-adres: een bericht dat binnenkomt, dan een melding, dan een antwoord of een “Gelezen”. Telegram zou mensen ook via timing aan elkaar kunnen koppelen. Een kopie van de opgeslagen gegevens laat dit niet zien, maar met de sleutels van de server is een deel ervan te zien in gegevens die tot een dag worden bewaard, soms een paar dagen langer. Ook met de enclave zouden timing en IP-adressen nog steeds te zien zijn.
 
 ### Je eigen apparaat
 
@@ -49,11 +49,11 @@ De persoon aan wie je schrijft, kan altijd kopiëren of fotograferen wat je stuu
 
 ### Moet ik me registreren?
 
-Nee. Om via iemands link te schrijven, is je Telegram-account genoeg: open de link en schrijf. Voor een eigen link heb je voorlopig een uitnodiging nodig.
+Geen e-mailadres, telefoonnummer of wachtwoord: open iemands link in Telegram, tik één keer op **Instellen** en schrijf. Voor een eigen link heb je voorlopig een uitnodiging nodig.
 
 ### Wat als iemand me lastigvalt?
 
-Blokkeer die persoon: die wordt niet ingelicht, en niets wat die stuurt, komt nog aan. Wie een nieuw account instelt, verschijnt onder een nieuw label, dus misschien moet je die persoon opnieuw blokkeren. Je kunt ook op elk moment je link vervangen; de oude werkt dan meteen niet meer.
+Blokkeer die persoon: die wordt niet ingelicht, en niets wat die stuurt, komt nog aan. Wie een nieuw account instelt, verschijnt onder een nieuw label, dus misschien moet je die persoon opnieuw blokkeren. Je kunt ook op elk moment je link vervangen: via de oude kunnen geen nieuwe chats meer beginnen, maar chats die al begonnen zijn, gaan door: blokkeer daarin iedereen van wie je niets wilt horen.
 
 ### Kan ik verwijderen wat ik heb gestuurd?
 
@@ -61,21 +61,21 @@ Ja. Als je een bericht verwijdert, wordt het standaard aan beide kanten verwijde
 
 ### Kan ik het op een andere telefoon of computer gebruiken?
 
-Op één apparaat tegelijk. Als je de app op een ander apparaat instelt, vervangt dat je account: je krijgt een nieuwe link, die mensen nodig hebben om je te bereiken, en je oude chats blijven op het oude apparaat staan, waar je ze alleen kunt lezen. Er wordt niets overgezet en er wordt geen back-up gemaakt, dus als je je telefoon kwijtraakt, zijn de chats erop weg. Stel de app dan opnieuw in op een nieuwe: dat beëindigt het oude account meteen.
+Op één apparaat tegelijk. Als je de app op een ander apparaat instelt, vervangt dat je account: je oude link werkt niet meer, en zolang links een uitnodiging vereisen, heb je een nieuwe uitnodiging nodig om weer een link te krijgen. Je oude chats blijven op het oude apparaat staan, waar je ze alleen kunt lezen. Er wordt niets overgezet en er wordt geen back-up gemaakt, dus als je je telefoon kwijtraakt, of als Telegram of de telefoon de gegevens van de app wist, zijn de chats erop weg. Stel de app dan opnieuw in op een nieuwe: dat beëindigt het oude account meteen.
 
 ### Hoe verwijder ik mijn account?
 
-Tik op het tabblad **Mijn link** op **Account verwijderen**. Zolang de app open blijft, verwijdert de server binnen enkele minuten wat hij voor je bewaart, en daarna verwijdert de app je chats en sleutels van dit apparaat. Bijlagen die je hebt gestuurd, kan de ander nog ophalen tot ze verlopen, binnen 30 dagen.
+Tik op het tabblad **Mijn link** op **Account verwijderen**. Zolang de app open blijft, verwijdert de server binnen enkele minuten wat hij voor je bewaart, en daarna verwijdert de app je chats en sleutels van dit apparaat (op sommige apparaten kunnen sporen achterblijven in de opslagbestanden van de app). Bijlagen die je hebt gestuurd, kan de ander nog ophalen tot ze verlopen, binnen 30 dagen.
 
 ### Hoe lang wordt wat bewaard?
 
-Op de server: versleutelde berichten tot je apparaat ze heeft, bijlagen tot ze worden verwijderd, allebei hoogstens 30 dagen. Je account (met onder meer je link, het versluierde Telegram-ID en de maand waarin je de app voor het laatst opende) blijft bestaan tot je het verwijdert, of tot de app 12 maanden niet is geopend. Op je apparaat: je chats, tot je ze verwijdert. Hoe lang bijlagen blijven (altijd, een maand of een week), kies je in **Data en opslag**.
+Op de server: versleutelde berichten tot je apparaat ze heeft, bijlagen tot ze worden verwijderd, allebei hoogstens 30 dagen. Je account (met onder meer je link, het versluierde Telegram-ID en de maand waarin je de app voor het laatst opende) blijft bestaan tot je het verwijdert, of tot de app 12 maanden niet is geopend. Op je apparaat: je chats, tot je ze verwijdert. Hoe lang bijlagen blijven (altijd, een maand of een week), kies je in **Data en opslag**, op het tabblad **Mijn link**.
 
 ## Het project
 
 ### Is het gratis? Wie betaalt het?
 
-Het is gratis, zonder advertenties en zonder trackers, en wordt betaald met donaties. Incognito Chat is vrije software onder de AGPL en wordt openbaar gebouwd: [de code](https://github.com/{{< param "codeRepo" >}}) en [deze site](https://github.com/{{< param "siteRepo" >}}) staan op GitHub.
+Het is gratis, zonder advertenties en zonder trackers. Voorlopig betalen wij wat het kost om de dienst te laten draaien (zie [Kosten](/nl/costs/)); donaties zullen helpen zodra doneren mogelijk is. Incognito Chat is vrije software onder de AGPL en wordt openbaar gebouwd: [de code](https://github.com/{{< param "codeRepo" >}}) en [deze site](https://github.com/{{< param "siteRepo" >}}) staan op GitHub.
 
 ### Hoe kan ik dit allemaal controleren?
 

@@ -9,7 +9,7 @@ updated: "2026-11-22"
 
 ### A pessoa para quem eu escrevo fica sabendo quem eu sou?
 
-Não. Ela vê um rótulo como **🦊 K3F9**, sempre o mesmo quando você escreve pelo link dela, e mais nada sobre você: nem seu nome, nem seu nome de usuário, nem seu número de telefone. Antes do envio, as fotos perdem os dados ocultos, como a localização, e os vídeos perdem a maior parte deles. Tudo o que é enviado com **Arquivo**, e também músicas e GIFs, vai do jeito que está, com o nome do arquivo e tudo o que houver dentro dele.
+Não. Ela vê um rótulo como **🦊 K3F9**, sempre o mesmo quando você escreve pelo link dela, e mais nada sobre você: nem seu nome, nem seu nome de usuário, nem seu número de telefone. As fotos e os vídeos enviados como fotos ou vídeos perdem o nome do arquivo e os dados ocultos, como a localização (nos vídeos, a maior parte desses dados). Tudo o que é enviado como arquivo (com **Arquivo**, ou com **Comprimir imagem** ou **Enviar como vídeo** desativado), e também músicas, vai do jeito que está, com o nome do arquivo e tudo o que houver dentro dele. GIFs vão sem o nome do arquivo, mas, fora isso, do jeito que estão.
 
 ### Vocês conseguem ler minhas mensagens?
 
@@ -35,7 +35,7 @@ Quem controla o bot decide qual página o Telegram abre, e o Telegram não ofere
 
 ### Alguém observando em tempo real {#live}
 
-Quem administra os servidores, ou a Amazon, que os hospeda, poderia observar as requisições em tempo real e relacionar as pessoas cruzando horários e endereços IP: uma mensagem chegando, depois uma notificação, depois uma resposta ou a marca “Visualizada”. O Telegram também poderia relacionar as pessoas pelos horários. Uma cópia dos dados guardados não mostra isso, mas, com as chaves do servidor, registros mantidos por cerca de um dia mostram parte disso. Mesmo com o enclave, os horários e os endereços IP continuariam visíveis.
+Quem administra os servidores, ou a Amazon, que os hospeda, poderia observar as requisições em tempo real e relacionar as pessoas cruzando horários e endereços IP: uma mensagem chegando, depois uma notificação, depois uma resposta ou a marca “Visualizada”. O Telegram também poderia relacionar as pessoas pelos horários. Uma cópia dos dados guardados não mostra isso, mas, com as chaves do servidor, registros mantidos por até um dia, às vezes alguns dias a mais, mostram parte disso. Mesmo com o enclave, os horários e os endereços IP continuariam visíveis.
 
 ### Seu próprio dispositivo
 
@@ -49,11 +49,11 @@ A pessoa para quem você escreve sempre pode copiar ou fotografar o que você en
 
 ### Preciso me cadastrar?
 
-Não. Para escrever pelo link de alguém, basta sua conta do Telegram: abra o link e escreva. Por enquanto, para ter seu próprio link, é preciso um convite.
+Sem e-mail, sem número de telefone, sem senha: abra o link de alguém no Telegram, toque em **Configurar** uma vez e escreva. Por enquanto, para ter seu próprio link, é preciso um convite.
 
 ### E se alguém me incomodar?
 
-Bloqueie a pessoa: ela não é avisada, e nada do que ela enviar chega até você. Se ela configurar uma nova conta, vai aparecer com um novo rótulo, então talvez você precise bloqueá-la de novo. Você também pode trocar seu link por um novo a qualquer momento; o antigo para de funcionar na hora.
+Bloqueie a pessoa: ela não é avisada, e nada do que ela enviar chega até você. Se ela configurar uma nova conta, vai aparecer com um novo rótulo, então talvez você precise bloqueá-la de novo. Você também pode trocar seu link por um novo a qualquer momento: nenhum chat novo pode começar pelo antigo, mas os chats já iniciados continuam: neles, bloqueie quem você não quiser que siga falando com você.
 
 ### Posso apagar o que enviei?
 
@@ -61,21 +61,21 @@ Sim. Por padrão, quando você apaga uma mensagem, ela é apagada para os dois l
 
 ### Posso usar em outro celular ou computador?
 
-Um dispositivo por vez. Configurar em outro dispositivo substitui sua conta: você recebe um novo link (as pessoas vão precisar dele para falar com você), e seus chats antigos ficam no dispositivo antigo, só para leitura. Nada é transferido e não há backup de nada, então, se você perder o celular, os chats dele se perdem. Configure de novo em um novo celular: isso encerra a conta antiga na hora.
+Um dispositivo por vez. Configurar em outro dispositivo substitui sua conta: seu link antigo para de funcionar e, enquanto os links precisarem de convite, você precisa de um novo convite para voltar a ter um link. Seus chats antigos ficam no dispositivo antigo, só para leitura. Nada é transferido e não há backup de nada, então, se você perder o celular, ou se o Telegram ou o celular apagar os dados do app, os chats dele se perdem. Configure de novo em um novo celular: isso encerra a conta antiga na hora.
 
 ### Como apago minha conta?
 
-Na aba **Meu link**, toque em **Apagar conta**. Enquanto o app continuar aberto, o servidor apaga em poucos minutos o que guarda para você, e depois o app apaga seus chats e chaves deste dispositivo. Os anexos que você enviou continuam disponíveis para a outra pessoa baixar até expirarem, em até 30 dias.
+Na aba **Meu link**, toque em **Apagar conta**. Enquanto o app continuar aberto, o servidor apaga em poucos minutos o que guarda para você, e depois o app apaga seus chats e chaves deste dispositivo (em alguns dispositivos, podem ficar vestígios nos arquivos de armazenamento do app). Os anexos que você enviou continuam disponíveis para a outra pessoa baixar até expirarem, em até 30 dias.
 
 ### Por quanto tempo as coisas ficam guardadas?
 
-No servidor: as mensagens criptografadas, até seu dispositivo recebê-las; os anexos, até serem apagados; no máximo 30 dias, nos dois casos. Sua conta (incluindo seu link, o ID do Telegram embaralhado e o mês em que você abriu o app pela última vez) fica guardada até você apagá-la, ou até o app passar 12 meses sem ser aberto. No seu dispositivo: seus chats, até você apagá-los. Em **Dados e armazenamento**, você escolhe por quanto tempo os anexos ficam guardados (sempre, 1 mês ou 1 semana).
+No servidor: as mensagens criptografadas, até seu dispositivo recebê-las; os anexos, até serem apagados; no máximo 30 dias, nos dois casos. Sua conta (incluindo seu link, o ID do Telegram embaralhado e o mês em que você abriu o app pela última vez) fica guardada até você apagá-la, ou até o app passar 12 meses sem ser aberto. No seu dispositivo: seus chats, até você apagá-los. Em **Dados e armazenamento**, na aba **Meu link**, você escolhe por quanto tempo os anexos ficam guardados (sempre, 1 mês ou 1 semana).
 
 ## O projeto
 
 ### É gratuito? Quem paga por isso?
 
-É gratuito, sem anúncios e sem rastreadores, e é financiado por doações. O Incognito Chat é software livre sob a AGPL, desenvolvido de forma aberta: [o código](https://github.com/{{< param "codeRepo" >}}) e [este site](https://github.com/{{< param "siteRepo" >}}) estão no GitHub.
+É gratuito, sem anúncios e sem rastreadores. Por enquanto, nós pagamos o que custa mantê-lo no ar (veja [Custos](/pt-br/costs/)); as doações vão ajudar quando forem abertas. O Incognito Chat é software livre sob a AGPL, desenvolvido de forma aberta: [o código](https://github.com/{{< param "codeRepo" >}}) e [este site](https://github.com/{{< param "siteRepo" >}}) estão no GitHub.
 
 ### Como posso verificar tudo isso?
 

@@ -9,7 +9,7 @@ updated: "2026-11-22"
 
 ### Does the person I write to find out who I am?
 
-No. They see a label like **🦊 K3F9**, the same each time you write through their link, and nothing else about you: not your name, username or phone number. Photos lose hidden details such as location before they're sent, and videos most of them. Anything sent with **File**, and music and GIFs, go as they are, with their names and anything in them.
+No. They see a label like **🦊 K3F9**, the same each time you write through their link, and nothing else about you: not your name, username or phone number. Photos and videos sent as photos or videos lose their names and hidden details such as location (videos most of them). Anything sent as a file (with **File**, or with **Compress image** or **Send as video** turned off), and music, go as they are, with their names and anything in them. GIFs go without their names, but otherwise as they are.
 
 ### Can you read my messages?
 
@@ -35,7 +35,7 @@ Whoever controls the bot decides which page Telegram opens, and Telegram offers 
 
 ### Someone watching live {#live}
 
-Whoever runs the servers, or Amazon, who hosts them, could watch requests as they happen and link people by timing and IP address: a message arriving, then a notice, then a reply or a "seen". Telegram could link people by timing too. A copy of the stored data doesn't show this, but with the server's keys, records kept for about a day show some of it. Even with the enclave, timing and IP addresses would still show.
+Whoever runs the servers, or Amazon, who hosts them, could watch requests as they happen and link people by timing and IP address: a message arriving, then a notice, then a reply or a "seen". Telegram could link people by timing too. A copy of the stored data doesn't show this, but with the server's keys, records kept for up to a day, sometimes a few days more, show some of it. Even with the enclave, timing and IP addresses would still show.
 
 ### Your own device
 
@@ -49,11 +49,11 @@ The person you write to can always copy or photograph what you send. Deleting a 
 
 ### Do I need to sign up?
 
-No. To write to someone's link, your Telegram account is enough: open the link and write. For now, getting a link of your own needs an invitation.
+No email, phone number or password: open someone's link in Telegram, tap **Set up** once, and write. For now, getting a link of your own needs an invitation.
 
 ### What if someone bothers me?
 
-Block them: they aren't told, and nothing they send arrives. Someone who sets up a new account shows up under a new label, so you may need to block them again. You can also replace your link at any time; the old one stops working at once.
+Block them: they aren't told, and nothing they send arrives. Someone who sets up a new account shows up under a new label, so you may need to block them again. You can also replace your link at any time: no new chats can start through the old one, but chats already started continue: block anyone in them you don't want to hear from.
 
 ### Can I delete what I sent?
 
@@ -61,21 +61,21 @@ Yes. Deleting a message removes it for both sides by default, read or not. You c
 
 ### Can I use it on another phone or computer?
 
-One device at a time. Setting up on another device replaces your account: you get a new link, which people need to reach you, and your old chats stay on the old device, read-only. Nothing moves and nothing is backed up, so if you lose your phone, its chats are gone. Set up again on a new one: that ends the old account at once.
+One device at a time. Setting up on another device replaces your account: your old link stops working, and while links need an invitation, you need a new one to get a link again. Your old chats stay on the old device, read-only. Nothing moves and nothing is backed up, so if you lose your phone, or Telegram or the phone clears the app's data, its chats are gone. Set up again on a new one: that ends the old account at once.
 
 ### How do I delete my account?
 
-On the **My link** tab, tap **Delete account**. While the app stays open, the server deletes what it holds for you within minutes, then the app deletes your chats and keys from this device. Attachments you sent stay for the other side to fetch until they expire, within 30 days.
+On the **My link** tab, tap **Delete account**. While the app stays open, the server deletes what it holds for you within minutes, then the app deletes your chats and keys from this device (on some devices, traces can stay in the app's storage files). Attachments you sent stay for the other side to fetch until they expire, within 30 days.
 
 ### How long is anything kept?
 
-On the server: encrypted messages until your device has them, attachments until they're deleted, at most 30 days for both. Your account (including your link, the scrambled Telegram ID, and the month you last opened the app) stays until you delete it, or until the app goes unopened for 12 months. On your device: your chats, until you delete them. You choose how long attachments stay (forever, a month or a week) in **Data and storage**.
+On the server: encrypted messages until your device has them, attachments until they're deleted, at most 30 days for both. Your account (including your link, the scrambled Telegram ID, and the month you last opened the app) stays until you delete it, or until the app goes unopened for 12 months. On your device: your chats, until you delete them. You choose how long attachments stay (forever, a month or a week) in **Data and storage**, on the **My link** tab.
 
 ## The project
 
 ### Is it free? Who pays for it?
 
-It's free, with no ads and no trackers, and paid for by donations. Incognito Chat is free software under the AGPL, built in public: [the code](https://github.com/{{< param "codeRepo" >}}) and [this site](https://github.com/{{< param "siteRepo" >}}) are on GitHub.
+It's free, with no ads and no trackers. For now we pay what it costs to run (see [Costs](/costs/)); donations will help once they open. Incognito Chat is free software under the AGPL, built in public: [the code](https://github.com/{{< param "codeRepo" >}}) and [this site](https://github.com/{{< param "siteRepo" >}}) are on GitHub.
 
 ### How can I check any of this?
 

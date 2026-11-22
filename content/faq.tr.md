@@ -9,7 +9,7 @@ updated: "2026-11-22"
 
 ### Yazdığım kişi kim olduğumu öğrenir mi?
 
-Hayır. Karşı taraf, kendi bağlantısı üzerinden her yazdığınızda aynı kalan **🦊 K3F9** gibi bir etiket görür ve sizinle ilgili başka hiçbir şey görmez. Adınızı, kullanıcı adınızı ya da telefon numaranızı da görmez. Fotoğraflardaki konum gibi gizli bilgiler gönderilmeden önce silinir; videolarda ise bu bilgilerin çoğu silinir. **Dosya** seçeneğiyle gönderilen her şey, ayrıca müzikler ve GIF'ler olduğu gibi gider: dosya adlarıyla ve içlerindeki her şeyle birlikte.
+Hayır. Karşı taraf, kendi bağlantısı üzerinden her yazdığınızda aynı kalan **🦊 K3F9** gibi bir etiket görür ve sizinle ilgili başka hiçbir şey görmez. Adınızı, kullanıcı adınızı ya da telefon numaranızı da görmez. Fotoğraf ya da video olarak gönderilen fotoğraf ve videolardan dosya adları ve konum gibi gizli bilgiler silinir (videolardan ise bu gizli bilgilerin çoğu). Dosya olarak gönderilen her şey (**Dosya** seçeneğiyle ya da **Görseli sıkıştır** veya **Video olarak gönder** seçeneği kapalıyken gönderilenler), ayrıca müzikler olduğu gibi gider: dosya adlarıyla ve içlerindeki her şeyle birlikte. GIF'ler dosya adları olmadan, ama bunun dışında olduğu gibi gider.
 
 ### Mesajlarımı okuyabilir misiniz?
 
@@ -35,7 +35,7 @@ Botu kim kontrol ediyorsa, Telegram'ın hangi sayfayı açacağına o karar veri
 
 ### Canlı izleme {#live}
 
-Sunucuları işleten kişi ya da onları barındıran Amazon, istekleri gerçekleştikleri anda izleyebilir ve insanları zamanlama ve IP adresi üzerinden ilişkilendirebilir: bir mesaj gelir, ardından bir bildirim, ardından bir yanıt ya da bir “Görüldü” bilgisi. Telegram da insanları zamanlamaya bakarak ilişkilendirebilir. Saklanan verilerin bir kopyası bunu göstermez, ancak sunucunun anahtarlarıyla, yaklaşık bir gün tutulan kayıtlar bunun bir kısmını gösterir. Sunucu güvenli bölgeye taşınsa bile zamanlama ve IP adresleri yine görünürdü.
+Sunucuları işleten kişi ya da onları barındıran Amazon, istekleri gerçekleştikleri anda izleyebilir ve insanları zamanlama ve IP adresi üzerinden ilişkilendirebilir: bir mesaj gelir, ardından bir bildirim, ardından bir yanıt ya da bir “Görüldü” bilgisi. Telegram da insanları zamanlamaya bakarak ilişkilendirebilir. Saklanan verilerin bir kopyası bunu göstermez, ancak sunucunun anahtarlarıyla, bir güne kadar, bazen birkaç gün daha uzun süre tutulan kayıtlar bunun bir kısmını gösterir. Sunucu güvenli bölgeye taşınsa bile zamanlama ve IP adresleri yine görünürdü.
 
 ### Kendi cihazınız
 
@@ -49,11 +49,11 @@ Yazdığınız kişi, gönderdiklerinizi her zaman kopyalayabilir ya da fotoğra
 
 ### Kaydolmam gerekiyor mu?
 
-Hayır. Birine bağlantısı üzerinden yazmak için Telegram hesabınız yeterli: bağlantıyı açın ve yazın. Şimdilik kendi bağlantınızı almak için bir davet gerekiyor.
+E-posta, telefon numarası ya da parola gerekmez: birinin bağlantısını Telegram'da açın, bir kez **Kur** düğmesine dokunun ve yazın. Şimdilik kendi bağlantınızı almak için bir davet gerekiyor.
 
 ### Biri beni rahatsız ederse ne yapabilirim?
 
-Onu engelleyin: bundan haberdar edilmez ve gönderdiği hiçbir şey size ulaşmaz. Yeni bir hesap kuran biri yeni bir etiketle görünür; bu yüzden onu yeniden engellemeniz gerekebilir. Bağlantınızı da istediğiniz zaman yenisiyle değiştirebilirsiniz; eskisi hemen çalışmayı bırakır.
+Onu engelleyin: bundan haberdar edilmez ve gönderdiği hiçbir şey size ulaşmaz. Yeni bir hesap kuran biri yeni bir etiketle görünür; bu yüzden onu yeniden engellemeniz gerekebilir. Bağlantınızı da istediğiniz zaman yenisiyle değiştirebilirsiniz: eskisi üzerinden artık yeni sohbet başlatılamaz, ancak daha önce başlatılmış sohbetler devam eder; bu sohbetlerde mesajlarını almak istemediğiniz herkesi engelleyin.
 
 ### Gönderdiğim bir şeyi silebilir miyim?
 
@@ -61,21 +61,21 @@ Evet. Bir mesajı silmek, okunmuş olsun olmasın, onu varsayılan olarak iki ta
 
 ### Başka bir telefonda ya da bilgisayarda kullanabilir miyim?
 
-Aynı anda yalnızca bir cihazda. Başka bir cihazda kurulum yapmak hesabınızı yenisiyle değiştirir: yeni bir bağlantı alırsınız ve insanların size ulaşması için bu bağlantı gerekir; eski sohbetleriniz ise eski cihazda yalnızca okunabilir olarak kalır. Hiçbir şey taşınmaz ve hiçbir şeyin yedeği alınmaz; bu yüzden telefonunuzu kaybederseniz, içindeki sohbetler de kaybolur. Yeni bir telefonda yeniden kurun: bu, eski hesabı hemen sona erdirir.
+Aynı anda yalnızca bir cihazda. Başka bir cihazda kurulum yapmak hesabınızı yenisiyle değiştirir: eski bağlantınız çalışmayı bırakır ve bağlantı almak davet gerektirdiği sürece, yeniden bağlantı almak için yeni bir davete ihtiyacınız olur. Eski sohbetleriniz eski cihazda yalnızca okunabilir olarak kalır. Hiçbir şey taşınmaz ve hiçbir şeyin yedeği alınmaz; bu yüzden telefonunuzu kaybederseniz ya da Telegram veya telefonun kendisi uygulamanın verilerini temizlerse, içindeki sohbetler de kaybolur. Yeni bir telefonda yeniden kurun: bu, eski hesabı hemen sona erdirir.
 
 ### Hesabımı nasıl silerim?
 
-**Bağlantım** sekmesinde **Hesabı sil** düğmesine dokunun. Uygulama açık kaldığı sürece sunucu, sizin için tuttuklarını birkaç dakika içinde siler; ardından uygulama sohbetlerinizi ve anahtarlarınızı bu cihazdan siler. Gönderdiğiniz ekler, karşı taraf indirebilsin diye süreleri dolana kadar kalır; bu da en geç 30 gün içinde olur.
+**Bağlantım** sekmesinde **Hesabı sil** düğmesine dokunun. Uygulama açık kaldığı sürece sunucu, sizin için tuttuklarını birkaç dakika içinde siler; ardından uygulama sohbetlerinizi ve anahtarlarınızı bu cihazdan siler (bazı cihazlarda uygulamanın depolama dosyalarında izler kalabilir). Gönderdiğiniz ekler, karşı taraf indirebilsin diye süreleri dolana kadar kalır; bu da en geç 30 gün içinde olur.
 
 ### Hangi veri ne kadar süre saklanır?
 
-Sunucuda: şifreli mesajlar cihazınız onları alana kadar, ekler silinene kadar; ikisi için de en fazla 30 gün. Hesabınız (bağlantınız, karıştırılmış Telegram kimliğiniz ve uygulamayı en son açtığınız ay dahil), siz onu silene kadar ya da uygulama 12 ay boyunca hiç açılmadan kalana kadar saklanır. Cihazınızda: sohbetleriniz, siz onları silene kadar. Eklerin ne kadar süre kalacağını (süresiz, bir ay ya da bir hafta) **Veri ve depolama** bölümünde siz seçersiniz.
+Sunucuda: şifreli mesajlar cihazınız onları alana kadar, ekler silinene kadar; ikisi için de en fazla 30 gün. Hesabınız (bağlantınız, karıştırılmış Telegram kimliğiniz ve uygulamayı en son açtığınız ay dahil), siz onu silene kadar ya da uygulama 12 ay boyunca hiç açılmadan kalana kadar saklanır. Cihazınızda: sohbetleriniz, siz onları silene kadar. Eklerin ne kadar süre kalacağını (süresiz, bir ay ya da bir hafta) **Bağlantım** sekmesindeki **Veri ve depolama** bölümünde siz seçersiniz.
 
 ## Proje
 
 ### Ücretsiz mi? Masraflarını kim karşılıyor?
 
-Ücretsiz; reklam ve izleme aracı yok, masrafları bağışlarla karşılanıyor. Incognito Chat, AGPL lisanslı ve herkesin gözü önünde geliştirilen özgür bir yazılımdır: [kod](https://github.com/{{< param "codeRepo" >}}) ve [bu site](https://github.com/{{< param "siteRepo" >}}) GitHub'da.
+Ücretsiz; reklam ve izleme aracı yok. Şimdilik hizmetin çalışma masraflarını biz karşılıyoruz ([Maliyetler](/tr/costs/) sayfasına bakın); bağışlar ise kabul edilmeye başlandığında buna yardımcı olacak. Incognito Chat, AGPL lisanslı ve herkesin gözü önünde geliştirilen özgür bir yazılımdır: [kod](https://github.com/{{< param "codeRepo" >}}) ve [bu site](https://github.com/{{< param "siteRepo" >}}) GitHub'da.
 
 ### Bunların hepsini nasıl kontrol edebilirim?
 

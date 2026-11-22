@@ -40,7 +40,7 @@ features:
     - title: "Built in public"
       text: "A public GitHub workflow builds the app from the public code, and GitHub Pages serves it, not our servers. Every build is reproducible and signed in a public log."
     - title: "Free, no ads, no trackers"
-      text: "Free software under the AGPL. No analytics in the app or on this site. Funded by donations."
+      text: "Free software under the AGPL. No analytics in the app or on this site. Donations will help pay for it."
 
 roadmap:
   title: "Roadmap"
