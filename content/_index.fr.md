@@ -40,7 +40,7 @@ features:
     - title: "Compilée au grand jour"
       text: "Un workflow GitHub public compile l’application à partir du code public, et c’est GitHub Pages qui la sert, pas nos serveurs. Chaque compilation est reproductible et signée dans un journal public."
     - title: "Gratuit, sans publicité ni traceurs"
-      text: "Logiciel libre sous licence AGPL. Aucune mesure d’audience dans l’application ni sur ce site. Les dons aideront à en couvrir les frais."
+      text: "Logiciel libre sous licence AGPL. Aucune mesure d’audience dans l’application ni sur ce site. Les dons aideront à payer le service."
 
 roadmap:
   title: "Feuille de route"

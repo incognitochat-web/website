@@ -15,7 +15,7 @@ Comme il n’y a pas de publicité et rien à vendre, les dons aident à payer l
 
 Les dons sont versés à [notre collectif sur Open Collective](https://opencollective.com/{{< param "openCollective" >}}) et détenus par Open Source Collective, un organisme à but non lucratif qui détient des fonds pour des projets open source. (Open Collective est le site web ; c’est Open Source Collective qui détient l’argent.) Chaque don et chaque dépense y sont listés publiquement : tout le monde peut donc voir ce qui entre et à quoi cet argent sert. Ce que coûtent les serveurs, jour par jour, se trouve sur la page [Coûts](/fr/costs/).
 
-Open Source Collective garde 10 % de chaque don pour son travail, et le prestataire de paiement (comme Stripe ou PayPal) prend ses propres frais. Open Collective demande aussi un pourboire pour lui-même, dont le montant est déjà rempli ; vous pouvez le modifier, et même le mettre à zéro. Les dons ne sont pas déductibles des impôts.
+Open Source Collective garde 10 % de chaque don pour son travail, et le prestataire de paiement (comme Stripe ou PayPal) prend ses propres frais. Open Collective demande aussi un pourboire pour lui-même, dont le montant est déjà prérempli ; vous pouvez le modifier, et même le mettre à zéro. Les dons ne sont pas déductibles des impôts.
 
 ## Votre vie privée
 
