@@ -7,7 +7,7 @@ updated: "2026-11-22"
 draft: true
 ---
 
-Karena tidak ada iklan dan tidak ada yang kami jual, layanan ini berjalan dari donasi. Donasi membayar server dan penyimpanan di Amazon Web Services, serta domainnya. GitHub menyediakan hosting untuk aplikasi dan situs ini secara gratis.
+Karena tidak ada iklan dan tidak ada yang kami jual, layanan ini dibiayai dari donasi. Donasi membayar server dan penyimpanan di Amazon Web Services, serta domainnya. GitHub menyediakan hosting untuk aplikasi dan situs ini secara gratis.
 
 {{< donate-button >}}
 
