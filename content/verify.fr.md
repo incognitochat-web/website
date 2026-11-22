@@ -13,7 +13,7 @@ Le chiffrement ne vous protège que si l’application que vous utilisez est bie
 - **Reproductible.** Une même version donne toujours des fichiers identiques octet pour octet : chacun peut donc la recompiler et comparer.
 - **Signée dans un journal public.** Chaque fichier, ainsi qu’un `manifest.json` qui liste le SHA-256 de chacun d’eux, est signé avec [Sigstore](https://www.sigstore.dev/) par ce workflow. Les signatures sont dans un journal de transparence public, qui ne peut pas être réécrit discrètement.
 - **Une seule adresse, rien d’autre dessus.** L’application n’est servie que depuis `{{< param "appOrigin" >}}`, et rien d’autre n’y est jamais servi : une page à la même adresse pourrait atteindre les clés sur votre appareil.
-- **Verrouillée.** L’application ne charge aucun code tiers, aucune mesure d’audience, et aucun code ni réglage venant du serveur.
+- **Verrouillée.** L’application ne charge aucun code tiers, aucun outil de mesure d’audience, et aucun code ni réglage venant du serveur.
 
 ## Vérifiez par vous-même
 
