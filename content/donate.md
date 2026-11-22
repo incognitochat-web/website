@@ -13,13 +13,14 @@ With no ads and nothing to sell, the service runs on donations. They pay for the
 
 ## Where the money goes
 
-Donations go to [our Open Collective](https://opencollective.com/{{< param "openCollective" >}}), held by Open Source Collective, a non-profit that holds money for open-source projects. Every donation and every expense is listed there publicly, so anyone can see what comes in and what it pays for. What running the service costs, day by day, is on the [Stats](/stats/) page.
+Donations go to [our Open Collective](https://opencollective.com/{{< param "openCollective" >}}), held by Open Source Collective, a non-profit that holds money for open-source projects. Every donation and every expense is listed there publicly, so anyone can see what comes in and what it pays for. What the servers cost, day by day, is on the [Stats](/stats/) page.
 
-Open Source Collective keeps 10% of each donation for its work, and the card processor takes a small fee.
+Open Source Collective keeps 10% of each donation for its work, and the payment processor (Stripe or PayPal) takes its own fee. Open Collective may suggest an optional tip for itself, which you can change. Donations aren't tax-deductible.
 
 ## Your privacy
 
-- Open Collective asks for your name and email. It lists donors publicly, unless you choose to give **incognito**: then only the collective's admins and Open Source Collective see who you are.
+- Open Collective asks for your email, and lists donors publicly under the name they give.
+- With an Open Collective account you can give **incognito**: only the amount is public. Open Source Collective, Open Collective and the payment processor still know who you are.
 - Donating has nothing to do with the app: there's no donate button in it, nothing links a donation to your account, and donors get nothing extra.
 
 ## Other ways to help
