@@ -317,6 +317,14 @@ echo '{"month":"2026-04","days":{"2026-04-01":{"A":5,"B":4,"C":3,"D":2,"E":1,"F"
 jq -e '.months[0].services == ["A", "B", "C", "D", "Other"] and .months[0].service_totals == [6, 4, 3, 2, 2] and .months[0].totals.production == 17' \
   "$work/svc.json" >/dev/null || fail "services and their totals: $(jq -c '.months[0] | {services, service_totals}' "$work/svc.json")"
 build "$work/svc.json" "$work/out8" "2026-01-01T00"
+# A service that cost nothing that month shows $0.00, not nothing.
+zero=$work/zero
+mkdir -p "$zero/stats/costs/production"
+echo '{"month":"2026-04","days":{"2026-04-01":{"A":1,"B":0}}}' >"$zero/stats/costs/production/2026-04.json"
+"$root/scripts/build-stats.sh" "$zero" "$work/zero.json" >/dev/null
+build "$work/zero.json" "$work/out9" "2026-01-01T00"
+# shellcheck disable=SC2016 # a literal dollar sign
+grep -qF '</span>B <span class="legend-amount">$0.00<' "$work/out9/stats/index.html" || fail "a service that cost nothing has no \$0.00 in the legend"
 legend=$(grep -o '</span>[A-Za-z]* <span class="legend-amount">[^<]*' "$work/out8/stats/index.html" | sed 's/<[^>]*>//g' | tr '\n' ',')
 # shellcheck disable=SC2016 # literal dollar signs
 [ "$legend" = 'A $6.00,B $4.00,C $3.00,D $2.00,Other $2.00,' ] || fail "the legend's services and totals: $legend"
