@@ -11,7 +11,7 @@ updated: "2026-11-21"
 
 - **Herkesin gözü önünde derlenir.** [`{{< param "hostingRepo" >}}`](https://github.com/{{< param "hostingRepo" >}}) deposundaki herkese açık bir iş akışı, [kodun](https://github.com/{{< param "codeRepo" >}}) tek bir sürümünü derler; o depoda başka hiçbir kod yoktur.
 - **Yeniden üretilebilir.** Aynı sürüm her zaman bayt bayt aynı dosyalara derlenir; böylece herkes onu yeniden derleyip karşılaştırabilir.
-- **Herkese açık bir kayıtta imzalı.** Her dosya ve her birinin SHA-256 değerini listeleyen bir `manifest.json`, o iş akışı tarafından [Sigstore](https://www.sigstore.dev/) ile imzalanır. İmzalar, sessizce yeniden yazılamayan herkese açık bir şeffaflık kaydında durur.
+- **Herkese açık bir kayıtta imzalı.** O iş akışı, [Sigstore](https://www.sigstore.dev/) ile her dosyayı tek tek ve ayrıca hepsinin SHA-256 değerlerini listeleyen bir `manifest.json` dosyasını imzalar. İmzalar, sessizce yeniden yazılamayan herkese açık bir şeffaflık kaydında durur.
 - **Tek adres, üzerinde başka hiçbir şey yok.** Uygulama yalnızca `{{< param "appOrigin" >}}` adresinden sunulur ve orada asla başka bir şey sunulmaz: aynı adresteki bir sayfa cihazınızdaki anahtarlara ulaşabilirdi.
 - **Dışarıya kapalı.** Uygulama üçüncü taraf kodu ya da analiz aracı yüklemez; sunucudan da kod veya ayar yüklemez.
 
