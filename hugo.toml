@@ -67,6 +67,14 @@ weight = 5
 [languages.nl.params]
 fonts = ["inter", "newsreader"]
 
+[languages.es]
+label = "Español"
+locale = "es"
+direction = "ltr"
+weight = 6
+[languages.es.params]
+fonts = ["inter", "newsreader"]
+
 [sitemap]
 changeFreq = ""
 priority = -1
