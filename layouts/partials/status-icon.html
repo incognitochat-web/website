@@ -1,0 +1,9 @@
+{{- /* One check's status: passed, failed, warning, unknown or na. */ -}}
+{{- $s := . | default "unknown" -}}
+{{- if not (in (slice "passed" "failed" "warning" "unknown" "na") $s) }}{{ $s = "unknown" }}{{ end -}}
+{{- $icons := dict "passed" "circle-check" "failed" "circle-x" "warning" "alert" "unknown" "circle-minus" -}}
+<span class="st st-{{ $s }}" title="{{ i18n (printf "st_is_%s" $s) }}">
+  {{- if eq $s "na" }}<span aria-hidden="true">—</span>{{ else }}{{ partial "icon.html" (index $icons $s) }}{{ end -}}
+  <span class="visually-hidden">{{ i18n (printf "st_is_%s" $s) }}</span>
+</span>
+{{- /* no trailing newline */ -}}

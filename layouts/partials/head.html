@@ -12,5 +12,6 @@
 {{ range .AllTranslations }}<link rel="alternate" hreflang="{{ .Language.Locale }}" href="{{ .Permalink }}">
 {{ end }}<link rel="icon" href="{{ "favicon.svg" | relURL }}" type="image/svg+xml">
 <link rel="preload" href="{{ "fonts/inter.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
-{{ if eq site.Language.Direction "rtl" }}<link rel="preload" href="{{ "fonts/vazirmatn-arabic.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+{{ if ne site.Language.Direction "rtl" }}<link rel="preload" href="{{ "fonts/newsreader.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+{{ end }}{{ if eq site.Language.Direction "rtl" }}<link rel="preload" href="{{ "fonts/vazirmatn-arabic.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
 {{ end }}<link rel="stylesheet" href="{{ "css/site.css" | relURL }}">

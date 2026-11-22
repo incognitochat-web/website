@@ -31,7 +31,12 @@ for id in $runs; do
       and (.checked_at | type == "string" and test("\\A[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z\\z"))
       and (.ref | type == "string" and test("\\A(v[0-9]+\\.[0-9]+\\.[0-9]+|[0-9a-f]{40})?\\z")))
     | . as $r
-    | $all[0] | if has($r.mode) then . else .[$r.mode] = ($r | {result, checked_at, ref, run_url: $url}) end
+    # Each check: a known name and a known status; anything else is dropped.
+    | ($r.checks // {} | if type == "object" then . else {} end
+        | with_entries(select(
+            (.key | IN("address", "domain", "source", "latest", "signed", "deployed", "files", "rebuild"))
+            and (.value | IN("passed", "failed", "warning", "unknown", "na"))))) as $checks
+    | $all[0] | if has($r.mode) then . else .[$r.mode] = ($r | {result, checked_at, ref, checks: $checks, run_url: $url}) end
   ' "$tmp/run/app-check.json" >"$tmp/next.json" 2>/dev/null || continue
   [ -s "$tmp/next.json" ] && mv "$tmp/next.json" "$tmp/all.json"
 done

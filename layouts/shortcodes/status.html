@@ -1,0 +1,55 @@
+{{- /* The latest automatic checks of the app, from data/appcheck.json (written at deploy time by scripts/fetch-app-checks.sh): the hourly checks, and the daily rebuild. */ -}}
+{{- $d := hugo.Data.appcheck | default dict -}}
+{{- $h := index $d "hourly" -}}
+{{- $r := index $d "rebuild" -}}
+{{- $new := printf `<span class="visually-hidden"> %s</span>` (i18n "newTab") | safeHTML -}}
+{{- $results := slice -}}
+{{- with $h }}{{ $results = $results | append .result }}{{ end -}}
+{{- with $r }}{{ $results = $results | append .result }}{{ end -}}
+{{- $overall := "none" -}}
+{{- if in $results "failed" }}{{ $overall = "failed" }}{{ else if in $results "error" }}{{ $overall = "error" }}{{ else if $results }}{{ $overall = "passed" }}{{ end -}}
+{{- $last := "" -}}
+{{- with $h }}{{ $last = .checked_at }}{{ end -}}
+{{- with $r }}{{ if gt .checked_at $last }}{{ $last = .checked_at }}{{ end }}{{ end -}}
+
+<div class="status-banner status-{{ $overall }}">
+  {{ partial "icon.html" (cond (eq $overall "passed") "circle-check" (cond (eq $overall "none") "circle-minus" "circle-x")) }}
+  <div>
+    <p class="status-title">{{ i18n (printf "st_overall_%s" $overall) }}</p>
+    {{- with $last }}
+    <p class="status-sub">{{ i18n "st_last" }} <time datetime="{{ . }}" dir="ltr">{{ time.Format "2006-01-02 15:04 UTC" . }}</time></p>
+    {{- end }}
+  </div>
+</div>
+
+{{- range $group := slice (dict "name" "hourly" "run" $h "checks" (slice "address" "domain" "source" "latest" "signed" "deployed" "files"))
+                           (dict "name" "daily" "run" $r "checks" (slice "rebuild")) }}
+<table class="status-table">
+  <thead>
+    <tr class="status-group">
+      <th scope="colgroup" colspan="2">
+        <span class="group-name">{{ i18n (printf "st_group_%s" $group.name) }}</span>
+        {{- with $group.run }}
+        <span class="group-meta"><time datetime="{{ .checked_at }}" dir="ltr">{{ time.Format "2006-01-02 15:04 UTC" .checked_at }}</time>
+          {{- with .ref }} · <code>{{ if hasPrefix . "v" }}{{ . }}{{ else }}{{ substr . 0 12 }}{{ end }}</code>{{ end }}
+          · <a href="{{ .run_url }}" target="_blank" rel="noopener noreferrer">{{ i18n "st_log_link" }}{{ $new }}</a></span>
+        {{- else }}
+        <span class="group-meta">{{ i18n "st_not_yet" }}</span>
+        {{- end }}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    {{- $checks := index ($group.run | default dict) "checks" | default dict }}
+    {{- range $group.checks }}
+    <tr>
+      <th scope="row">
+        <span class="check-name">{{ i18n (printf "st_%s" .) }}</span>
+        <span class="check-desc">{{ i18n (printf "st_%s_desc" .) }}</span>
+      </th>
+      <td>{{ partial "status-icon.html" (index $checks .) }}</td>
+    </tr>
+    {{- end }}
+  </tbody>
+</table>
+{{- end }}

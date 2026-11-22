@@ -27,9 +27,7 @@ It checks that every file served is exactly what the unchanged, reviewed workflo
 
 ## Checked automatically
 
-A [scheduled job](https://github.com/{{< param "siteRepo" >}}/blob/main/.github/workflows/check-app.yml) in this site's public repository runs the same script against the live app every hour, and once a day also rebuilds the app and compares it byte for byte. The latest results, each with its full log:
-
-{{< appcheck >}}
+The same script runs against the live app every hour, and once a day with `--rebuild`. The results, and what each check covers, are on the [Status](/status/) page.
 
 ## What this can't prove
 
