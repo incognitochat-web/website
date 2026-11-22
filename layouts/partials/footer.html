@@ -12,7 +12,7 @@
     <div class="footer-col">
       <h2>{{ i18n "footerProject" }}</h2>
       <ul>
-        {{- range slice "official" "verify" "status" "stats" "security" }}
+        {{- range slice "official" "verify" "status" "stats" "costs" "security" }}
           {{- with site.GetPage . }}<li><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></li>{{ end }}
         {{- end }}
       </ul>

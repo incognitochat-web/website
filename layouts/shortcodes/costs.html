@@ -1,0 +1,58 @@
+{{- /* What running the service costs, from data/stats.json (written at
+     deploy time by scripts/build-stats.sh from the data branch): one
+     section per month with costs read, newest first, picked by the links
+     above them with no script (the newest shows by default; #c-yyyy-mm
+     shows another, site.css). Production by day and service, the test
+     environment as one total a day. */ -}}
+{{- $s := hugo.Data.stats | default dict -}}
+{{- $months := slice -}}
+{{- range $s.months | default slice }}{{ if or (ne .totals.production nil) (ne .totals.dev nil) }}{{ $months = $months | append . }}{{ end }}{{ end -}}
+{{- if not $months }}
+<p class="stats-empty">{{ i18n "costs_none" }}</p>
+{{- else }}
+
+{{- /* Up to the newest day production's costs were read. */}}
+{{- $last := "" }}
+{{- range $months }}{{ range .days }}{{ if and (ne .total nil) (gt .date $last) }}{{ $last = .date }}{{ end }}{{ end }}{{ end }}
+{{- with $last }}
+<p class="stats-asof">{{ i18n "costs_asof" }} <time datetime="{{ . }}" dir="ltr">{{ . }}</time></p>
+{{- end }}
+
+<div class="months">
+{{- range $i, $m := $months }}
+<section class="month{{ if eq $i 0 }} newest{{ end }}" id="c-{{ $m.month }}">
+{{ partial "month-nav.html" (dict "months" $months "current" $m.month "prefix" "c") }}
+<h2>{{ partial "month-name.html" $m.month }}</h2>
+<div class="tiles">
+  <div class="tile"><p class="tile-value" dir="ltr">{{ if ne $m.totals.production nil }}${{ printf "%.2f" (float $m.totals.production) }}{{ else }}—{{ end }}</p><p class="tile-name">{{ i18n "stats_cost_prod" }}</p></div>
+  <div class="tile"><p class="tile-value" dir="ltr">{{ if ne $m.totals.dev nil }}${{ printf "%.2f" (float $m.totals.dev) }}{{ else }}—{{ end }}</p><p class="tile-name">{{ i18n "stats_cost_dev" }}</p></div>
+</div>
+
+{{- if ne $m.totals.production nil }}
+<h3>{{ i18n "stats_costs_chart" }}</h3>
+{{ partial "cost-bars.html" $m }}
+{{- end }}
+
+<details class="table-view">
+  <summary>{{ i18n "stats_day_table" }}</summary>
+  {{- /* Scrolls inside when wider than the screen; focusable so it can be
+       scrolled from the keyboard. */}}
+  <div class="table-scroll" role="region" tabindex="0" aria-label="{{ i18n "stats_day_table" }}">
+  <table>
+    <thead><tr><th>{{ i18n "stats_day" }}</th><th>{{ i18n "stats_cost_prod" }}</th><th>{{ i18n "stats_cost_dev" }}</th></tr></thead>
+    <tbody>
+      {{- range sort $m.days "date" "desc" }}
+      <tr>
+        <td dir="ltr">{{ .date }}</td>
+        <td dir="ltr">{{ if ne .total nil }}${{ printf "%.2f" (float .total) }}{{ else }}—{{ end }}</td>
+        <td dir="ltr">{{ if ne .dev nil }}${{ printf "%.2f" (float .dev) }}{{ else }}—{{ end }}</td>
+      </tr>
+      {{- end }}
+    </tbody>
+  </table>
+  </div>
+</details>
+</section>
+{{- end }}
+</div>
+{{- end }}

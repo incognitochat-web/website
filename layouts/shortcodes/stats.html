@@ -4,7 +4,8 @@
      newest shows by default; #m-yyyy-mm shows another, site.css). Each
      metric counts from params.statsCountedFrom: earlier days show "—", and
      a month or day it started in is marked "*". The newest month also shows
-     the last 24 hours and the last 7 days hour by hour. */ -}}
+     the last 24 hours and the last 7 days hour by hour. Only months with
+     counts; the costs are on the Costs page (costs.html). */ -}}
 {{- $s := hugo.Data.stats | default dict -}}
 {{- $from := site.Params.statsCountedFrom | default dict -}}
 {{- $starts := dict "accounts" (index $from "accounts" | default "") "messages" (index $from "messages" | default "") "media_bytes" (index $from "media" | default "") -}}
@@ -13,7 +14,8 @@
 {{- /* How this language writes a list and a day of a month. */ -}}
 {{- $comma := cond (in (slice "fa" "ar") site.Language.Lang) "، " ", " -}}
 {{- $dayMonth := cond (in (slice "es" "pt-br") site.Language.Lang) "2 de January" "2 January" -}}
-{{- $months := $s.months | default slice -}}
+{{- $months := slice -}}
+{{- range $s.months | default slice }}{{ if gt .totals.hours 0 }}{{ $months = $months | append . }}{{ end }}{{ end -}}
 {{- if not $months }}
 <p class="stats-empty">{{ i18n "stats_none" }}</p>
 {{- else }}
@@ -38,15 +40,7 @@
 <section class="month{{ if eq $i 0 }} newest{{ end }}" id="m-{{ $m.month }}">
 {{- /* The month links in every month, so they're right above the month
      picked, with that month marked. */}}
-{{- if gt (len $months) 1 }}
-<nav class="month-nav" aria-label="{{ i18n "stats_months" }}">
-  <ul>
-    {{- range $months }}
-    <li><a href="#m-{{ .month }}"{{ if eq .month $m.month }} aria-current="true"{{ end }}>{{ partial "month-name.html" .month }}</a></li>
-    {{- end }}
-  </ul>
-</nav>
-{{- end }}
+{{ partial "month-nav.html" (dict "months" $months "current" $m.month "prefix" "m") }}
 <h2>{{ partial "month-name.html" $m.month }}</h2>
 <div class="tiles">
   {{- range $metrics }}
@@ -54,8 +48,6 @@
   {{- $st := index $state . }}
   <div class="tile"><p class="tile-value">{{ if or (eq $st "no") (eq $v nil) }}—{{ else }}{{ if eq . "media_bytes" }}<span dir="ltr">{{ printf "%.1f" (div (float $v) 1048576) }} MiB</span>{{ else }}{{ lang.FormatNumber 0 $v }}{{ end }}{{ if eq $st "part" }}*{{ end }}{{ end }}</p><p class="tile-name">{{ index $labels . }}</p></div>
   {{- end }}
-  <div class="tile"><p class="tile-value" dir="ltr">{{ if ne $m.totals.production nil }}${{ printf "%.2f" (float $m.totals.production) }}{{ else }}—{{ end }}</p><p class="tile-name">{{ i18n "stats_cost_prod" }}</p></div>
-  <div class="tile"><p class="tile-value" dir="ltr">{{ if ne $m.totals.dev nil }}${{ printf "%.2f" (float $m.totals.dev) }}{{ else }}—{{ end }}</p><p class="tile-name">{{ i18n "stats_cost_dev" }}</p></div>
 </div>
 {{- /* When counting began this month: one line per start, naming what. */}}
 {{- $begins := slice }}
@@ -78,18 +70,13 @@
 {{- end }}
 {{- end }}
 
-{{- if ne $m.totals.production nil }}
-<h3>{{ i18n "stats_costs_chart" }}</h3>
-{{ partial "cost-bars.html" $m }}
-{{- end }}
-
 <details class="table-view">
   <summary>{{ i18n "stats_day_table" }}</summary>
   {{- /* Scrolls inside when wider than the screen; focusable so it can be
        scrolled from the keyboard. */}}
   <div class="table-scroll" role="region" tabindex="0" aria-label="{{ i18n "stats_day_table" }}">
   <table>
-    <thead><tr><th>{{ i18n "stats_day" }}</th>{{ range $metrics }}<th>{{ index $labels . }}{{ if eq . "media_bytes" }} (MiB){{ end }}</th>{{ end }}<th>{{ i18n "stats_cost_prod" }}</th><th>{{ i18n "stats_cost_dev" }}</th></tr></thead>
+    <thead><tr><th>{{ i18n "stats_day" }}</th>{{ range $metrics }}<th>{{ index $labels . }}{{ if eq . "media_bytes" }} (MiB){{ end }}</th>{{ end }}</tr></thead>
     <tbody>
       {{- range sort $m.days "date" "desc" }}
       {{- $d := . }}
@@ -102,8 +89,6 @@
         {{- $f := index $starts . }}
         <td>{{ if or (eq $f "") (eq $v nil) (lt $d.date (substr $f 0 10)) }}—{{ else if eq . "media_bytes" }}{{ printf "%.1f" (div (float $v) 1048576) }}{{ else }}{{ lang.FormatNumber 0 $v }}{{ end }}</td>
         {{- end }}
-        <td dir="ltr">{{ if ne .total nil }}${{ printf "%.2f" (float .total) }}{{ else }}—{{ end }}</td>
-        <td dir="ltr">{{ if ne .dev nil }}${{ printf "%.2f" (float .dev) }}{{ else }}—{{ end }}</td>
       </tr>
       {{- end }}
     </tbody>
@@ -134,4 +119,8 @@
 </section>
 {{- end }}
 </div>
+{{- end }}
+
+{{- with site.GetPage "costs" }}
+<p class="stats-more">{{ i18n "stats_see_costs" }} <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></p>
 {{- end }}

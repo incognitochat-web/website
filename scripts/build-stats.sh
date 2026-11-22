@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Turns the data store (the `data` branch, checked out at <store>) into
-# what the Stats page shows, data/stats.json:
+# what the Stats and Costs pages show, data/stats.json:
 # - months: the newest 13 months, newest first, each with its days (counts,
 #   production's costs by service, the test environment's total) and its
 #   totals; production's 4 biggest services that month by name, the rest

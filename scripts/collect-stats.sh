@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Reads the app's public statistics from AWS into the data store (the
-# repository's `data` branch, checked out at <store>), for the Stats page.
+# repository's `data` branch, checked out at <store>), for the Stats and
+# Costs pages.
 # Run by .github/workflows/stats.yml with a read-only role
 # (the code repository's infra/init/stats_reader.tf); anyone with such a
 # role can run it the same way.

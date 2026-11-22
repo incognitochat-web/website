@@ -2,7 +2,7 @@
 # Tests the statistics pipeline end to end, offline: collect-stats.sh
 # against a stand-in AWS CLI with known answers (and its refusals), a second
 # run that must change nothing, build-stats.sh (and what it refuses), then
-# Hugo, and checks what the Stats page shows, with numbers, with costs only,
+# Hugo, and checks what the Stats and Costs pages show, with numbers, with costs only,
 # and with none. Touches nothing but a temporary folder. Needs hugo and jq.
 #
 #   scripts/test-stats.sh
@@ -177,10 +177,14 @@ grep -q '>5</p>' "$page" || fail "the accounts tile isn't 5"
 grep -q '>7</p>' "$page" || fail "the messages tile isn't 7"
 grep -q '2.0 MiB' "$page" || fail "the media tile isn't 2.0 MiB"
 [ "$(grep -o 'class="bar"' "$page" | wc -l)" -ge 3 ] || fail "too few bars"
-grep -q 'AWS WAF' "$page" || fail "no service in the legend"
-grep -q '&lt;b&gt;AWS Lambda&lt;/b&gt;' "$page" || fail "a service name isn't escaped"
-if grep -q '<b>AWS Lambda</b>' "$page"; then fail "a service name was written as HTML"; fi
-grep -q 'class="seg so"' "$page" || fail "no Other segment"
+# The costs are on their own page; Stats links to it.
+cpage=$work/out/costs/index.html
+grep -q 'AWS WAF' "$cpage" || fail "no service in the legend"
+grep -q '&lt;b&gt;AWS Lambda&lt;/b&gt;' "$cpage" || fail "a service name isn't escaped"
+if grep -q '<b>AWS Lambda</b>' "$cpage"; then fail "a service name was written as HTML"; fi
+if grep -q 'legend-amount\|AWS WAF\|tile-name">Production\|tile-name">Test environment' "$page"; then fail "costs on the Stats page"; fi
+grep -q 'class="stats-more">What running the service costs: <a href="/costs/">Costs</a>' "$page" || fail "the Stats page doesn't link to Costs"
+grep -q 'class="seg so"' "$cpage" || fail "no Other segment"
 grep -q 'Table: day by day' "$page" || fail "no day-by-day table"
 grep -q "class=\"month newest\" id=\"m-$(jq -r '.months[0].month' "$work/stats.json")\"" "$page" || fail "the newest month isn't the one shown"
 latest=$(jq -r .latest "$work/stats.json")
@@ -238,6 +242,8 @@ grep -qz '<td dir="ltr">2026-11-01 \*</td>\s*<td>24</td>\s*<td>—</td>\s*<td>0.
 grep -q 'Messages sent: counted from 21 November, <span dir="ltr">05:00 UTC</span>' "$work/out5/stats/index.html" || fail "no note on when messages started being counted"
 grep -q 'Media: counted from 1 November, <span dir="ltr">05:00 UTC</span>' "$work/out5/stats/index.html" || fail "no note on when media started being counted"
 grep -q '>48</p>' "$work/out5/stats/index.html" || fail "the month's accounts tile isn't 48"
+# Counts alone: Costs has no months.
+grep -q 'No costs yet' "$work/out5/costs/index.html" || fail "months with counts alone are on the Costs page"
 # A day before counting started is "—" in its chart too.
 grep -q '<title>2026-11-01: —</title>' "$work/out5/stats/index.html" || fail "a day before counting started is charted as counted"
 # The hourly charts only in the newest month; every month has the links, its own marked.
@@ -294,18 +300,35 @@ echo '{"month":"2026-02","days":{}}' >"$costs3/stats/costs/dev/2026-02.json"
 jq -e '.months[1].days[-1].dev == 0 and .months[0].days[0].dev == null and .months[0].totals.dev == null' "$work/costs3.json" >/dev/null \
   || fail "a day the test environment wasn't read for: $(jq -c '[.months[1].days[-1].dev, .months[0].days[0].dev]' "$work/costs3.json")"
 build "$work/costs.json" "$work/out4" "2026-01-01T00"
+# Costs alone: Stats has no months, Costs has them all.
+grep -q 'No numbers yet' "$work/out4/stats/index.html" || fail "months with costs alone are on the Stats page"
 # shellcheck disable=SC2016 # a literal dollar sign
-grep -qF '$1.00' "$work/out4/stats/index.html" || fail "costs alone aren't shown"
-if grep -q 'No numbers yet' "$work/out4/stats/index.html"; then fail "costs alone are hidden"; fi
-grep -q 'tile-value" dir="ltr">—' "$work/out4/stats/index.html" || fail "an unread test environment isn't a dash"
-grep -q 'href="#m-2026-01"' "$work/out4/stats/index.html" || fail "no link to an earlier month"
+grep -qF '$1.00' "$work/out4/costs/index.html" || fail "costs alone aren't shown"
+grep -q 'tile-value" dir="ltr">—' "$work/out4/costs/index.html" || fail "an unread test environment isn't a dash"
+grep -q 'href="#c-2026-01"' "$work/out4/costs/index.html" || fail "no link to an earlier month"
 # (The section is read first: grep -q in a pipe can stop sed early, and pipefail would fail.)
-dec=$(sed -n '/id="m-2025-12"/,/<\/section>/p' "$work/out4/stats/index.html")
+dec=$(sed -n '/id="c-2025-12"/,/<\/section>/p' "$work/out4/costs/index.html")
 # shellcheck disable=SC2016 # literal dollar signs
 grep -qF '>$0.00</p><p class="tile-name">Production' <<<"$dec" || fail "a month that cost nothing does not show \$0.00"
 # shellcheck disable=SC2016 # a literal dollar sign
-grep -qF 'legend-amount">$1.00<' "$work/out4/stats/index.html" || fail "the legend does not give a service's month total"
-grep -q 'class="month newest" id="m-2026-02"' "$work/out4/stats/index.html" || fail "the newest month isn't shown first"
+grep -qF 'legend-amount">$1.00<' "$work/out4/costs/index.html" || fail "the legend does not give a service's month total"
+grep -q 'class="month newest" id="c-2026-02"' "$work/out4/costs/index.html" || fail "the newest month isn't shown first"
+grep -q 'datetime="2026-02-01"' "$work/out4/costs/index.html" || fail "Costs isn't 'up to' the newest day production's costs were read"
+# A month with the test environment's costs only is on Costs, production "—".
+dev6=$(sed -n '/id="c-2025-06"/,/<\/section>/p' "$work/out4/costs/index.html")
+grep -qF 'tile-value" dir="ltr">—</p><p class="tile-name">Production' <<<"$dev6" || fail "a month with test-environment costs only isn't on Costs"
+
+# Counts in one month, costs in another: each page lists only its own.
+mixed=$work/mixed
+mkdir -p "$mixed/stats/hourly" "$mixed/stats/costs/production"
+jq -n '{date: "2026-11-01", accounts: [range(24) | 1], messages: [range(24) | 0], media_bytes: [range(24) | 0]}' >"$mixed/stats/hourly/2026-11-01.json"
+echo '{"month":"2026-10","days":{"2026-10-31":{"AWS Lambda":1}}}' >"$mixed/stats/costs/production/2026-10.json"
+"$root/scripts/build-stats.sh" "$mixed" "$work/mixed.json" >/dev/null
+build "$work/mixed.json" "$work/out10" "2026-01-01T00"
+grep -q 'id="m-2026-11"' "$work/out10/stats/index.html" || fail "a month with counts isn't on Stats"
+if grep -q 'id="m-2026-10"' "$work/out10/stats/index.html"; then fail "a month with costs alone is on Stats"; fi
+grep -q 'id="c-2026-10"' "$work/out10/costs/index.html" || fail "a month with costs isn't on Costs"
+if grep -q 'id="c-2026-11"' "$work/out10/costs/index.html"; then fail "a month with counts alone is on Costs"; fi
 
 # A month with six services: the four biggest by name, the rest as Other,
 # each with its month total in the legend, in that order.
@@ -324,8 +347,8 @@ echo '{"month":"2026-04","days":{"2026-04-01":{"A":1,"B":0}}}' >"$zero/stats/cos
 "$root/scripts/build-stats.sh" "$zero" "$work/zero.json" >/dev/null
 build "$work/zero.json" "$work/out9" "2026-01-01T00"
 # shellcheck disable=SC2016 # a literal dollar sign
-grep -qF '</span>B <span class="legend-amount">$0.00<' "$work/out9/stats/index.html" || fail "a service that cost nothing has no \$0.00 in the legend"
-legend=$(grep -o '</span>[A-Za-z]* <span class="legend-amount">[^<]*' "$work/out8/stats/index.html" | sed 's/<[^>]*>//g' | tr '\n' ',')
+grep -qF '</span>B <span class="legend-amount">$0.00<' "$work/out9/costs/index.html" || fail "a service that cost nothing has no \$0.00 in the legend"
+legend=$(grep -o '</span>[A-Za-z]* <span class="legend-amount">[^<]*' "$work/out8/costs/index.html" | sed 's/<[^>]*>//g' | tr '\n' ',')
 # shellcheck disable=SC2016 # literal dollar signs
 [ "$legend" = 'A $6.00,B $4.00,C $3.00,D $2.00,Other $2.00,' ] || fail "the legend's services and totals: $legend"
 
@@ -347,5 +370,6 @@ jq -e '(.months | length) == 13 and .months[0].month == "2026-03" and .months[-1
 echo '{}' >"$work/empty.json"
 build "$work/empty.json" "$work/out3" ""
 grep -q 'No numbers yet' "$work/out3/stats/index.html" || fail "an empty store isn't said so"
+grep -q 'No costs yet' "$work/out3/costs/index.html" || fail "an empty store isn't said so on Costs"
 
 echo "ok: statistics pipeline"
