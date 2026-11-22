@@ -20,7 +20,7 @@ Opisz, na czym polega problem, jak go odtworzyć i co atakujący mógłby z nim 
 - Poważne problemy naprawiamy w pierwszej kolejności, a gdy użytkownicy są już bezpieczni, publikujemy, co było nie tak i jak to naprawiono.
 - Jeśli chcesz, wymienimy cię w podziękowaniach.
 
-## Prosimy
+## Nasze prośby
 
 - Testuj na własnych kontach albo na kopii uruchomionej u siebie. [Kod](https://github.com/{{< param "codeRepo" >}}) zawiera wszystko, czego potrzeba, by ją uruchomić.
 - Nie uzyskuj dostępu do danych innych osób i nie zakłócaj działania usługi innym.
