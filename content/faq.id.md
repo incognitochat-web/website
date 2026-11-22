@@ -21,7 +21,7 @@ Tidak ada yang disimpannya yang menunjukkan hal itu: pesan berpindah lewat kotak
 
 ### Apakah tim Incognito Chat bisa tahu akun Telegram mana yang memiliki sebuah tautan?
 
-Saat ini bisa, jika kami memilih untuk melihatnya. Server menyimpan ID Telegram setiap akun dalam bentuk yang diacak, dan siapa pun yang memegang kunci server bisa mengetahui ID itu dari bentuk tersebut. Hal itu tidak mengungkapkan siapa yang menulis kepada Anda, karena pesan dikirim tanpa login. Memindahkan server ke enclave, [yang sudah ada dalam rencana](/id/#roadmap), juga akan membuat kami sendiri tidak bisa lagi melakukannya.
+Saat ini bisa, jika kami memilih untuk melihatnya. Server menyimpan ID Telegram setiap akun dalam bentuk yang diacak, dan siapa pun yang memegang kunci server bisa mengetahui ID itu dari bentuk tersebut. Untuk sebagian besar tautan, hal ini tidak terlalu penting: tautan memang dibuat untuk dibagikan atau dikirim, jadi siapa pun yang mendapatkannya biasanya sudah tahu tautan itu milik siapa. Selain itu, mengetahui pemilik tautan tidak mengungkapkan siapa yang menulis kepada Anda, karena pesan dikirim tanpa login. Memindahkan server ke enclave, [yang sudah ada dalam rencana](/id/#roadmap), juga akan membuat kami sendiri tidak bisa lagi mengetahui pemilik tautan.
 
 ### Apa yang dilihat Telegram?
 

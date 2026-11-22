@@ -21,7 +21,7 @@ Niets wat hij opslaat, zegt dat: berichten gaan via willekeurige postvakken, nie
 
 ### Kunnen jullie zien welk Telegram-account bij een link hoort?
 
-Op dit moment wel, als we ervoor zouden kiezen om te kijken. De server bewaart een versluierde vorm van het Telegram-ID van elk account, en wie de sleutels van de server heeft, kan het ID daaruit afleiden. Het laat niemand zien wie er naar jou schrijft, want berichten worden verstuurd zonder in te loggen. De server naar een enclave verhuizen, [een van onze plannen](/nl/#roadmap), zou dit ook voor ons onmogelijk maken.
+Op dit moment wel, als we ervoor zouden kiezen om te kijken. De server bewaart een versluierde vorm van het Telegram-ID van elk account, en wie de sleutels van de server heeft, kan het ID daaruit afleiden. Voor de meeste links maakt dat weinig uit: een link is bedoeld om ergens te plaatsen of te versturen, dus wie hem heeft, weet meestal al van wie hij is. En weten van wie de link is, zegt niets over wie er naar jou schrijft, want berichten worden verstuurd zonder in te loggen. De server naar een enclave verhuizen, [een van onze plannen](/nl/#roadmap), zou dit ook voor ons onmogelijk maken.
 
 ### Wat ziet Telegram?
 

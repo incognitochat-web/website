@@ -21,7 +21,7 @@ Nothing it stores says so: messages travel through random mailboxes, not by acco
 
 ### Can you tell which Telegram account owns a link?
 
-Today, yes, if we chose to look. The server keeps a scrambled form of each account's Telegram ID, and whoever holds the server's keys can work the ID out from it. It doesn't tell anyone who writes to you, since messages are sent without a login. Moving the server into an enclave, [on the roadmap](/#roadmap), would take this away from us too.
+Today, yes, if we chose to look. The server keeps a scrambled form of each account's Telegram ID, and whoever holds the server's keys can work the ID out from it. For most links this matters little: a link is made to be posted or sent, so whoever has it usually knows whose it is already. And knowing the owner doesn't tell anyone who writes to you, since messages are sent without a login. Moving the server into an enclave, [on the roadmap](/#roadmap), would take this away from us too.
 
 ### What does Telegram see?
 

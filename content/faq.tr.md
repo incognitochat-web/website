@@ -21,7 +21,7 @@ Sakladığı hiçbir şey bunu söylemez: mesajlar hesap üzerinden değil, rast
 
 ### Bir bağlantının hangi Telegram hesabına ait olduğunu anlayabilir misiniz?
 
-Şu an için evet, bakmak istersek. Sunucu her hesabın Telegram kimliğini karıştırılmış bir biçimde tutar ve sunucunun anahtarlarına sahip olan kişi kimliği bu biçimden çıkarabilir. Bu kimlik, size kimin yazdığını kimseye söylemez, çünkü mesajlar giriş yapılmadan gönderilir. Sunucuyu bir güvenli bölgeye taşımak ([yol haritasında](/tr/#roadmap) yer alıyor) bu imkânı bizden de alırdı.
+Şu an için evet, bakmak istersek. Sunucu her hesabın Telegram kimliğini karıştırılmış bir biçimde tutar ve sunucunun anahtarlarına sahip olan kişi kimliği bu biçimden çıkarabilir. Çoğu bağlantı için bunun pek önemi yoktur: bağlantı bir yerde paylaşılmak ya da birine gönderilmek için oluşturulur, bu yüzden onu elinde bulunduran kişi genellikle kime ait olduğunu zaten bilir. Bağlantının sahibini bilmek de size kimin yazdığını kimseye söylemez, çünkü mesajlar giriş yapılmadan gönderilir. Sunucuyu bir güvenli bölgeye taşımak ([yol haritasında](/tr/#roadmap) yer alıyor) bu imkânı bizden de alırdı.
 
 ### Telegram neleri görür?
 

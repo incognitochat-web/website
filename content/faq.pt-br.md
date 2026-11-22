@@ -21,7 +21,7 @@ Nada do que ele guarda diz isso: as mensagens passam por caixas de entrada aleat
 
 ### Vocês conseguem saber qual conta do Telegram é dona de um link?
 
-Hoje, sim, se resolvêssemos procurar. O servidor guarda uma versão embaralhada do ID do Telegram de cada conta, e quem tem as chaves do servidor consegue descobrir o ID a partir dela. Isso não revela a ninguém quem escreve para você, já que as mensagens são enviadas sem login. Levar o servidor para um enclave, algo que está [nos próximos passos](/pt-br/#roadmap), tiraria essa possibilidade de nós também.
+Hoje, sim, se resolvêssemos procurar. O servidor guarda uma versão embaralhada do ID do Telegram de cada conta, e quem tem as chaves do servidor consegue descobrir o ID a partir dela. Para a maioria dos links, isso importa pouco: um link é feito para ser publicado ou enviado, então quem está com ele normalmente já sabe de quem ele é. E saber de quem é o link não revela a ninguém quem escreve para você, já que as mensagens são enviadas sem login. Levar o servidor para um enclave, algo que está [nos próximos passos](/pt-br/#roadmap), tiraria essa possibilidade de nós também.
 
 ### O que o Telegram vê?
 
