@@ -5,7 +5,7 @@ description: "De enige echte bot, het adres van de app en waar de code staat. Al
 updated: "2026-11-21"
 ---
 
-Dit zijn de enige officiële adressen van Incognito Chat. **Al het andere zijn wij niet**, hoe sterk de naam ook lijkt: kopieën van de bot of de app kun je je berichten niet toevertrouwen.
+Dit zijn de enige officiële adressen van Incognito Chat. **Al het andere zijn wij niet**, hoe sterk de naam er ook op lijkt: kopieën van de bot of de app kun je je berichten niet toevertrouwen.
 
 {{< official >}}
 

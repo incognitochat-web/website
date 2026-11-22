@@ -31,7 +31,7 @@ features:
   items:
     - title: "End-to-end versleuteld"
       text: "Elk bericht en elke bijlage wordt op je apparaat versleuteld. Alleen de twee mensen in een chat kunnen het lezen."
-    - title: "Geen registratie van wie met wie praat"
+    - title: "Geen register van wie met wie praat"
       text: "Berichten gaan via willekeurige postvakken, nooit per account. Niets wat wordt opgeslagen, zegt wie naar wie schreef of wie een afzender is."
     - title: "Versturen zonder in te loggen"
       text: "Elk bericht verbruikt een anoniem token, zodat misbruik kan worden beperkt zonder te weten te komen wie de afzender is."

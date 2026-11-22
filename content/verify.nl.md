@@ -9,7 +9,7 @@ De versleuteling beschermt je alleen als de app die je gebruikt de gepubliceerde
 
 ## Zo wordt de app gepubliceerd
 
-- **Openbaar gebouwd.** Een openbare workflow in [`{{< param "hostingRepo" >}}`](https://github.com/{{< param "hostingRepo" >}}) bouwt één release van [de code](https://github.com/{{< param "codeRepo" >}}), zonder andere code in die repository.
+- **Openbaar gebouwd.** Een openbare workflow in [`{{< param "hostingRepo" >}}`](https://github.com/{{< param "hostingRepo" >}}) bouwt één release van [de code](https://github.com/{{< param "codeRepo" >}}), en verder staat er geen code in die repository.
 - **Reproduceerbaar.** Dezelfde release levert altijd byte voor byte dezelfde bestanden op, dus iedereen kan hem opnieuw bouwen en vergelijken.
 - **Ondertekend in een openbaar logboek.** Elk bestand, en een `manifest.json` met de SHA-256 van elk bestand, wordt door die workflow ondertekend met [Sigstore](https://www.sigstore.dev/). De handtekeningen staan in een openbaar transparantielogboek dat niet ongemerkt kan worden herschreven.
 - **Eén adres, en verder niets erop.** De app wordt alleen geladen vanaf `{{< param "appOrigin" >}}`, en daar wordt nooit iets anders aangeboden: een pagina op hetzelfde adres zou bij de sleutels op je apparaat kunnen komen.
