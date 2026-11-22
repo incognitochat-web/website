@@ -31,7 +31,7 @@ To, że używasz bota, które linki otwierasz i kiedy wysyłane są powiadomieni
 
 ### Fałszywa strona w Telegramie
 
-Ten, kto kontroluje bota, decyduje, którą stronę otwiera Telegram, a Telegram nie daje żadnego sposobu, by ten wybór zablokować. Strona udostępniana z dowolnego adresu poza [oficjalnym](/pl/official/) nie ma żadnego z twoich kluczy, więc nie może przeczytać twoich wcześniejszych wiadomości, ale to, co w niej wpiszesz, nie jest bezpieczne. Jeśli aplikacja kiedykolwiek poprosi cię o ponowną konfigurację, choć to nie był twój wybór, nie rób tego. Każdy może [sprawdzić](/pl/verify/), czy oficjalny adres udostępnia dokładnie opublikowany kod.
+Ten, kto kontroluje bota, decyduje, którą stronę otwiera Telegram, a Telegram nie daje żadnego sposobu, by ustalić ją na stałe. Strona udostępniana z dowolnego adresu poza [oficjalnym](/pl/official/) nie ma żadnego z twoich kluczy, więc nie może przeczytać twoich wcześniejszych wiadomości, ale to, co w niej wpiszesz, nie jest bezpieczne. Jeśli aplikacja kiedykolwiek poprosi cię o ponowną konfigurację, choć to nie był twój wybór, nie rób tego. Każdy może [sprawdzić](/pl/verify/), czy oficjalny adres udostępnia dokładnie opublikowany kod.
 
 ### Obserwacja na żywo {#live}
 
