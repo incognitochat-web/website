@@ -2,7 +2,7 @@
 title: "Alamat resmi"
 linkTitle: "Alamat resmi"
 description: "Satu-satunya bot yang asli, alamat aplikasi, dan tempat kodenya berada. Selain itu, bukan kami."
-updated: "2026-11-21"
+updated: "2026-11-23"
 ---
 
 Inilah satu-satunya alamat resmi Incognito Chat. **Selain ini, bukan kami**, semirip apa pun namanya: salinan bot atau aplikasi tidak bisa dipercaya memegang pesan Anda.

@@ -2,7 +2,7 @@
 title: "Officiële adressen"
 linkTitle: "Officieel"
 description: "De enige echte bot, het adres van de app en waar de code staat. Al het andere zijn wij niet."
-updated: "2026-11-21"
+updated: "2026-11-23"
 ---
 
 Dit zijn de enige officiële adressen van Incognito Chat. **Al het andere zijn wij niet**, hoe sterk de naam er ook op lijkt: kopieën van de bot of de app kun je je berichten niet toevertrouwen.

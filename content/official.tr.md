@@ -2,7 +2,7 @@
 title: "Resmî adresler"
 linkTitle: "Resmî adresler"
 description: "Tek gerçek bot, uygulamanın adresi ve kodun bulunduğu yer. Bunların dışındaki hiçbir şey bize ait değil."
-updated: "2026-11-21"
+updated: "2026-11-23"
 ---
 
 Incognito Chat için resmî adresler yalnızca bunlardır. **Bunların dışındaki hiçbir şey bize ait değil**, adı ne kadar benzese de: botun ya da uygulamanın kopyalarına mesajlarınızı emanet edemezsiniz.

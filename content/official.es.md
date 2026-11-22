@@ -2,7 +2,7 @@
 title: "Direcciones oficiales"
 linkTitle: "Direcciones oficiales"
 description: "El único bot real, la dirección de la app y dónde está el código. Cualquier otra cosa no somos nosotros."
-updated: "2026-11-21"
+updated: "2026-11-23"
 ---
 
 Estas son las únicas direcciones oficiales de Incognito Chat. **Cualquier otra cosa no somos nosotros**, por mucho que se parezca el nombre: a las copias del bot o de la app no se les pueden confiar tus mensajes.
