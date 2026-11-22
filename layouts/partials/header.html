@@ -18,7 +18,7 @@
       {{- if gt (len hugo.Sites) 2 }}
       {{- /* A menu of every language, each named in itself; the globe says what it is to readers of any of them. */}}
       <details class="lang-menu">
-        <summary aria-label="{{ i18n "language" }}">{{ partial "icon.html" "globe" }}<span lang="{{ site.Language.Locale }}">{{ site.Language.Label }}</span></summary>
+        <summary>{{ partial "icon.html" "globe" }}<span class="visually-hidden">{{ i18n "language" }}: </span><span lang="{{ site.Language.Locale }}">{{ site.Language.Label }}</span></summary>
         <ul>
           {{- range .AllTranslations }}
           <li><a href="{{ .RelPermalink }}" hreflang="{{ .Language.Locale }}" lang="{{ .Language.Locale }}"{{ if eq .Language.Lang site.Language.Lang }} aria-current="true"{{ end }}>{{ .Language.Label }}</a></li>

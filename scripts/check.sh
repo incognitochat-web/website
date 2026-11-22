@@ -8,29 +8,52 @@ set -euo pipefail
 out=${1:-public}
 cd "$(dirname "$0")/.."
 
-# Every page and every i18n key in every language (hugo.toml's
-# [languages.*]): a missing page would just drop out of that language's nav.
-langs=$(sed -n 's/^\[languages\.\([a-z-]*\)\]$/\1/p' hugo.toml)
-for page in content/*.md; do
-  name=$(basename "$page" .md)
-  case "$name" in *.*) continue ;; esac # a translation
-  for lang in $langs; do
-    [ "$lang" = en ] && continue
-    if [ ! -f "content/$name.$lang.md" ]; then
-      echo "error: content/$name.$lang.md is missing" >&2
-      exit 1
-    fi
-  done
-done
-keys() { sed -n 's/^\([A-Za-z0-9_]*\) *=.*/\1/p' "$1" | sort; }
-for lang in $langs; do
-  [ "$lang" = en ] && continue
-  if ! diff <(keys i18n/en.toml) <(keys "i18n/$lang.toml") >/dev/null; then
-    echo "error: i18n/$lang.toml's keys differ from i18n/en.toml's:" >&2
-    diff <(keys i18n/en.toml) <(keys "i18n/$lang.toml") >&2 || true
-    exit 1
-  fi
-done
+# Every page and every i18n key in every language, and the fonts each
+# language preloads: a missing page would just drop out of that language's
+# nav. hugo.toml and the i18n files are read as TOML.
+python3 - <<'PY'
+import pathlib, sys, tomllib
+
+def fail(message):
+    print(f"error: {message}", file=sys.stderr)
+    sys.exit(1)
+
+site = tomllib.loads(pathlib.Path("hugo.toml").read_text(encoding="utf-8"))
+languages = site.get("languages", {})
+if "en" not in languages or len(languages) < 2:
+    fail(f"hugo.toml lists languages {sorted(languages)}: expected en and at least one more")
+others = [lang for lang in languages if lang != "en"]
+
+for lang, conf in languages.items():
+    for font in conf.get("params", {}).get("fonts", []):
+        if not pathlib.Path(f"static/fonts/{font}.woff2").is_file():
+            fail(f"{lang} preloads static/fonts/{font}.woff2, which doesn't exist")
+
+pages = sorted(pathlib.Path("content").rglob("*.md"))
+names = {p.relative_to("content").as_posix() for p in pages}
+for page in names:
+    stem, _, _ = page.rpartition(".md")
+    base, dot, suffix = stem.rpartition(".")
+    if dot and suffix in languages:
+        if suffix == "en" or f"{base}.md" not in names:
+            fail(f"content/{page} has no English page content/{base}.md")
+        continue
+    for lang in others:
+        if f"{stem}.{lang}.md" not in names:
+            fail(f"content/{stem}.{lang}.md is missing")
+
+def keys(lang):
+    path = pathlib.Path(f"i18n/{lang}.toml")
+    if not path.is_file():
+        fail(f"{path} is missing")
+    return set(tomllib.loads(path.read_text(encoding="utf-8")))
+
+english = keys("en")
+for lang in others:
+    theirs = keys(lang)
+    if theirs != english:
+        fail(f"i18n/{lang}.toml's keys differ from i18n/en.toml's: missing {sorted(english - theirs)}, extra {sorted(theirs - english)}")
+PY
 
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
