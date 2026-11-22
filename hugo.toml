@@ -47,7 +47,9 @@ locale = "ru"
 direction = "ltr"
 weight = 3
 [languages.ru.params]
-fonts = ["inter"]
+# Russian text uses the system's fonts (site.css); the site's name and
+# numbers use Newsreader.
+fonts = ["newsreader"]
 
 [languages.ar]
 label = "العربية"
