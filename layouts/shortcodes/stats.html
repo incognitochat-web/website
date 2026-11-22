@@ -80,8 +80,8 @@
 <h2>{{ i18n "stats_costs" }}</h2>
 <div class="tiles">
   <div class="tile"><p class="tile-value" dir="ltr">${{ printf "%.2f" (float .month.production) }}</p><p class="tile-name">{{ i18n "stats_cost_prod" }} · <span dir="ltr">{{ .month.name }}</span></p></div>
-  <div class="tile"><p class="tile-value" dir="ltr">{{ if $s.dev_known }}${{ printf "%.2f" (float .month.dev) }}{{ else }}—{{ end }}</p><p class="tile-name">{{ i18n "stats_cost_dev" }} · <span dir="ltr">{{ .month.name }}</span></p></div>
-  <div class="tile"><p class="tile-value" dir="ltr">${{ printf "%.2f" (add (float .previous.production) (float .previous.dev)) }}</p><p class="tile-name">{{ i18n (cond $s.dev_known "stats_cost_previous" "stats_cost_previous_prod") }} · <span dir="ltr">{{ .previous.name }}</span></p></div>
+  <div class="tile"><p class="tile-value" dir="ltr">{{ if ne .month.dev nil }}${{ printf "%.2f" (float .month.dev) }}{{ else }}—{{ end }}</p><p class="tile-name">{{ i18n "stats_cost_dev" }} · <span dir="ltr">{{ .month.name }}</span></p></div>
+  <div class="tile"><p class="tile-value" dir="ltr">{{ $both := ne .previous.dev nil }}${{ printf "%.2f" (add (float .previous.production) (cond $both (float .previous.dev) 0.0)) }}</p><p class="tile-name">{{ i18n (cond $both "stats_cost_previous" "stats_cost_previous_prod") }} · <span dir="ltr">{{ .previous.name }}</span></p></div>
 </div>
 <h3>{{ i18n "stats_costs_chart" }}</h3>
 {{ partial "cost-bars.html" . }}
@@ -92,7 +92,7 @@
     <thead><tr><th>{{ i18n "stats_day" }}</th>{{ range $services }}<th>{{ if eq . "Other" }}{{ i18n "stats_other" }}{{ else }}{{ . }}{{ end }}</th>{{ end }}<th>{{ i18n "stats_total" }}</th><th>{{ i18n "stats_cost_dev" }}</th></tr></thead>
     <tbody>
       {{- range sort .days "date" "desc" }}
-      <tr><td dir="ltr">{{ .date }}</td>{{ range .values }}<td dir="ltr">${{ printf "%.2f" (float .) }}</td>{{ end }}<td dir="ltr">${{ printf "%.2f" (float .total) }}</td><td dir="ltr">{{ if $s.dev_known }}${{ printf "%.2f" (float .dev) }}{{ else }}—{{ end }}</td></tr>
+      <tr><td dir="ltr">{{ .date }}</td>{{ range .values }}<td dir="ltr">${{ printf "%.2f" (float .) }}</td>{{ end }}<td dir="ltr">${{ printf "%.2f" (float .total) }}</td><td dir="ltr">{{ if ne .dev nil }}${{ printf "%.2f" (float .dev) }}{{ else }}—{{ end }}</td></tr>
       {{- end }}
     </tbody>
   </table>

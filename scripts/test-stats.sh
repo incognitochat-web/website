@@ -140,10 +140,12 @@ if "$root/scripts/build-stats.sh" "$b" "$work/bad.json" >/dev/null 2>&1; then fa
 b=$work/bad-year && mkdir -p "$b/stats/hourly"
 jq -n '{date: "1000-01-01", accounts: [range(24) | 1], messages: [range(24) | 0], media_bytes: [range(24) | 0]}' >"$b/stats/hourly/1000-01-01.json"
 if "$root/scripts/build-stats.sh" "$b" "$work/bad.json" >/dev/null 2>&1; then fail "year 1000 was accepted"; fi
-cp "$store/stats/hourly/${end:0:10}.json" "$work/real.json"
+# The newest day counted: the window ends an hour before end.
+newest=$(date -u -d "$end - 1 hour" +%Y-%m-%d)
+cp "$store/stats/hourly/$newest.json" "$work/real.json"
 mkdir -p "$work/elsewhere/hourly"
 cp "$work/real.json" "$work/elsewhere/hourly/"
-for where in "stats/hourly/${end:0:10}.json" stats/hourly stats; do
+for where in "stats/hourly/$newest.json" stats/hourly stats; do
   b=$work/bad-link && rm -rf "$b" && mkdir -p "$b/$(dirname "$where")"
   case $where in
     *.json) ln -s "$work/real.json" "$b/$where" ;;
@@ -158,13 +160,13 @@ cp "$work/real.json" "$b/stats/hourly/x.json"
 [ "$(cat "$work/name.json")" = '{}' ] || fail "a file named other than yyyy-mm-dd.json was read"
 
 # The site, with the numbers and with none.
-build() { # stats.json output-dir counted-from
+build() { # stats.json output-dir messages-counted-from [media-counted-from]
   rm -rf "$work/site"
   cp -r "$root" "$work/site"
   rm -rf "$work/site/public" "$work/site/data/stats.json" "$work/site/.git" "$work/site/.stats-store"
   mkdir -p "$work/site/data"
   cp "$1" "$work/site/data/stats.json"
-  sed -i "s/^    messages = \".*\"/    messages = \"$3\"/; s/^    media = \".*\"/    media = \"$3\"/" "$work/site/hugo.toml"
+  sed -i "s/^    messages = \".*\"/    messages = \"$3\"/; s/^    media = \".*\"/    media = \"${4-$3}\"/" "$work/site/hugo.toml"
   hugo --quiet --source "$work/site" --destination "$2" >/dev/null
 }
 build "$work/stats.json" "$work/out" "2026-01-01T00"
@@ -207,13 +209,14 @@ done
 "$root/scripts/build-stats.sh" "$gap" "$work/gap.json" >/dev/null
 jq -e '(.hours | length) == 168 and .hours[0].t == "2026-11-15T00" and .hours[0].accounts == null and .hours[-1].t == "2026-11-21T23"' \
   "$work/gap.json" >/dev/null || fail "a gap isn't kept: $(jq -c '[.hours[0], .hours[-1]]' "$work/gap.json")"
-# By day, counted from mid-day: the day before shows "—", the first day,
-# whole but only partly counted, is marked.
-build "$work/gap.json" "$work/out5" "2026-11-21T05"
-grep -qz '<td dir="ltr">2026-11-21 \*</td>\s*<td>24</td>\s*<td>0</td>' "$work/out5/stats/index.html" \
-  || fail "the day counting started isn't marked"
-grep -qz '<td dir="ltr">2026-11-01</td>\s*<td>24</td>\s*<td>—</td>\s*<td>—</td>' "$work/out5/stats/index.html" \
-  || fail "a day before counting started is shown as counted"
+# By day, messages counted from mid-day on the 21st, media from mid-day on
+# the 1st: a day before either started shows "—" for it, and each first
+# day, whole but only partly counted, is marked.
+build "$work/gap.json" "$work/out5" "2026-11-21T05" "2026-11-01T05"
+grep -qz '<td dir="ltr">2026-11-21 \*</td>\s*<td>24</td>\s*<td>0</td>\s*<td>0.0</td>' "$work/out5/stats/index.html" \
+  || fail "the day messages started being counted isn't marked"
+grep -qz '<td dir="ltr">2026-11-01 \*</td>\s*<td>24</td>\s*<td>—</td>\s*<td>0.0</td>' "$work/out5/stats/index.html" \
+  || fail "the day media started being counted isn't marked, or messages before it are shown as counted"
 
 # Costs only, from last month into this one: shown, with both months, and
 # the test environment, never read, as a dash.
@@ -225,8 +228,16 @@ echo '{"month":"2026-02","days":{"2026-02-01":{"AWS Lambda":1}}}' >"$costs/stats
 mkdir -p "$costs/stats/costs/dev"
 echo '{"month":"2025-06","days":{"2025-06-01":0.5}}' >"$costs/stats/costs/dev/2025-06.json"
 "$root/scripts/build-stats.sh" "$costs" "$work/costs.json" >/dev/null
-jq -e '.costs.month == {name: "2026-02", production: 1, dev: 0} and .costs.previous == {name: "2026-01", production: 2, dev: 0} and .dev_known == false' \
+jq -e '.costs.month == {name: "2026-02", production: 1, dev: null} and .costs.previous == {name: "2026-01", production: 2, dev: null} and all(.costs.days[]; .dev == null)' \
   "$work/costs.json" >/dev/null || fail "month totals: $(jq -c '[.costs.month, .costs.previous]' "$work/costs.json")"
+# Read for last month only: this month's unknown, not $0.
+costs2=$work/costs2
+cp -r "$costs" "$costs2"
+rm "$costs2"/stats/costs/dev/*
+echo '{"month":"2026-01","days":{"2026-01-31":0.5}}' >"$costs2/stats/costs/dev/2026-01.json"
+"$root/scripts/build-stats.sh" "$costs2" "$work/costs2.json" >/dev/null
+jq -e '.costs.month.dev == null and .costs.previous.dev == 0.5 and [.costs.days[].dev] == [0.5, null]' "$work/costs2.json" >/dev/null \
+  || fail "test-environment costs known for last month only: $(jq -c '[.costs.month, .costs.previous, [.costs.days[].dev]]' "$work/costs2.json")"
 build "$work/costs.json" "$work/out4" "2026-01-01T00"
 # shellcheck disable=SC2016 # a literal dollar sign
 grep -qF '$1.00' "$work/out4/stats/index.html" || fail "costs alone aren't shown"

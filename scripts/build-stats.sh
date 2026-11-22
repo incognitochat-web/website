@@ -12,6 +12,8 @@
 # no numbers yet.
 set -euo pipefail
 export TZ=UTC
+# [0-9] means ASCII digits only, whatever the machine's language.
+export LC_ALL=C
 
 store=${1:?usage: $0 <store> <output.json>}
 out=${2:?usage: $0 <store> <output.json>}
@@ -22,7 +24,9 @@ mkdir -p "$(dirname "$out")"
 # collect-stats.sh writes are read (yyyy-mm-dd.json, yyyy-mm.json): nothing
 # with a newline or a path in it.
 if [ -e "$store/stats" ] || [ -L "$store/stats" ]; then
-  if [ -L "$store/stats" ] || [ -n "$(find "$store/stats" -type l -print -quit)" ]; then
+  # Assigned first, so a find that fails stops here (set -e).
+  links=$(find "$store/stats" -type l -print -quit)
+  if [ -L "$store/stats" ] || [ -n "$links" ]; then
     echo "$store/stats has a link in it; not read" >&2
     exit 1
   fi
@@ -96,7 +100,11 @@ jq -n -S \
   # Costs by day: production by service, dev as one total.
   | ($production | map(.days) | add // {}) as $prod
   | ($dev | map(.days) | add // {}) as $devdays
-  | ($prod | keys | sort | .[-30:]) as $costdays
+  # The months whose test-environment costs were read: any other shows as
+  # unknown (null), not $0.
+  | ($dev | map(.month)) as $devmonths
+  | def devknown($m): $devmonths | index($m) != null;
+  ($prod | keys | sort | .[-30:]) as $costdays
   | ([$costdays[] as $d | $prod[$d] | to_entries[]] | group_by(.key)
       | map({key: .[0].key, value: (map(.value) | add)}) | sort_by(-.value) | map(.key)) as $ranked
   | ($ranked[:4]) as $named
@@ -104,7 +112,7 @@ jq -n -S \
       date: $d,
       values: ([$named[] as $n | ($s[$n] // 0)] + [([$s | to_entries[] | select(.key as $k | $named | index($k) | not) | .value] | add // 0)] | map(round4)),
       total: ([$s[]] | add // 0 | round4),
-      dev: (($devdays[$d] // 0) | round4)
+      dev: (if devknown($d[0:7]) then ($devdays[$d] // 0) | round4 else null end)
     })) as $costs
   | ($costdays[-1] // "" | .[0:7]) as $month
   | (if $month == "" then "" else ($month + "-01" | strptime("%Y-%m-%d") | mktime - 86400 | strftime("%Y-%m")) end) as $previous
@@ -112,8 +120,6 @@ jq -n -S \
 
   {
     latest: ($known[-1].t // null),
-    # Whether costs of the test environment were read for the months shown.
-    dev_known: ([$dev[].month] | any(. == $month or . == $previous)),
     hours: $hours,
     last24: {accounts: ($day | map(.accounts) | sum), messages: ($day | map(.messages) | sum), media_bytes: ($day | map(.media_bytes) | sum)},
     days: ($all | group_by(.t[0:10]) | map({date: .[0].t[0:10], hours: (map(select(.accounts != null)) | length),
@@ -122,8 +128,8 @@ jq -n -S \
     costs: {
       services: ($named + (if ($ranked | length) > 4 then ["Other"] else [] end)),
       days: ($costs | if ($ranked | length) > 4 then . else map(.values |= .[0:-1]) end),
-      month: {name: $month, production: month_total($prod; $month), dev: month_total($devdays; $month)},
-      previous: {name: $previous, production: month_total($prod; $previous), dev: month_total($devdays; $previous)}
+      month: {name: $month, production: month_total($prod; $month), dev: (if devknown($month) then month_total($devdays; $month) else null end)},
+      previous: {name: $previous, production: month_total($prod; $previous), dev: (if devknown($previous) then month_total($devdays; $previous) else null end)}
     }
   }' >"$out"
 echo "statistics: $(jq -r '"\(.hours | length) hours, \(.days | length) days, \(.costs.days | length) days of costs, latest \(.latest)"' "$out")"

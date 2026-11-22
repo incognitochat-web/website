@@ -32,6 +32,7 @@ set -euo pipefail
 # Hours and days are UTC whatever the machine's time zone: the CLI prints
 # CloudWatch's timestamps in local time otherwise.
 export TZ=UTC
+export LC_ALL=C
 
 usage() {
   echo "usage: $0 counts <store> | $0 costs <production|dev> <store>" >&2
