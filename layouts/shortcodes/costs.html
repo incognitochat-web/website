@@ -43,7 +43,7 @@
     <tbody>
       {{- range sort $m.days "date" "desc" }}
       <tr>
-        <td dir="ltr">{{ .date }}</td>
+        <td dir="ltr"><time datetime="{{ .date }}">{{ int (strings.TrimLeft "0" (substr .date 8 2)) }}</time></td>
         <td dir="ltr">{{ if ne .total nil }}{{ partial "money.html" .total }}{{ else }}—{{ end }}</td>
         <td dir="ltr">{{ if ne .dev nil }}{{ partial "money.html" .dev }}{{ else }}—{{ end }}</td>
       </tr>

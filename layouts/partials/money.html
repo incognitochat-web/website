@@ -5,4 +5,4 @@
      span where they're used. Not lang.FormatCurrency: it changes the sign
      ("US$", "$US", "USD") and prints its raw pattern for Persian. */ -}}
 {{- $n := lang.FormatNumber 2 (float .) -}}
-{{- if in (slice "de" "es" "fr" "pl" "ru" "uk") site.Language.Lang }}{{ printf "%s $" $n }}{{ else }}{{ printf "$%s" $n }}{{ end -}}
+{{- if in (slice "de" "es" "fr" "pl" "ru" "uk") site.Language.Lang }}{{ printf "%s\u00a0$" $n }}{{ else }}{{ printf "$%s" $n }}{{ end -}}

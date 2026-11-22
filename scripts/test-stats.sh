@@ -286,9 +286,9 @@ build "$work/gap.json" "$work/out5" "2026-11-21T05" "2026-11-01T05"
 # German writes a day with a full stop: "21. November".
 de5=$(cat "$work/out5/de/stats/index.html")
 [[ $de5 == *'Gesendete Nachrichten: gezählt ab 21. November'* ]] || fail "German day isn't written as 21. November"
-grep -qz '<td dir="ltr">2026-11-21 \*</td>\s*<td>24</td>\s*<td>0</td>\s*<td>0.0</td>' "$work/out5/stats/index.html" \
+grep -qz '<td dir="ltr"><time datetime="2026-11-21">21</time> \*</td>\s*<td>24</td>\s*<td>0</td>\s*<td>0.0</td>' "$work/out5/stats/index.html" \
   || fail "the day messages started being counted isn't marked"
-grep -qz '<td dir="ltr">2026-11-01 \*</td>\s*<td>24</td>\s*<td>—</td>\s*<td>0.0</td>' "$work/out5/stats/index.html" \
+grep -qz '<td dir="ltr"><time datetime="2026-11-01">1</time> \*</td>\s*<td>24</td>\s*<td>—</td>\s*<td>0.0</td>' "$work/out5/stats/index.html" \
   || fail "the day media started being counted isn't marked, or messages before it are shown as counted"
 # The month's totals say from when each was counted.
 grep -q 'Messages sent: counted from 21 November, <span dir="ltr">05:00 UTC</span>' "$work/out5/stats/index.html" || fail "no note on when messages started being counted"
@@ -388,6 +388,9 @@ grep -qF '>$0.00</p><p class="tile-name">Production' <<<"$dec" || fail "a month 
 grep -qF 'legend-amount">$1.00<' "$work/out4/costs/index.html" || fail "the legend does not give a service's month total"
 grep -q 'class="month newest" id="c-2026-02"' "$work/out4/costs/index.html" || fail "the newest month isn't shown first"
 grep -q 'datetime="2026-02-01"' "$work/out4/costs/index.html" || fail "Costs isn't 'up to' the newest day production's costs were read"
+# The tables give the day of the month (the month is the heading above),
+# the full date machine-readable.
+grep -q '<td dir="ltr"><time datetime="2026-01-31">31</time></td>' "$work/out4/costs/index.html" || fail "the Costs table's days aren't the day of the month"
 # A month with the test environment's costs only is on Costs, production "—".
 dev6=$(sed -n '/id="c-2025-06"/,/<\/section>/p' "$work/out4/costs/index.html")
 grep -qF 'tile-value" dir="ltr">—</p><p class="tile-name">Production' <<<"$dev6" || fail "a month with test-environment costs only isn't on Costs"
@@ -425,6 +428,10 @@ grep -qF '</span>B <span class="legend-amount">$0.00<' "$work/out9/costs/index.h
 legend=$(grep -o '</span>[A-Za-z]* <span class="legend-amount">[^<]*' "$work/out8/costs/index.html" | sed 's/<[^>]*>//g' | tr '\n' ',')
 # shellcheck disable=SC2016 # literal dollar signs
 [ "$legend" = 'A $6.00,B $4.00,C $3.00,D $2.00,Other $2.00,' ] || fail "the legend's services and totals: $legend"
+# The sign after the amount in the legend and the chart's tooltips too.
+fr8=$(cat "$work/out8/fr/costs/index.html")
+[[ $fr8 == *$'</span>A <span class="legend-amount">6,00\u00a0$<'* ]] || fail "the French legend isn't written as 6,00 \$"
+[[ $fr8 == *$'<title>2026-04-01: 15,50\u00a0$'* ]] || fail "the French chart's tooltip isn't written as 15,50 \$"
 
 # Only the newest 13 months are shown.
 many=$work/many
