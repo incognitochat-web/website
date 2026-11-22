@@ -85,6 +85,9 @@
 
 <details class="table-view">
   <summary>{{ i18n "stats_day_table" }}</summary>
+  {{- /* Scrolls inside when wider than the screen; focusable so it can be
+       scrolled from the keyboard. */}}
+  <div class="table-scroll" role="region" tabindex="0" aria-label="{{ i18n "stats_day_table" }}">
   <table>
     <thead><tr><th>{{ i18n "stats_day" }}</th>{{ range $metrics }}<th>{{ index $labels . }}{{ if eq . "media_bytes" }} (MiB){{ end }}</th>{{ end }}<th>{{ i18n "stats_cost_prod" }}</th><th>{{ i18n "stats_cost_dev" }}</th></tr></thead>
     <tbody>
@@ -105,6 +108,7 @@
       {{- end }}
     </tbody>
   </table>
+  </div>
   <p class="table-note">{{ i18n "stats_partial_day" }}</p>
 </details>
 

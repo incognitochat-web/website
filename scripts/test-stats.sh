@@ -243,6 +243,11 @@ grep -q '<title>2026-11-01: —</title>' "$work/out5/stats/index.html" || fail "
 # The hourly charts only in the newest month; every month has the links, its own marked.
 [ "$(grep -c 'Hour by hour, the last 7 days' "$work/out5/stats/index.html")" = 1 ] || fail "the hourly charts aren't only in the newest month"
 grep -q 'href="#m-2026-10" aria-current="true"' "$work/out5/stats/index.html" || fail "October's links don't mark October"
+nov=$(sed -n '/id="m-2026-11"/,/<\/section>/p' "$work/out5/stats/index.html")
+[ "$(grep -o 'aria-current="true"' <<<"$nov" | wc -l)" = 1 ] || fail "November's links mark more than one month"
+grep -q 'href="#m-2026-11" aria-current="true"' <<<"$nov" || fail "November's links don't mark November"
+# The hourly chart's dates are short, to fit on a phone.
+grep -q '>16 Nov</text>' "$work/out5/stats/index.html" || fail "the hourly chart's dates aren't short"
 # Counting that starts at a month's first hour counts the whole month: no "*".
 build "$work/gap.json" "$work/out7" "2026-11-21T05" "2026-11-21T05" "2026-11-01T00"
 grep -q '>48</p>' "$work/out7/stats/index.html" || fail "a start at the month's first hour marks the month as partly counted"
@@ -301,6 +306,20 @@ grep -qF '>$0.00</p><p class="tile-name">Production' <<<"$dec" || fail "a month 
 # shellcheck disable=SC2016 # a literal dollar sign
 grep -qF 'legend-amount">$1.00<' "$work/out4/stats/index.html" || fail "the legend does not give a service's month total"
 grep -q 'class="month newest" id="m-2026-02"' "$work/out4/stats/index.html" || fail "the newest month isn't shown first"
+
+# A month with six services: the four biggest by name, the rest as Other,
+# each with its month total in the legend, in that order.
+svc=$work/svc
+mkdir -p "$svc/stats/costs/production"
+echo '{"month":"2026-04","days":{"2026-04-01":{"A":5,"B":4,"C":3,"D":2,"E":1,"F":0.5},"2026-04-02":{"A":1,"E":0.5}}}' \
+  >"$svc/stats/costs/production/2026-04.json"
+"$root/scripts/build-stats.sh" "$svc" "$work/svc.json" >/dev/null
+jq -e '.months[0].services == ["A", "B", "C", "D", "Other"] and .months[0].service_totals == [6, 4, 3, 2, 2] and .months[0].totals.production == 17' \
+  "$work/svc.json" >/dev/null || fail "services and their totals: $(jq -c '.months[0] | {services, service_totals}' "$work/svc.json")"
+build "$work/svc.json" "$work/out8" "2026-01-01T00"
+legend=$(grep -o '</span>[A-Za-z]* <span class="legend-amount">[^<]*' "$work/out8/stats/index.html" | sed 's/<[^>]*>//g' | tr '\n' ',')
+# shellcheck disable=SC2016 # literal dollar signs
+[ "$legend" = 'A $6.00,B $4.00,C $3.00,D $2.00,Other $2.00,' ] || fail "the legend's services and totals: $legend"
 
 # Only the newest 13 months are shown.
 many=$work/many
