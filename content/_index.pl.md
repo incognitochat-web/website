@@ -40,7 +40,7 @@ features:
     - title: "Budowana publicznie"
       text: "Publiczny workflow na GitHubie buduje aplikację z publicznego kodu, a udostępnia ją GitHub Pages, nie nasze serwery. Każda kompilacja jest powtarzalna i podpisana w publicznym rejestrze."
     - title: "Bezpłatnie, bez reklam i śledzenia"
-      text: "Wolne oprogramowanie na licencji AGPL. Żadnej analityki w aplikacji ani na tej stronie. Utrzymujemy się z darowizn."
+      text: "Wolne oprogramowanie na licencji AGPL. Żadnej analityki w aplikacji ani na tej stronie. Darowizny pomogą pokryć koszty."
 
 roadmap:
   title: "Plany"
