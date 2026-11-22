@@ -18,7 +18,7 @@ Solo recuentos y sumas: nada de lo que hay aquí, ni en el lugar de donde salen 
 ## De dónde salen las cifras
 
 - El servidor de la app cuenta una vez por minuto, y AWS (CloudWatch) suma los recuentos por hora. Una [tarea programada](https://github.com/{{< param "siteRepo" >}}/blob/main/.github/workflows/stats.yml) en el repositorio público de este sitio los lee cada hora, y los costos una vez al día, con un rol que solo puede leer métricas y costos.
-- Los recuentos de una hora llevan la fecha en que el servidor los escribió, que en un servidor con poca actividad puede ser mucho más tarde: escribe los recuentos de un minuto con su siguiente solicitud, o cuando se apaga. Por eso una hora puede contener recuentos de horas anteriores. Cada ejecución vuelve a leer los últimos 7 días, así que las ejecuciones que lleguen tarde o se pierdan, durante hasta una semana, no dejan huecos.
+- Los recuentos de una hora llevan la fecha en que el servidor los escribió, que en un servidor con poca actividad puede ser mucho más tarde: escribe los recuentos de un minuto con su siguiente solicitud, o cuando se apaga. Por eso una hora puede contener recuentos de horas anteriores. Cada ejecución vuelve a leer los últimos 7 días, así que una ejecución que se retrase o no llegue a hacerse no deja huecos, siempre que no pase más de una semana.
 - La tarea guarda cada cifra que lee en la [rama `data`](https://github.com/{{< param "siteRepo" >}}/tree/data/stats) del repositorio, así que su historial es público, y firma con Sigstore cada archivo que escribe:
 
   ```shell

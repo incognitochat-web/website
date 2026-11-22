@@ -23,7 +23,7 @@ Desde una copia del [código](https://github.com/{{< param "codeRepo" >}}), con 
 scripts/verify-site.sh {{< param "appOrigin" >}} {{< param "hostingRepo" >}} --rebuild
 ```
 
-El script comprueba que cada archivo servido es exactamente lo que el flujo de trabajo revisado, sin cambios, compiló a partir de una versión publicada en `main`, que la misma ejecución de ese flujo de trabajo lo desplegó y que ningún otro sitio comparte la dirección de la app. Con `--rebuild`, además, compila esa versión por su cuenta y compara byte a byte. Los detalles, y lo que no demuestra, están en [Verifying the app](https://github.com/{{< param "codeRepo" >}}/blob/main/docs/verifying.md) (en inglés).
+El script comprueba que cada archivo servido es exactamente lo que compiló el flujo de trabajo revisado y sin modificar a partir de una versión publicada en `main`, que la misma ejecución de ese flujo de trabajo lo desplegó y que ningún otro sitio comparte la dirección de la app. Con `--rebuild`, además, compila esa versión por su cuenta y compara byte a byte. Los detalles, y lo que no demuestra, están en [Verifying the app](https://github.com/{{< param "codeRepo" >}}/blob/main/docs/verifying.md) (en inglés).
 
 ## Comprobación automática
 

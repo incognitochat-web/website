@@ -18,7 +18,7 @@ Cuéntanos qué encontraste, cómo reproducirlo y qué podría hacer un atacante
 
 - Te responderemos en el plazo de una semana y te diremos qué vamos a hacer al respecto.
 - Primero corregimos los problemas graves, y cuando los usuarios ya estén a salvo publicamos qué fallaba y cómo se corrigió.
-- Si quieres, te daremos el crédito.
+- Si quieres, mencionaremos tu nombre al publicarlo.
 
 ## Por favor
 
