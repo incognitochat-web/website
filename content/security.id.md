@@ -30,6 +30,6 @@ Kami tidak akan menempuh jalur hukum terhadap riset yang dilakukan dengan cara i
 
 ## Cakupan
 
-Aplikasi, server, protokol, alur build dan publikasi, dan situs ini. Hal-hal yang memang diakui oleh desainnya tidak bisa dilindungi tercantum dalam [model keamanan](https://github.com/{{< param "codeRepo" >}}/blob/main/docs/security.md) (dalam bahasa Inggris); cara baru untuk memanfaatkan batasan itu tetap kami terima dengan senang hati.
+Aplikasi, server, protokol, alur build dan publikasi, dan situs ini. Batasan yang sudah diakui oleh desainnya tercantum dalam [model keamanan](https://github.com/{{< param "codeRepo" >}}/blob/main/docs/security.md) (dalam bahasa Inggris); cara baru untuk memanfaatkan batasan itu tetap kami terima dengan senang hati.
 
 Berkas [`security.txt`](/.well-known/security.txt) kami memuat kontak yang sama dalam format standar.

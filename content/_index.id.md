@@ -34,7 +34,7 @@ features:
     - title: "Tidak ada catatan siapa berbicara dengan siapa"
       text: "Pesan berpindah lewat kotak pesan acak, tidak pernah lewat akun. Tidak ada data tersimpan yang menunjukkan siapa menulis kepada siapa, atau siapa pengirimnya."
     - title: "Mengirim tanpa login"
-      text: "Setiap pesan memakai satu token anonim, jadi penyalahgunaan bisa dibatasi tanpa mengetahui siapa yang mengirim."
+      text: "Setiap pesan menghabiskan satu token anonim, jadi penyalahgunaan bisa dibatasi tanpa mengetahui siapa yang mengirim."
     - title: "Obrolan tetap di perangkat Anda"
       text: "Server hanya menyimpan pesan terenkripsi sampai perangkat Anda menerimanya, paling lama 30 hari."
     - title: "Dibangun secara terbuka"
@@ -46,7 +46,7 @@ roadmap:
   title: "Rencana ke depan"
   items:
     - title: "Server yang membuktikan kode yang dijalankannya"
-      text: "Kami berencana memindahkan server ke enclave teratestasi: bagian mesin yang tersegel, yang kodenya bisa diperiksa siapa saja. Dengan begitu, Anda tidak perlu lagi percaya begitu saja pada kata-kata kami tentang apa yang dilakukan server, dan bahkan kami pun tidak akan bisa mengetahui akun Telegram mana pemilik sebuah tautan."
+      text: "Kami berencana memindahkan server ke enclave teratestasi: bagian mesin yang tersegel, yang kodenya bisa diperiksa siapa saja. Dengan begitu, Anda tidak perlu lagi percaya begitu saja pada kata-kata kami tentang apa yang dilakukan server, dan bahkan kami pun tidak akan bisa mengetahui akun Telegram mana yang memiliki sebuah tautan."
     - title: "Angka yang tidak bisa dipalsukan siapa pun"
       text: "[Halaman statistik](stats/) menampilkan jumlah akun yang dibuat, pesan yang dikirim, dan volume media per jam, serta biaya menjalankan layanan ini, yang dipublikasikan secara otomatis dan ditandatangani. Setelah enclave itu aktif, enclave itu sendiri yang akan menghitung dan menandatanganinya, sehingga tidak ada yang bisa memalsukannya, bahkan kami sekalipun."
 
