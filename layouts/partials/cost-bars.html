@@ -21,7 +21,7 @@
     {{- end }}
     {{- $y := $h }}
     <g>
-      <title>{{ $d.date }}: ${{ printf "%.2f" (float $d.total) }}{{ range $j, $v := $d.values }}{{ if gt (float $v) 0.0 }}&#10;{{ index $c.services $j }}: ${{ printf "%.2f" (float $v) }}{{ end }}{{ end }}</title>
+      <title>{{ $d.date }}: ${{ printf "%.2f" (float $d.total) }}{{ range $j, $v := $d.values }}{{ if gt (float $v) 0.0 }}&#10;{{ $name := index $c.services $j }}{{ if eq $name "Other" }}{{ i18n "stats_other" }}{{ else }}{{ $name }}{{ end }}: ${{ printf "%.2f" (float $v) }}{{ end }}{{ end }}</title>
       <rect class="hit" x="{{ sub $x 2 }}" y="0" width="{{ $step }}" height="{{ $h }}"/>
       {{- range $j, $v := $d.values }}
       {{- $sh := mul (div (float $v) $scale) (sub $h 4) }}

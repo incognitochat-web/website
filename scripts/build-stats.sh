@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Turns the data store (the `data` branch, checked out at <store>) into
-# what the Stats page shows, data/stats.json: the last 7 days by hour, the
+# what the Stats page shows, data/stats.json: the 7 days of hours up to the
+# latest one counted (an hour never counted shows as a gap), the
 # last 30 days by day, the last 24 hours' totals, and the costs of the last
 # 30 days, production's 4 biggest services by name and the rest as "Other",
 # with this month's and last month's totals. Run by the deploy before Hugo.
@@ -10,6 +11,7 @@
 # With no store, or nothing in it, it writes {} and the page says there are
 # no numbers yet.
 set -euo pipefail
+export TZ=UTC
 
 store=${1:?usage: $0 <store> <output.json>}
 out=${2:?usage: $0 <store> <output.json>}
@@ -19,7 +21,7 @@ shopt -s nullglob
 hourly=("$store"/stats/hourly/*.json)
 production=("$store"/stats/costs/production/*.json)
 dev=("$store"/stats/costs/dev/*.json)
-if [ ${#hourly[@]} -eq 0 ] && [ ${#production[@]} -eq 0 ]; then
+if [ ${#hourly[@]} -eq 0 ] && [ ${#production[@]} -eq 0 ] && [ ${#dev[@]} -eq 0 ]; then
   echo '{}' >"$out"
   echo "no statistics in $store"
   exit 0
@@ -42,14 +44,22 @@ jq -n -S \
   def sum: map(select(. != null)) | add // 0;
   def round4: . * 10000 | round / 10000;
 
+  def hourname: strftime("%Y-%m-%dT%H");
   # Every hour stored, oldest first: {t: "2026-11-21T07", accounts, messages, media_bytes}.
   ($hourly | sort_by(.date) | map(. as $d | range(24) as $h | {
     t: ($d.date + "T" + (if $h < 10 then "0" else "" end) + ($h | tostring)),
     accounts: $d.accounts[$h], messages: $d.messages[$h], media_bytes: $d.media_bytes[$h]
   })) as $all
   | ($all | map(select(.accounts != null))) as $known
-  | ($known[-168:]) as $hours
-  | ($known[-24:]) as $day
+  | ($all | map({key: .t, value: .}) | from_entries) as $byhour
+  # The 168 hours up to the latest counted, by the clock: an hour never
+  # counted is a gap (null), not left out.
+  | (if ($known | length) == 0 then [] else
+      ($known[-1].t + ":00:00Z" | fromdateiso8601) as $last
+      | [range(167; -1; -1) as $i | ($last - $i * 3600 | hourname) as $t
+         | ($byhour[$t] // {t: $t, accounts: null, messages: null, media_bytes: null})]
+    end) as $hours
+  | ($hours[-24:]) as $day
 
   # Costs by day: production by service, dev as one total.
   | ($production | map(.days) | add // {}) as $prod
@@ -70,6 +80,7 @@ jq -n -S \
 
   {
     latest: ($known[-1].t // null),
+    dev_known: (($dev | length) > 0),
     hours: $hours,
     last24: {accounts: ($day | map(.accounts) | sum), messages: ($day | map(.messages) | sum), media_bytes: ($day | map(.media_bytes) | sum)},
     days: ($all | group_by(.t[0:10]) | map({date: .[0].t[0:10], hours: (map(select(.accounts != null)) | length),

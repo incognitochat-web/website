@@ -8,24 +8,30 @@
 #   scripts/collect-stats.sh counts <store>        hourly counts (needs NAMESPACE, AWS_REGION)
 #   scripts/collect-stats.sh costs <account> <store>   daily costs; account: production or dev
 #
-# counts reads three metrics, an hour at a time, for the last 48 complete
-# hours, and writes them into stats/hourly/<yyyy-mm-dd>.json. A metric's
-# data point is dated by when its line was logged, which can be a while
-# after the minute it counts, so late counts land in a later hour. Each run
-# reads the 48 hours again and overwrites them, so a late or missed run
-# leaves no gap, and CloudWatch's own short delay is caught up. An hour
-# with no data point counted nothing (the metrics only get data when
-# there's something to count).
+# counts reads three metrics, an hour at a time, for the last 7 days of
+# complete hours, and writes them into stats/hourly/<yyyy-mm-dd>.json. A
+# metric's data point is dated by when its line was logged, which can be
+# much later than the minute it counts, so late counts land in a later hour.
+# Each run reads the 7 days again and overwrites them, so runs late or
+# missed for up to a week leave no gap (GetMetricData costs the same for
+# any window). An hour with no data point counted nothing (the metrics only
+# get data when there's something to count); but if no metric has a single
+# data point in the whole window while the store has counts in it, the
+# namespace is probably wrong, and nothing is written.
 #
-# costs reads Cost Explorer's daily costs from the start of last month (AWS
-# revises recent days, and this month's last days arrive next month), before
-# credits and refunds, and writes stats/costs/<account>/<yyyy-mm>.json:
+# costs reads Cost Explorer's daily costs from the start of last month to
+# yesterday (today isn't over; AWS revises recent days, and a month's last
+# days arrive in the next), before credits and refunds, following
+# NextPageToken, and writes stats/costs/<account>/<yyyy-mm>.json:
 # production by service, dev as one total. Cost Explorer charges $0.01 a
 # call, so the workflow reads costs once a day.
 #
 # Files are written with sorted keys and fixed formatting, so a run that
 # reads nothing new changes nothing.
 set -euo pipefail
+# Hours and days are UTC whatever the machine's time zone: the CLI prints
+# CloudWatch's timestamps in local time otherwise.
+export TZ=UTC
 
 usage() {
   echo "usage: $0 counts <store> | $0 costs <production|dev> <store>" >&2
@@ -47,7 +53,7 @@ counts() {
   : "${NAMESPACE:?NAMESPACE, the namespace of the counts, is needed}" "${AWS_REGION:?AWS_REGION is needed}"
   local end start
   end=$(date -u +%Y-%m-%dT%H:00:00Z)
-  start=$(date -u -d "${end} - 48 hours" +%Y-%m-%dT%H:00:00Z)
+  start=$(date -u -d "${end} - 168 hours" +%Y-%m-%dT%H:00:00Z)
   # Metric name => the field it fills.
   jq -n --arg ns "$NAMESPACE" '[
     {Id: "accounts", MetricStat: {Metric: {Namespace: $ns, MetricName: "Registrations"}, Period: 3600, Stat: "Sum"}},
@@ -65,7 +71,16 @@ counts() {
   # Every hour of the window, with what each metric counted (0 without a
   # data point), grouped by day.
   local day file
-  for ((h = 0; h < 48; h++)); do
+  # No data point at all, where the store has counts: probably the wrong
+  # namespace. Don't overwrite real history with zeros.
+  if jq -e '[.MetricDataResults[].Values | length] | add == 0' "$tmp/metrics.json" >/dev/null &&
+    [ -n "$(find "$store/stats/hourly" -name '*.json' -newermt "$start" 2>/dev/null | head -n 1)" ] &&
+    jq -se --arg start "${start:0:10}" '[.[] | select(.date >= $start) | (.accounts + .messages + .media_bytes)[] | select(. != null and . > 0)] | length > 0' \
+      "$store"/stats/hourly/*.json >/dev/null 2>&1; then
+    echo "No data points in the whole window, but the store has counts there: is the namespace right? Nothing written" >&2
+    exit 1
+  fi
+  for ((h = 0; h < 168; h++)); do
     date -u -d "${start} + ${h} hours" +%Y-%m-%dT%H:00:00Z
   done >"$tmp/hours.txt"
   while read -r day; do
@@ -85,17 +100,35 @@ counts() {
 }
 
 costs() {
-  local first end month file
+  local first end month file token='' page=0
   first=$(date -u -d "$(date -u +%Y-%m-01) - 1 month" +%Y-%m-01)
-  end=$(date -u -d tomorrow +%Y-%m-%d)
+  # Up to yesterday: End is exclusive, and today isn't over.
+  end=$(date -u +%Y-%m-%d)
+  if [ "$first" = "$end" ]; then
+    echo "costs ($account): nothing whole yet"
+    return 0
+  fi
   local group=()
   # shellcheck disable=SC2054 # one argument with commas, as the CLI takes it
   [ "$account" = production ] && group=(--group-by Type=DIMENSION,Key=SERVICE)
-  # Before credits and refunds: what running the service costs.
-  aws ce get-cost-and-usage --region us-east-1 --output json \
-    --time-period "Start=${first},End=${end}" --granularity DAILY --metrics UnblendedCost \
-    --filter '{"Not": {"Dimensions": {"Key": "RECORD_TYPE", "Values": ["Credit", "Refund"]}}}' \
-    "${group[@]}" >"$tmp/costs.json"
+  # Before credits and refunds: what running the service costs. The answer
+  # can come in pages; every page is read.
+  echo '[]' >"$tmp/results.json"
+  while :; do
+    page=$((page + 1))
+    [ $page -le 20 ] || { echo "Cost Explorer kept paging; nothing written" >&2; exit 1; }
+    aws ce get-cost-and-usage --region us-east-1 --output json \
+      --time-period "Start=${first},End=${end}" --granularity DAILY --metrics UnblendedCost \
+      --filter '{"Not": {"Dimensions": {"Key": "RECORD_TYPE", "Values": ["Credit", "Refund"]}}}' \
+      "${group[@]}" ${token:+--next-page-token "$token"} >"$tmp/page.json"
+    jq -s '.[0] + .[1].ResultsByTime' "$tmp/results.json" "$tmp/page.json" >"$tmp/merged.json"
+    mv "$tmp/merged.json" "$tmp/results.json"
+    token=$(jq -r '.NextPageToken // empty' "$tmp/page.json")
+    [ -n "$token" ] || break
+  done
+  # Pages can split a day's groups: put each day's back together.
+  jq '{ResultsByTime: (group_by(.TimePeriod.Start) | map({TimePeriod: .[0].TimePeriod, Estimated: (map(.Estimated) | any),
+       Total: .[0].Total, Groups: (map(.Groups // []) | add)}))}' "$tmp/results.json" >"$tmp/costs.json"
   while read -r month; do
     file=$store/stats/costs/$account/$month.json
     mkdir -p "$(dirname "$file")"

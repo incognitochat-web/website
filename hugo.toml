@@ -17,6 +17,11 @@ unsafe = true # only our own content; needed for small inline SVGs and <abbr>
 [markup.goldmark.parser.attribute]
 block = true
 
+# No syntax highlighting: it writes inline styles, which the site's
+# Content-Security-Policy refuses.
+[markup.highlight]
+codeFences = false
+
 [languages.en]
 label = "English"
 locale = "en"

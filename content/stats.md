@@ -17,8 +17,8 @@ Counts and sums only: nothing here, or where the counts come from, says who did 
 
 ## Where the numbers come from
 
-- The app's server counts once a minute, and AWS (CloudWatch) adds the counts up by the hour. A [scheduled job](https://github.com/{{< param "siteRepo" >}}/blob/main/.github/workflows/stats.yml) in this site's public repository reads them every hour, and the costs once a day, with a role that can read counts and costs and nothing else.
-- An hour's counts are dated by when the server wrote them, which on a quiet server can be some minutes later, so an hour can hold a few counts from the one before. Each run reads the last 48 hours again, so a run that's late or missed leaves no gap.
+- The app's server counts once a minute, and AWS (CloudWatch) adds the counts up by the hour. A [scheduled job](https://github.com/{{< param "siteRepo" >}}/blob/main/.github/workflows/stats.yml) in this site's public repository reads them every hour, and the costs once a day, with a role that can only read metrics and costs.
+- An hour's counts are dated by when the server wrote them, which can be much later on a quiet server: it writes a minute's counts with its next request, or when it shuts down. So an hour can hold counts from earlier ones. Each run reads the last 7 days again, so runs late or missed for up to a week leave no gap.
 - The job keeps every number it reads in the repository's [`data` branch](https://github.com/{{< param "siteRepo" >}}/tree/data/stats), so their history is public, and signs each file it writes with Sigstore:
 
   ```shell

@@ -69,8 +69,14 @@ jobs:
           path: .stats-store
           persist-credentials: false
 
+      # Bad data in the branch mustn't block the site: the page then says
+      # there are no numbers, and the run warns.
       - name: Build the statistics
-        run: scripts/build-stats.sh .stats-store data/stats.json
+        run: |
+          if ! scripts/build-stats.sh .stats-store data/stats.json; then
+            echo '{}' > data/stats.json
+            echo "::warning::The statistics in the data branch couldn't be read; the Stats page shows none"
+          fi
 
       - name: Build twice and check
         run: scripts/check.sh public

@@ -5,10 +5,14 @@
 {{- $from := site.Params.statsCountedFrom | default dict -}}
 {{- $messagesFrom := index $from "messages" | default "" -}}
 {{- $mediaFrom := index $from "media" | default "" -}}
-{{- if not $s.latest }}
+{{- $costs := $s.costs | default dict -}}
+{{- if and (not $s.latest) (not $costs.days) }}
 <p class="stats-empty">{{ i18n "stats_none" }}</p>
-{{- else }}
-<p class="stats-asof">{{ i18n "stats_asof" }} <time datetime="{{ $s.latest }}:00:00Z" dir="ltr">{{ time.Format "2006-01-02 15:00 UTC" (printf "%s:00:00Z" $s.latest) }}</time></p>
+{{- end }}
+
+{{- with $s.latest }}
+{{- $end := (time.AsTime (printf "%s:00:00Z" .)).Add (time.ParseDuration "1h") }}
+<p class="stats-asof">{{ i18n "stats_asof" }} <time datetime="{{ $end.Format "2006-01-02T15:04:05Z07:00" }}" dir="ltr">{{ $end.Format "2006-01-02 15:04 UTC" }}</time></p>
 
 <h2>{{ i18n "stats_last24" }}</h2>
 <div class="tiles">
@@ -34,6 +38,23 @@
 {{- end }}
 
 <details class="table-view">
+  <summary>{{ i18n "stats_by_hour" }}</summary>
+  <table>
+    <thead><tr><th>{{ i18n "stats_hour" }}</th><th>{{ i18n "stats_accounts" }}</th><th>{{ i18n "stats_messages" }}</th><th>{{ i18n "stats_media" }} (MiB)</th></tr></thead>
+    <tbody>
+      {{- range sort (last 48 $s.hours) "t" "desc" }}
+      <tr>
+        <td dir="ltr">{{ replace .t "T" " " }}:00</td>
+        <td>{{ with .accounts }}{{ lang.FormatNumber 0 . }}{{ else }}{{ if eq .accounts nil }}—{{ else }}0{{ end }}{{ end }}</td>
+        <td>{{ if and $messagesFrom (ne .messages nil) }}{{ lang.FormatNumber 0 .messages }}{{ else }}—{{ end }}</td>
+        <td>{{ if and $mediaFrom (ne .media_bytes nil) }}{{ printf "%.1f" (div (float .media_bytes) 1048576) }}{{ else }}—{{ end }}</td>
+      </tr>
+      {{- end }}
+    </tbody>
+  </table>
+</details>
+
+<details class="table-view">
   <summary>{{ i18n "stats_by_day" }}</summary>
   <table>
     <thead><tr><th>{{ i18n "stats_day" }}</th><th>{{ i18n "stats_accounts" }}</th><th>{{ i18n "stats_messages" }}</th><th>{{ i18n "stats_media" }} (MiB)</th></tr></thead>
@@ -50,13 +71,14 @@
   </table>
   <p class="table-note">{{ i18n "stats_partial_day" }}</p>
 </details>
+{{- end }}
 
-{{- with $s.costs }}
+{{- with $costs }}
 {{- if .days }}
 <h2>{{ i18n "stats_costs" }}</h2>
 <div class="tiles">
   <div class="tile"><p class="tile-value" dir="ltr">${{ printf "%.2f" (float .month.production) }}</p><p class="tile-name">{{ i18n "stats_cost_prod" }} · <span dir="ltr">{{ .month.name }}</span></p></div>
-  <div class="tile"><p class="tile-value" dir="ltr">${{ printf "%.2f" (float .month.dev) }}</p><p class="tile-name">{{ i18n "stats_cost_dev" }} · <span dir="ltr">{{ .month.name }}</span></p></div>
+  <div class="tile"><p class="tile-value" dir="ltr">{{ if $s.dev_known }}${{ printf "%.2f" (float .month.dev) }}{{ else }}—{{ end }}</p><p class="tile-name">{{ i18n "stats_cost_dev" }} · <span dir="ltr">{{ .month.name }}</span></p></div>
   <div class="tile"><p class="tile-value" dir="ltr">${{ printf "%.2f" (add (float .previous.production) (float .previous.dev)) }}</p><p class="tile-name">{{ i18n "stats_cost_previous" }} · <span dir="ltr">{{ .previous.name }}</span></p></div>
 </div>
 <h3>{{ i18n "stats_costs_chart" }}</h3>
@@ -68,11 +90,10 @@
     <thead><tr><th>{{ i18n "stats_day" }}</th>{{ range $services }}<th>{{ if eq . "Other" }}{{ i18n "stats_other" }}{{ else }}{{ . }}{{ end }}</th>{{ end }}<th>{{ i18n "stats_total" }}</th><th>{{ i18n "stats_cost_dev" }}</th></tr></thead>
     <tbody>
       {{- range sort .days "date" "desc" }}
-      <tr><td dir="ltr">{{ .date }}</td>{{ range .values }}<td dir="ltr">${{ printf "%.2f" (float .) }}</td>{{ end }}<td dir="ltr">${{ printf "%.2f" (float .total) }}</td><td dir="ltr">${{ printf "%.2f" (float .dev) }}</td></tr>
+      <tr><td dir="ltr">{{ .date }}</td>{{ range .values }}<td dir="ltr">${{ printf "%.2f" (float .) }}</td>{{ end }}<td dir="ltr">${{ printf "%.2f" (float .total) }}</td><td dir="ltr">{{ if $s.dev_known }}${{ printf "%.2f" (float .dev) }}{{ else }}—{{ end }}</td></tr>
       {{- end }}
     </tbody>
   </table>
 </details>
-{{- end }}
 {{- end }}
 {{- end }}

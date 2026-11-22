@@ -39,6 +39,9 @@ concurrency:
 jobs:
   collect:
     name: Collect
+    # Only on its schedule or by hand, from main: the role trusts any job in
+    # the stats environment.
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment: stats
@@ -58,52 +61,73 @@ jobs:
           path: site
           persist-credentials: false
 
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: data
-          path: store
+      # Read without credentials (the repository is public); the token is
+      # used only to push, in the last step. A new data branch starts empty.
+      - name: Get the data branch
+        run: |
+          if git ls-remote --exit-code --heads "https://github.com/${GITHUB_REPOSITORY}.git" data >/dev/null; then
+            git clone --quiet --single-branch --branch data "https://github.com/${GITHUB_REPOSITORY}.git" store
+          else
+            echo "No data branch yet: starting one"
+            git init --quiet --initial-branch data store
+          fi
 
+      # Each read may fail on its own; what the others read is still saved,
+      # and the job fails at the end.
       - name: Production credentials
+        id: prod-creds
         if: env.HAS_PRODUCTION == 'true'
+        continue-on-error: true
         uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
         with:
           role-to-assume: ${{ secrets.STATS_ROLE_ARN_PRODUCTION }}
           aws-region: ${{ vars.STATS_REGION_PRODUCTION }}
           role-session-name: website-stats
+          mask-aws-account-id: true
 
       - name: Production counts
-        if: env.HAS_PRODUCTION == 'true'
+        id: prod-counts
+        if: env.HAS_PRODUCTION == 'true' && steps.prod-creds.outcome == 'success'
+        continue-on-error: true
         env:
           NAMESPACE: ${{ vars.STATS_NAMESPACE_PRODUCTION }}
         run: site/scripts/collect-stats.sh counts store
 
       - name: Production costs
-        if: env.HAS_PRODUCTION == 'true' && env.COSTS == 'true'
+        id: prod-costs
+        if: env.HAS_PRODUCTION == 'true' && env.COSTS == 'true' && steps.prod-creds.outcome == 'success'
+        continue-on-error: true
         run: site/scripts/collect-stats.sh costs production store
 
       - name: Dev credentials
+        id: dev-creds
         if: env.HAS_DEV == 'true' && env.COSTS == 'true'
+        continue-on-error: true
         uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
         with:
           role-to-assume: ${{ secrets.STATS_ROLE_ARN_DEV }}
           aws-region: ${{ vars.STATS_REGION_DEV }}
           role-session-name: website-stats
+          mask-aws-account-id: true
 
       - name: Dev costs
-        if: env.HAS_DEV == 'true' && env.COSTS == 'true'
+        id: dev-costs
+        if: env.HAS_DEV == 'true' && env.COSTS == 'true' && steps.dev-creds.outcome == 'success'
+        continue-on-error: true
         run: site/scripts/collect-stats.sh costs dev store
 
-      - name: Save to the data branch
-        id: save
+      - name: Commit what changed
+        id: commit
         working-directory: store
         run: |
+          mkdir -p stats
           git add -A stats
           if git diff --cached --quiet; then
             echo "Nothing new"
             echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          # What this run wrote, for the attestation below.
+          # What this run wrote, to sign before it's pushed.
           mkdir -p "$RUNNER_TEMP/written"
           git diff --cached --name-only --diff-filter=AM | while read -r f; do
             mkdir -p "$RUNNER_TEMP/written/$(dirname "$f")"
@@ -111,18 +135,43 @@ jobs:
           done
           git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
             commit -q -m "stats: $(date -u +%Y-%m-%dT%H:%MZ)"
-          git push -q origin HEAD:data
           echo "changed=true" >> "$GITHUB_OUTPUT"
 
+      # Signed first: a file is pushed only once it's signed.
       - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
-        if: steps.save.outputs.changed == 'true'
+        if: steps.commit.outputs.changed == 'true'
         with:
           subject-path: ${{ runner.temp }}/written/**/*.json
+
+      - name: Push to the data branch
+        id: save
+        working-directory: store
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "${{ steps.commit.outputs.changed }}" != true ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
+          echo "::add-mask::${auth}"
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic ${auth}" \
+            push -q "https://github.com/${GITHUB_REPOSITORY}.git" HEAD:data
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Fail if a read failed
+        if: >-
+          steps.prod-creds.outcome == 'failure' || steps.prod-counts.outcome == 'failure' ||
+          steps.prod-costs.outcome == 'failure' || steps.dev-creds.outcome == 'failure' ||
+          steps.dev-costs.outcome == 'failure'
+        run: |
+          echo "A read failed (see the steps above); what the others read was saved."
+          exit 1
 
   publish:
     name: Show them on the site
     needs: collect
-    if: needs.collect.outputs.changed == 'true'
+    if: always() && needs.collect.outputs.changed == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
