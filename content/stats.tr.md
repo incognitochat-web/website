@@ -1,7 +1,7 @@
 ---
 title: "İstatistikler"
 linkTitle: "İstatistikler"
-description: "Hizmetin saat saat ne kadar kullanıldığı ve çalıştırılmasının ne kadara mal olduğu. Küçükler dahil, gerçek sayılar."
+description: "Hizmetin ay ay ne kadar kullanıldığı ve çalıştırılmasının ne kadara mal olduğu. Gerçek sayılar."
 ---
 
 {{< stats >}}

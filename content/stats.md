@@ -1,7 +1,7 @@
 ---
 title: "Statistics"
 linkTitle: "Stats"
-description: "How much the service is used, hour by hour, and what it costs to run. Real numbers, small ones included."
+description: "How much the service is used, month by month, and what it costs to run. Real numbers."
 ---
 
 {{< stats >}}

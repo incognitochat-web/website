@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 # Turns the data store (the `data` branch, checked out at <store>) into
-# what the Stats page shows, data/stats.json: the 7 days of hours up to the
-# latest one counted (an hour never counted shows as a gap), the
-# last 30 days by day, the last 24 hours' totals, and the costs of the last
-# 30 days, production's 4 biggest services by name and the rest as "Other",
-# with this month's and last month's totals. Run by the deploy before Hugo.
+# what the Stats page shows, data/stats.json:
+# - months: the newest 13 months, newest first, each with its days (counts,
+#   production's costs by service, the test environment's total) and its
+#   totals; production's 4 biggest services that month by name, the rest
+#   as "Other". A day or month not counted (or a cost not read) is null.
+# - the 7 days of hours up to the latest one counted (an hour never counted
+#   is a gap) and the last 24 hours' totals, for the newest month.
+# Run by the deploy before Hugo.
 #
 #   scripts/build-stats.sh <store> <output.json>
 #
@@ -43,15 +46,19 @@ if [ ${#hourly[@]} -eq 0 ] && [ ${#production[@]} -eq 0 ] && [ ${#dev[@]} -eq 0 
   exit 0
 fi
 
-# Only the newest files matter: 31 days of hours, 2 months of costs.
-recent() { # count files...
-  local n=$1
-  shift
-  [ $# -eq 0 ] || printf '%s\n' "$@" | sort | tail -n "$n"
+# Only the newest 13 months are shown: this one and the 12 before it.
+mapfile -t shown < <(for f in ${hourly[@]+"${hourly[@]}"} ${production[@]+"${production[@]}"} ${dev[@]+"${dev[@]}"}; do
+  b=$(basename "$f"); echo "${b:0:7}"; done | sort -u | tail -n 13)
+within() { # files... -> those of a shown month
+  local f b m
+  for f in "$@"; do
+    b=$(basename "$f")
+    for m in "${shown[@]}"; do [ "${b:0:7}" = "$m" ] && echo "$f"; done
+  done
 }
-mapfile -t hourly < <(recent 31 ${hourly[@]+"${hourly[@]}"})
-mapfile -t production < <(recent 2 ${production[@]+"${production[@]}"})
-mapfile -t dev < <(recent 2 ${dev[@]+"${dev[@]}"})
+mapfile -t hourly < <(within ${hourly[@]+"${hourly[@]}"})
+mapfile -t production < <(within ${production[@]+"${production[@]}"})
+mapfile -t dev < <(within ${dev[@]+"${dev[@]}"})
 
 # Every file must have the shape collect-stats.sh writes: counts that are
 # whole numbers or null, real dates, amounts that are numbers. Anything else
@@ -79,8 +86,8 @@ jq -n -S \
   --slurpfile dev <(cat /dev/null ${dev[@]+"${dev[@]}"}) '
   def sum: map(select(. != null)) | add // 0;
   def round4: . * 10000 | round / 10000;
-
   def hourname: strftime("%Y-%m-%dT%H");
+
   # Every hour stored, oldest first: {t: "2026-11-21T07", accounts, messages, media_bytes}.
   ($hourly | sort_by(.date) | map(. as $d | range(24) as $h | {
     t: ($d.date + "T" + (if $h < 10 then "0" else "" end) + ($h | tostring)),
@@ -97,40 +104,59 @@ jq -n -S \
     end) as $hours
   | ($hours[-24:]) as $day
 
-  # Costs by day: production by service, dev as one total.
+  # Each day stored: the hours counted and their sums.
+  | ($all | group_by(.t[0:10]) | map({key: .[0].t[0:10], value: {
+      hours: (map(select(.accounts != null)) | length),
+      accounts: (map(.accounts) | sum), messages: (map(.messages) | sum), media_bytes: (map(.media_bytes) | sum)
+    }}) | from_entries) as $counted
+  # Costs by day: production by service, dev as one total. A day missing
+  # from a file was not read.
   | ($production | map(.days) | add // {}) as $prod
   | ($dev | map(.days) | add // {}) as $devdays
-  # The months whose test-environment costs were read: any other shows as
-  # unknown (null), not $0.
-  | ($dev | map(.month)) as $devmonths
-  | def devknown($m): $devmonths | index($m) != null;
-  ($prod | keys | sort | .[-30:]) as $costdays
-  | ([$costdays[] as $d | $prod[$d] | to_entries[]] | group_by(.key)
-      | map({key: .[0].key, value: (map(.value) | add)}) | sort_by(-.value) | map(.key)) as $ranked
-  | ($ranked[:4]) as $named
-  | ($costdays | map(. as $d | ($prod[$d] // {}) as $s | {
-      date: $d,
-      values: ([$named[] as $n | ($s[$n] // 0)] + [([$s | to_entries[] | select(.key as $k | $named | index($k) | not) | .value] | add // 0)] | map(round4)),
-      total: ([$s[]] | add // 0 | round4),
-      # A dev file holds every day it read: a day missing from it was not read.
-      dev: (if $devdays | has($d) then $devdays[$d] | round4 else null end)
-    })) as $costs
-  | ($costdays[-1] // "" | .[0:7]) as $month
-  | (if $month == "" then "" else ($month + "-01" | strptime("%Y-%m-%d") | mktime - 86400 | strftime("%Y-%m")) end) as $previous
-  | def month_total($days; $m): [$days | to_entries[] | select(.key | startswith($m)) | .value | if type == "object" then ([.[]] | add // 0) else . end] | add // 0 | round4;
+  # The last day anything was counted or read; a month shows its days up to it.
+  | ([($known[-1].t // "" | .[0:10]), ($prod | keys | max // ""), ($devdays | keys | max // "")] | max) as $lastday
+  | (([$all[].t[0:7]] + [$prod | keys[] | .[0:7]] + [$devdays | keys[] | .[0:7]]) | unique | reverse) as $months
+  | def known(f): [.[] | f | select(. != null)] | if length > 0 then add | round4 else null end;
 
   {
     latest: ($known[-1].t // null),
     hours: $hours,
     last24: {accounts: ($day | map(.accounts) | sum), messages: ($day | map(.messages) | sum), media_bytes: ($day | map(.media_bytes) | sum)},
-    days: ($all | group_by(.t[0:10]) | map({date: .[0].t[0:10], hours: (map(select(.accounts != null)) | length),
-      accounts: (map(.accounts) | sum), messages: (map(.messages) | sum), media_bytes: (map(.media_bytes) | sum)})
-      | map(select(.hours > 0)) | .[-30:]),
-    costs: {
-      services: ($named + (if ($ranked | length) > 4 then ["Other"] else [] end)),
-      days: ($costs | if ($ranked | length) > 4 then . else map(.values |= .[0:-1]) end),
-      month: {name: $month, production: month_total($prod; $month), dev: (if devknown($month) then month_total($devdays; $month) else null end)},
-      previous: {name: $previous, production: month_total($prod; $previous), dev: (if devknown($previous) then month_total($devdays; $previous) else null end)}
-    }
+    months: [$months[] as $m
+      | ($m + "-01T00:00:00Z" | fromdateiso8601) as $first
+      | [range(0; 31) as $n | ($first + $n * 86400 | strftime("%Y-%m-%d")) | select(startswith($m) and . <= $lastday)] as $dates
+      | ([$dates[] as $d | ($prod[$d] // {}) | to_entries[]] | group_by(.key)
+          | map({key: .[0].key, value: (map(.value) | add)}) | sort_by(-.value) | map(.key)) as $ranked
+      | ($ranked[:4]) as $named
+      | (($ranked | length) > 4) as $other
+      | [$dates[] as $d | ($counted[$d] // {hours: 0}) as $c | ($prod[$d]) as $p | {
+          date: $d,
+          hours: $c.hours,
+          accounts: (if $c.hours > 0 then $c.accounts else null end),
+          messages: (if $c.hours > 0 then $c.messages else null end),
+          media_bytes: (if $c.hours > 0 then $c.media_bytes else null end),
+          total: (if $p == null then null else [$p[]] | add // 0 | round4 end),
+          values: (if $p == null then null else
+            ([$named[] as $n | ($p[$n] // 0)]
+             + (if $other then [[$p | to_entries[] | select(.key as $k | $named | index($k) | not) | .value] | add // 0] else [] end)
+             | map(round4)) end),
+          dev: (if $devdays | has($d) then $devdays[$d] | round4 else null end)
+        }] as $days
+      | {
+          month: $m,
+          services: ($named + (if $other then ["Other"] else [] end)),
+          # The total of each service that month, in the same order (Other last).
+          service_totals: ([range(0; ($named | length) + (if $other then 1 else 0 end)) as $j
+            | [$days[] | .values // [] | .[$j] // 0] | add // 0 | round4]),
+          days: $days,
+          totals: {
+            hours: ($days | map(.hours) | add // 0),
+            accounts: ($days | known(.accounts)),
+            messages: ($days | known(.messages)),
+            media_bytes: ($days | known(.media_bytes)),
+            production: ($days | known(.total)),
+            dev: ($days | known(.dev))
+          }
+        }]
   }' >"$out"
-echo "statistics: $(jq -r '"\(.hours | length) hours, \(.days | length) days, \(.costs.days | length) days of costs, latest \(.latest)"' "$out")"
+echo "statistics: $(jq -r '"\(.hours | length) hours, \(.months | length) months (\(.months | map(.month) | join(" "))), latest \(.latest)"' "$out")"

@@ -1,42 +1,51 @@
-{{- /* Production's daily costs, stacked by service (the biggest four, then
-     "Other"), one bar a day, each segment's service and amount as its
-     tooltip. Input: data/stats.json's costs. Segments are kept apart by a
-     2px gap of the page's colour. */ -}}
+{{- /* A month's production costs by day, stacked by service (that month's
+     biggest four, then "Other"), one slot per day of the month, the day's
+     number under every seventh, each day's services and amounts as its
+     tooltip, and each service's month total in the legend. Input: a month
+     from data/stats.json (services, service_totals, days). A day
+     whose costs weren't read has no bar. Segments are kept apart by a 2px
+     gap of the page's colour. */ -}}
 {{- $c := . -}}
 {{- $w := 700.0 -}}
 {{- $h := 140.0 -}}
-{{- $n := len $c.days -}}
 {{- $max := 0.0 -}}
-{{- range $c.days }}{{ if gt (float .total) $max }}{{ $max = float .total }}{{ end }}{{ end -}}
+{{- range $c.days }}{{ if ne .total nil }}{{ if gt (float .total) $max }}{{ $max = float .total }}{{ end }}{{ end }}{{ end -}}
 {{- $scale := cond (gt $max 0.0) $max 1.0 -}}
-{{- $step := div $w (cond (gt $n 0) (float $n) 1.0) -}}
+{{- $step := div $w 31.0 -}}
 {{- $bar := math.Max 2.0 (sub $step 4.0) -}}
+{{- $last := sub (len $c.services) 1 -}}
 <figure class="chart" dir="ltr">
   <svg viewBox="0 0 {{ $w }} {{ add $h 26 }}" role="img" aria-label="{{ i18n "stats_costs_chart" }}">
     <line class="axis" x1="0" y1="{{ $h }}" x2="{{ $w }}" y2="{{ $h }}"/>
     {{- range $i, $d := $c.days }}
     {{- $x := add (mul (float $i) $step) 2 }}
-    {{- if and (eq (mod $i 7) 0) (lt $x (sub $w 60)) }}
-    <text class="tick" x="{{ $x }}" y="{{ add $h 20 }}">{{ time.Format "1/2" $d.date }}</text>
+    {{- if eq (mod $i 7) 0 }}
+    <text class="tick" x="{{ $x }}" y="{{ add $h 20 }}">{{ int (strings.TrimLeft "0" (substr $d.date 8 2)) }}</text>
     {{- end }}
+    {{- if ne $d.total nil }}
     {{- $y := $h }}
     <g>
-      <title>{{ $d.date }}: ${{ printf "%.2f" (float $d.total) }}{{ range $j, $v := $d.values }}{{ if gt (float $v) 0.0 }}&#10;{{ $name := index $c.services $j }}{{ if eq $name "Other" }}{{ i18n "stats_other" }}{{ else }}{{ $name }}{{ end }}: ${{ printf "%.2f" (float $v) }}{{ end }}{{ end }}</title>
+      <title>{{ $d.date }}: ${{ printf "%.2f" (float $d.total) }}{{ range $j, $v := $d.values }}{{ if gt (float $v) 0.0 }}&#10;{{ $name := index $c.services $j }}{{ if and (eq $name "Other") (eq $j $last) }}{{ i18n "stats_other" }}{{ else }}{{ $name }}{{ end }}: ${{ printf "%.2f" (float $v) }}{{ end }}{{ end }}</title>
       <rect class="hit" x="{{ sub $x 2 }}" y="0" width="{{ $step }}" height="{{ $h }}"/>
       {{- range $j, $v := $d.values }}
       {{- $sh := mul (div (float $v) $scale) (sub $h 4) }}
       {{- if gt $sh 0.0 }}
       {{- $y = sub $y $sh }}
-      <rect class="seg s{{ cond (and (eq (index $c.services $j) "Other") (eq (add $j 1) (len $c.services))) "o" (add $j 1) }}" x="{{ $x }}" y="{{ $y }}" width="{{ $bar }}" height="{{ math.Max 0.5 (sub $sh 2) }}"/>
+      <rect class="seg s{{ cond (and (eq (index $c.services $j) "Other") (eq $j $last)) "o" (add $j 1) }}" x="{{ $x }}" y="{{ $y }}" width="{{ $bar }}" height="{{ math.Max 0.5 (sub $sh 2) }}"/>
       {{- end }}
       {{- end }}
     </g>
     {{- end }}
+    {{- end }}
   </svg>
   <figcaption dir="{{ site.Language.Direction | default "ltr" }}">{{ i18n "stats_peak" }} <span dir="ltr">${{ printf "%.2f" $max }}</span></figcaption>
 </figure>
+{{- with $c.services }}
+{{- /* Each service with its total for the month: the numbers the chart
+     shows only on hover, as text anyone (and a screen reader) can read. */}}
 <ul class="legend" dir="ltr">
-  {{- range $j, $s := $c.services }}
-  <li><span class="swatch s{{ cond (and (eq $s "Other") (eq (add $j 1) (len $c.services))) "o" (add $j 1) }}" aria-hidden="true"></span>{{ if eq $s "Other" }}{{ i18n "stats_other" }}{{ else }}{{ $s }}{{ end }}</li>
+  {{- range $j, $s := . }}
+  <li><span class="swatch s{{ cond (and (eq $s "Other") (eq $j $last)) "o" (add $j 1) }}" aria-hidden="true"></span>{{ if and (eq $s "Other") (eq $j $last) }}{{ i18n "stats_other" }}{{ else }}{{ $s }}{{ end }}{{ $t := index ($c.service_totals | default slice) $j }}{{ if ne $t nil }} <span class="legend-amount">${{ printf "%.2f" (float $t) }}</span>{{ end }}</li>
   {{- end }}
 </ul>
+{{- end }}

@@ -4,7 +4,9 @@
      (accounts, messages or media_bytes), "label" (what it counts, for the
      chart's name), "mib" (show bytes as MiB), "from" (the first hour
      counted, yyyy-mm-ddThh; earlier ones weren't). An hour not counted has
-     no bar and "—" as its tooltip. No script: the tooltips are SVG titles. */ -}}
+     no bar and "—" as its tooltip. No script: the tooltips are SVG titles.
+     Dates under midnights are short ("16 Nov") to fit on a phone; Hugo has
+     no short Arabic month names, and the full ones fit. */ -}}
 {{- $hours := .hours -}}
 {{- $key := .key -}}
 {{- $mib := .mib | default false -}}
@@ -24,8 +26,8 @@
     {{- $x := mul (float $i) $step }}
     {{- if eq (substr $p.t 11 2) "00" }}
     <line class="midnight" x1="{{ $x }}" y1="0" x2="{{ $x }}" y2="{{ $h }}"/>
-    {{- if lt $x (sub $w 60) }}
-    <text class="tick" x="{{ add $x 3 }}" y="{{ add $h 20 }}">{{ time.Format "1/2" (printf "%s:00:00Z" $p.t) }}</text>
+    {{- if lt $x (sub $w 100) }}
+    <text class="tick" x="{{ add $x 3 }}" y="{{ add $h 20 }}">{{ time.Format (cond (eq site.Language.Lang "ar") "2 January" "2 Jan") (printf "%s:00:00Z" $p.t) }}</text>
     {{- end }}
     {{- end }}
     {{- $raw := index $p $key }}
