@@ -6,7 +6,7 @@
     </a>
     <nav class="nav" aria-label="{{ i18n "nav" }}">
       <ul>
-        {{- range slice "official" "verify" "status" "stats" }}
+        {{- range slice "official" "verify" "status" "stats" "faq" }}
           {{- with site.GetPage . }}
           <li><a href="{{ .RelPermalink }}"{{ if eq $.RelPermalink .RelPermalink }} aria-current="page"{{ end }}>{{ .LinkTitle }}</a></li>
           {{- end }}
