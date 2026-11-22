@@ -3,3 +3,6 @@ public/
 resources/_gen/
 # Written at deploy time by scripts/fetch-app-checks.sh.
 data/appcheck.json
+# Written at deploy time by scripts/build-stats.sh, from the data branch.
+data/stats.json
+.stats-store/
