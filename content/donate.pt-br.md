@@ -3,8 +3,6 @@ title: "Doar"
 linkTitle: "Doar"
 description: "O Incognito Chat é gratuito e não tem anúncios. As doações ajudam a pagar o custo de mantê-lo no ar, e cada doação e cada gasto são públicos."
 updated: "2026-11-22"
-# Unpublished until Open Source Collective accepts the collective.
-draft: true
 ---
 
 Sem anúncios e sem nada para vender, as doações ajudam a pagar o serviço: os servidores e o armazenamento na Amazon Web Services, e o domínio. O GitHub hospeda o app e este site de graça.

@@ -3,8 +3,6 @@ title: "التبرع"
 linkTitle: "التبرع"
 description: "تطبيق Incognito Chat مجاني وبلا إعلانات. تساعد التبرعات في دفع تكاليف تشغيله، وكل تبرع وكل نفقة معلنة للجميع."
 updated: "2026-11-22"
-# Unpublished until Open Source Collective accepts the collective.
-draft: true
 ---
 
 لا إعلانات لدينا ولا شيء نبيعه، لذا تساعد التبرعات في دفع تكاليف الخدمة: الخوادم والتخزين على Amazon Web Services، واسم النطاق. أما التطبيق وهذا الموقع فيستضيفهما GitHub مجانًا.

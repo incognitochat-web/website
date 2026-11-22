@@ -3,8 +3,6 @@ title: "Darowizny"
 linkTitle: "Darowizny"
 description: "Incognito Chat jest bezpłatny i bez reklam. Darowizny pomagają pokryć koszty jego działania, a każda darowizna i każdy wydatek są jawne."
 updated: "2026-11-22"
-# Unpublished until Open Source Collective accepts the collective.
-draft: true
 ---
 
 Nie mamy reklam ani niczego do sprzedania, więc darowizny pomagają opłacić usługę: serwery i przechowywanie danych w Amazon Web Services oraz domenę. GitHub bezpłatnie hostuje aplikację i tę stronę.

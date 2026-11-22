@@ -3,8 +3,6 @@ title: "Donar"
 linkTitle: "Donar"
 description: "Incognito Chat es gratis y no tiene anuncios. Las donaciones ayudan a pagar lo que cuesta mantenerlo, y cada donación y cada gasto son públicos."
 updated: "2026-11-22"
-# Unpublished until Open Source Collective accepts the collective.
-draft: true
 ---
 
 Sin anuncios y sin nada que vender, las donaciones ayudan a pagar el servicio: los servidores y el almacenamiento en Amazon Web Services, y el dominio. GitHub aloja la app y este sitio de forma gratuita.
