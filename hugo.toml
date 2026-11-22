@@ -75,6 +75,14 @@ weight = 6
 [languages.es.params]
 fonts = ["inter", "newsreader"]
 
+[languages.pt-br]
+label = "Português (Brasil)"
+locale = "pt-BR"
+direction = "ltr"
+weight = 7
+[languages.pt-br.params]
+fonts = ["inter", "newsreader"]
+
 [sitemap]
 changeFreq = ""
 priority = -1
