@@ -25,7 +25,7 @@
     {{- if ne $d.total nil }}
     {{- $y := $h }}
     <g>
-      <title>{{ $d.date }}: ${{ printf "%.2f" (float $d.total) }}{{ range $j, $v := $d.values }}{{ if gt (float $v) 0.0 }}&#10;{{ $name := index $c.services $j }}{{ if and (eq $name "Other") (eq $j $last) }}{{ i18n "stats_other" }}{{ else }}{{ $name }}{{ end }}: ${{ printf "%.2f" (float $v) }}{{ end }}{{ end }}</title>
+      <title>{{ $d.date }}: ${{ lang.FormatNumber 2 (float $d.total) }}{{ range $j, $v := $d.values }}{{ if gt (float $v) 0.0 }}&#10;{{ $name := index $c.services $j }}{{ if and (eq $name "Other") (eq $j $last) }}{{ i18n "stats_other" }}{{ else }}{{ $name }}{{ end }}: ${{ lang.FormatNumber 2 (float $v) }}{{ end }}{{ end }}</title>
       <rect class="hit" x="{{ sub $x 2 }}" y="0" width="{{ $step }}" height="{{ $h }}"/>
       {{- range $j, $v := $d.values }}
       {{- $sh := mul (div (float $v) $scale) (sub $h 4) }}
@@ -38,14 +38,14 @@
     {{- end }}
     {{- end }}
   </svg>
-  <figcaption dir="{{ site.Language.Direction | default "ltr" }}">{{ i18n "stats_peak" }} <span dir="ltr">${{ printf "%.2f" $max }}</span></figcaption>
+  <figcaption dir="{{ site.Language.Direction | default "ltr" }}">{{ i18n "stats_peak" }} <span dir="ltr">${{ lang.FormatNumber 2 $max }}</span></figcaption>
 </figure>
 {{- with $c.services }}
 {{- /* Each service with its total for the month: the numbers the chart
      shows only on hover, as text anyone (and a screen reader) can read. */}}
 <ul class="legend" dir="ltr">
   {{- range $j, $s := . }}
-  <li><span class="swatch s{{ cond (and (eq $s "Other") (eq $j $last)) "o" (add $j 1) }}" aria-hidden="true"></span>{{ if and (eq $s "Other") (eq $j $last) }}{{ i18n "stats_other" }}{{ else }}{{ $s }}{{ end }}{{ $t := index ($c.service_totals | default slice) $j }}{{ if ne $t nil }} <span class="legend-amount">${{ printf "%.2f" (float $t) }}</span>{{ end }}</li>
+  <li><span class="swatch s{{ cond (and (eq $s "Other") (eq $j $last)) "o" (add $j 1) }}" aria-hidden="true"></span>{{ if and (eq $s "Other") (eq $j $last) }}{{ i18n "stats_other" }}{{ else }}{{ $s }}{{ end }}{{ $t := index ($c.service_totals | default slice) $j }}{{ if ne $t nil }} <span class="legend-amount">${{ lang.FormatNumber 2 (float $t) }}</span>{{ end }}</li>
   {{- end }}
 </ul>
 {{- end }}

@@ -199,6 +199,23 @@ grep -q '<h1>Estatísticas</h1>' "$work/out/pt-br/stats/index.html" || fail "no 
 grep -q '<h1>Statistik</h1>' "$work/out/id/stats/index.html" || fail "no Indonesian Stats page"
 grep -q '<h1>İstatistikler</h1>' "$work/out/tr/stats/index.html" || fail "no Turkish Stats page"
 
+# Numbers are written the page's language's way: a decimal point in English,
+# a comma in Dutch (and Russian, Spanish, Portuguese, Indonesian, Turkish).
+en_costs=$(cat "$cpage") nl_costs=$(cat "$work/out/nl/costs/index.html") nl_stats=$(cat "$work/out/nl/stats/index.html")
+[[ $en_costs == *'>$2.00</p>'* ]] || fail "English costs aren't written as \$2.00"
+[[ $nl_costs == *'>$2,00</p>'* ]] || fail "Dutch costs aren't written as \$2,00"
+[[ $nl_stats == *'2,0 MiB'* ]] || fail "Dutch media isn't written as 2,0 MiB"
+# Nowhere left with a decimal point: tiles, tables, chart tooltips, captions, legends.
+dot_money='\$[0-9]+\.[0-9]' dot_mib='[0-9]\.[0-9] MiB' dot_cell='<td>[0-9]+\.[0-9]</td>'
+if [[ $nl_costs =~ $dot_money ]]; then fail "a Dutch cost is written with a decimal point: ${BASH_REMATCH[0]}"; fi
+if [[ $nl_stats =~ $dot_mib || $nl_stats =~ $dot_cell ]]; then fail "a Dutch media size is written with a decimal point: ${BASH_REMATCH[0]}"; fi
+# And thousands are grouped: 1,234.50 in English, 1 234,50 in Russian.
+jq '.months[0].totals.production = 1234.5' "$work/stats.json" >"$work/big.json"
+build "$work/big.json" "$work/out-big" "2026-01-01T00"
+en_big=$(cat "$work/out-big/costs/index.html") ru_big=$(cat "$work/out-big/ru/costs/index.html")
+[[ $en_big == *'>$1,234.50</p>'* ]] || fail "English thousands aren't written as \$1,234.50"
+[[ $ru_big == *$'>$1\u00a0234,50</p>'* ]] || fail "Russian thousands aren't written as \$1 234,50, with a no-break space"
+
 # Counted from an hour: earlier hours show as not counted, not as 0.
 from=$(date -u -d "$end - 2 hours" +%Y-%m-%dT%H)
 build "$work/stats.json" "$work/out1" "$from"
