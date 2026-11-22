@@ -171,9 +171,9 @@ pre code { background: none; padding: 0; font-size: inherit; }
   justify-content: space-between;
   gap: 0.75rem 2rem;
   min-height: 60px;
-  flex-wrap: wrap;
 }
 .brand {
+  flex: none;
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
@@ -193,19 +193,21 @@ pre code { background: none; padding: 0; font-size: inherit; }
 .nav a[aria-current="page"] { color: var(--text); text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 0.45em; }
 .lang-switch { color: var(--text-2); font-size: 0.9rem; text-decoration: none; }
 .lang-switch:hover { color: var(--text); }
-/* With three languages or more: a menu (no script), each named in itself. */
-.lang-menu { position: relative; }
-.lang-menu summary { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--text-2); font-size: 0.9rem; cursor: pointer; list-style: none; }
+/* With three languages or more: a menu (no script), each named in itself.
+   The button is a flex box, not an inline one: an inline box sits on a
+   line of text, a few pixels above the links. The menu hangs from the
+   tools' box (the header's full height), just below the header's line. */
+.lang-menu summary { display: flex; align-items: center; gap: 0.4rem; color: var(--text-2); font-size: 0.9rem; cursor: pointer; list-style: none; }
 .lang-menu summary::-webkit-details-marker { display: none; }
 .lang-menu summary:hover, .lang-menu[open] summary { color: var(--text); }
-.lang-menu ul { position: absolute; inset-inline-end: 0; top: calc(100% + 0.5rem); z-index: 10; margin: 0; padding: 0.35rem 0; list-style: none; min-width: 10rem; background: var(--bg); border: 1px solid var(--border); border-radius: 0.5rem; box-shadow: 0 6px 24px rgb(0 0 0 / 0.08); }
+.lang-menu ul { position: absolute; inset-inline-end: 0; top: calc(100% + 1px + 0.4rem); z-index: 10; margin: 0; padding: 0.35rem 0; list-style: none; min-width: 10rem; background: var(--bg); border: 1px solid var(--border); border-radius: 0.5rem; box-shadow: 0 6px 24px rgb(0 0 0 / 0.08); }
 .lang-menu li a { display: block; padding: 0.4rem 0.9rem; color: var(--text-2); font-size: 0.93rem; text-decoration: none; white-space: nowrap; }
 .lang-menu li a:hover { color: var(--text); background: var(--accent-soft); }
 .lang-menu li a[aria-current="true"] { color: var(--text); font-weight: 600; }
-.header-tools { display: flex; align-items: center; gap: 1.1rem; }
+.header-tools { flex: none; align-self: stretch; position: relative; display: flex; align-items: center; gap: 1.1rem; }
 .icon-link { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--text-2); text-decoration: none; }
 .icon-link:hover { color: var(--text); }
-.header-tools .icon-link { padding: 0.25rem; margin: -0.25rem; }
+.header-tools .icon-link, .lang-menu summary { padding: 0.25rem; margin: -0.25rem; }
 
 /* Buttons */
 .actions { display: flex; flex-wrap: wrap; gap: 0.7rem; }
@@ -449,6 +451,15 @@ table.official .hint { font-size: 0.82rem; color: var(--muted); }
 .footer-bottom p { margin: 0; }
 
 /* Smaller screens */
+/* The header in two rows (name and tools, then the links) below the width
+   the longest language needs for one row: about 940px in Portuguese and
+   Russian. Above it, links that still don't fit wrap inside the nav. */
+@media (max-width: 1000px) {
+  .header-row { flex-wrap: wrap; padding-block: 0.75rem; row-gap: 0.6rem; }
+  .header-tools { order: 2; margin-inline-start: auto; }
+  .nav { order: 3; width: 100%; margin-inline-start: 0; }
+}
+
 @media (max-width: 900px) {
   .hero { padding-block: 3.5rem; }
   .hero-grid { grid-template-columns: 1fr; gap: 3rem; }
@@ -476,9 +487,6 @@ table.official .hint { font-size: 0.82rem; color: var(--muted); }
   .items .item:nth-child(2) { border-top: 1px solid var(--border); padding-top: 1.1rem; }
   .actions { width: 100%; }
   .actions .button { flex: 1 1 auto; justify-content: center; }
-  .header-row { padding-block: 0.75rem; row-gap: 0.6rem; }
-  .header-tools { order: 2; margin-inline-start: auto; }
-  .nav { order: 3; width: 100%; margin-inline-start: 0; }
   .nav ul { gap: 0.25rem 1.2rem; }
   .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
@@ -507,6 +515,16 @@ table.official .hint { font-size: 0.82rem; color: var(--muted); }
    columns fit it only from about 450px, in Persian and Arabic). */
 @media (max-width: 480px) {
   .footer-grid { grid-template-columns: minmax(0, 1fr); }
+  /* Only the globe: with a long name ("Português (Brasil)") the tools
+     wouldn't fit beside the site's name. Screen readers still hear it. */
+  .lang-current {
+    position: absolute;
+    width: 1px; height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
