@@ -104,10 +104,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 html[dir="rtl"] { font-size: 106.25%; }
-/* The self-hosted Inter and Newsreader have no Cyrillic: Russian text uses
-   the system's fonts throughout, so Latin words in it (Telegram) don't
-   switch fonts mid-line. */
-:lang(ru) {
+/* The self-hosted Inter and Newsreader have no Cyrillic, and no Turkish
+   ğ, ş or İ: Russian and Turkish text use the system's fonts throughout,
+   so Latin words in Russian (Telegram) don't switch fonts mid-line, and
+   Turkish words don't switch fonts mid-word. */
+:lang(ru), :lang(tr) {
   --font: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
   --serif-text: Georgia, "Times New Roman", "Noto Serif", serif;
 }

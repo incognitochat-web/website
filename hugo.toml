@@ -91,6 +91,16 @@ weight = 8
 [languages.id.params]
 fonts = ["inter", "newsreader"]
 
+[languages.tr]
+label = "Türkçe"
+locale = "tr"
+direction = "ltr"
+weight = 9
+[languages.tr.params]
+# Turkish text uses the system's fonts (site.css): Inter and Newsreader
+# have no ğ, ş or İ. The site's name and numbers use Newsreader.
+fonts = ["newsreader"]
+
 [sitemap]
 changeFreq = ""
 priority = -1

@@ -190,6 +190,7 @@ grep -q '<h1>Statistieken</h1>' "$work/out/nl/stats/index.html" || fail "no Dutc
 grep -q '<h1>Estadísticas</h1>' "$work/out/es/stats/index.html" || fail "no Spanish Stats page"
 grep -q '<h1>Estatísticas</h1>' "$work/out/pt-br/stats/index.html" || fail "no Brazilian Portuguese Stats page"
 grep -q '<h1>Statistik</h1>' "$work/out/id/stats/index.html" || fail "no Indonesian Stats page"
+grep -q '<h1>İstatistikler</h1>' "$work/out/tr/stats/index.html" || fail "no Turkish Stats page"
 
 # Counted from an hour: earlier hours show as not counted, not as 0.
 from=$(date -u -d "$end - 2 hours" +%Y-%m-%dT%H)
