@@ -61,6 +61,7 @@ st_rebuild_desc = "Membangun kodenya lagi menghasilkan berkas yang sama, byte de
 stats_none = "Belum ada angka: yang pertama muncul pada proses per jam berikutnya."
 stats_see_costs = "Berapa biaya menjalankan layanan ini:"
 costs_none = "Belum ada angka biaya: yang pertama muncul pada proses harian berikutnya."
+costs_see_donate = "Biaya ini dibayar dari donasi:"
 stats_asof = "Hingga"
 costs_asof = "Hingga"
 stats_last24 = "24 jam terakhir"

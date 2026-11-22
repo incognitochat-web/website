@@ -13,7 +13,7 @@ With no ads and nothing to sell, the service runs on donations. They pay for the
 
 ## Where the money goes
 
-Donations go to [our Open Collective](https://opencollective.com/{{< param "openCollective" >}}), held by Open Source Collective, a non-profit that holds money for open-source projects. Every donation and every expense is listed there publicly, so anyone can see what comes in and what it pays for. What the servers cost, day by day, is on the [Stats](/stats/) page.
+Donations go to [our Open Collective](https://opencollective.com/{{< param "openCollective" >}}), held by Open Source Collective, a non-profit that holds money for open-source projects. Every donation and every expense is listed there publicly, so anyone can see what comes in and what it pays for. What the servers cost, day by day, is on the [Costs](/costs/) page.
 
 Open Source Collective keeps 10% of each donation for its work, and the payment processor (Stripe or PayPal) takes its own fee. Open Collective may suggest an optional tip for itself, which you can change. Donations aren't tax-deductible.
 

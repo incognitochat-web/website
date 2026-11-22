@@ -13,7 +13,7 @@ Reklam yok, satacak bir şeyimiz de yok; bu yüzden hizmet bağışlarla çalı�
 
 ## Para nereye gidiyor
 
-Bağışlar [Open Collective sayfamıza](https://opencollective.com/{{< param "openCollective" >}}) gelir; parayı ise açık kaynak projeler için para tutan, kâr amacı gütmeyen bir kuruluş olan Open Source Collective tutar. Her bağış ve her harcama orada herkese açık olarak listelenir; böylece herkes ne geldiğini ve neye harcandığını görebilir. Sunucuların gün gün ne kadara mal olduğu [İstatistikler](/tr/stats/) sayfasında.
+Bağışlar [Open Collective sayfamıza](https://opencollective.com/{{< param "openCollective" >}}) gelir; parayı ise açık kaynak projeler için para tutan, kâr amacı gütmeyen bir kuruluş olan Open Source Collective tutar. Her bağış ve her harcama orada herkese açık olarak listelenir; böylece herkes ne geldiğini ve neye harcandığını görebilir. Sunucuların gün gün ne kadara mal olduğu [Maliyetler](/tr/costs/) sayfasında görülebilir.
 
 Open Source Collective, yaptığı iş karşılığında her bağışın %10'unu kendine ayırır; ödeme kuruluşu (Stripe ya da PayPal) da kendi ücretini alır. Open Collective kendisi için isteğe bağlı bir bahşiş önerebilir; bu tutarı değiştirebilirsiniz. Bağışlar vergiden düşülemez.
 

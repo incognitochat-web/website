@@ -61,6 +61,7 @@ st_rebuild_desc = "De code opnieuw bouwen geeft dezelfde bestanden, byte voor by
 stats_none = "Nog geen cijfers: de eerste verschijnen na de volgende run, die elk uur draait."
 stats_see_costs = "Wat het kost om de dienst te draaien:"
 costs_none = "Nog geen kostencijfers: de eerste verschijnen na de volgende run, die elke dag draait."
+costs_see_donate = "Deze kosten worden betaald met donaties:"
 stats_asof = "Tot"
 costs_asof = "Tot"
 stats_last24 = "De afgelopen 24 uur"

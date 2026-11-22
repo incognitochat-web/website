@@ -184,6 +184,11 @@ grep -q '&lt;b&gt;AWS Lambda&lt;/b&gt;' "$cpage" || fail "a service name isn't e
 if grep -q '<b>AWS Lambda</b>' "$cpage"; then fail "a service name was written as HTML"; fi
 if grep -q 'legend-amount\|AWS WAF\|tile-name">Production\|tile-name">Test environment' "$page"; then fail "costs on the Stats page"; fi
 grep -q 'class="stats-more">What running the service costs: <a href="/costs/">Costs</a>' "$page" || fail "the Stats page doesn't link to Costs"
+# Costs links Donate only once Donate is published (it's a draft until then).
+if grep -q 'href="/donate/"' "$cpage"; then fail "Costs links the unpublished Donate page"; fi
+hugo --quiet --buildDrafts --source "$work/site" --destination "$work/out-drafts" >/dev/null
+grep -q 'class="stats-more">These costs are paid for by donations: <a href="/donate/">Donate</a>' "$work/out-drafts/costs/index.html" \
+  || fail "Costs doesn't link Donate once it's published"
 grep -q 'class="seg so"' "$cpage" || fail "no Other segment"
 grep -q 'Table: day by day' "$page" || fail "no day-by-day table"
 grep -q "class=\"month newest\" id=\"m-$(jq -r '.months[0].month' "$work/stats.json")\"" "$page" || fail "the newest month isn't the one shown"

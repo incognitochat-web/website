@@ -13,7 +13,7 @@ Sin anuncios y sin nada que vender, el servicio se mantiene con donaciones. Con 
 
 ## A dónde va el dinero
 
-Las donaciones van a [nuestro Open Collective](https://opencollective.com/{{< param "openCollective" >}}), y las custodia Open Source Collective, una organización sin fines de lucro que guarda fondos para proyectos de código abierto. Cada donación y cada gasto aparecen allí públicamente, así que cualquiera puede ver qué entra y en qué se gasta. Lo que cuestan los servidores, día a día, está en la página [Estadísticas](/es/stats/).
+Las donaciones van a [nuestro Open Collective](https://opencollective.com/{{< param "openCollective" >}}), y las custodia Open Source Collective, una organización sin fines de lucro que guarda fondos para proyectos de código abierto. Cada donación y cada gasto aparecen allí públicamente, así que cualquiera puede ver qué entra y en qué se gasta. Lo que cuestan los servidores, día a día, está en la página [Costos](/es/costs/).
 
 Open Source Collective se queda con el 10% de cada donación por su trabajo, y el procesador de pagos (Stripe o PayPal) cobra su propia comisión. Puede que Open Collective te sugiera una propina opcional para la propia plataforma, que puedes cambiar. Las donaciones no son deducibles de impuestos.
 

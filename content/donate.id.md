@@ -13,7 +13,7 @@ Karena tidak ada iklan dan tidak ada yang kami jual, layanan ini dibiayai dari d
 
 ## Ke mana uangnya digunakan
 
-Donasi masuk ke [Open Collective kami](https://opencollective.com/{{< param "openCollective" >}}), yang dananya dikelola oleh Open Source Collective, organisasi nirlaba yang mengelola dana untuk proyek-proyek sumber terbuka. Setiap donasi dan setiap pengeluaran tercantum di sana secara publik, jadi siapa pun bisa melihat apa yang masuk dan untuk apa uang itu dipakai. Biaya server, hari demi hari, ada di halaman [Statistik](/id/stats/).
+Donasi masuk ke [Open Collective kami](https://opencollective.com/{{< param "openCollective" >}}), yang dananya dikelola oleh Open Source Collective, organisasi nirlaba yang mengelola dana untuk proyek-proyek sumber terbuka. Setiap donasi dan setiap pengeluaran tercantum di sana secara publik, jadi siapa pun bisa melihat apa yang masuk dan untuk apa uang itu dipakai. Biaya server, hari demi hari, ada di halaman [Biaya](/id/costs/).
 
 Open Source Collective mengambil 10% dari setiap donasi untuk pekerjaannya, dan pemroses pembayaran (Stripe atau PayPal) memungut biayanya sendiri. Open Collective mungkin menyarankan tip opsional untuk dirinya sendiri, yang bisa Anda ubah. Donasi tidak dapat dikurangkan dari pajak.
 

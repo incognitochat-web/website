@@ -13,7 +13,7 @@ Er zijn geen advertenties en we verkopen niets, dus de dienst draait op donaties
 
 ## Waar het geld naartoe gaat
 
-Donaties gaan naar [ons Open Collective](https://opencollective.com/{{< param "openCollective" >}}). Het geld wordt beheerd door Open Source Collective, een non-profitorganisatie die geld beheert voor opensourceprojecten. Elke donatie en elke uitgave staat daar openbaar vermeld, dus iedereen kan zien wat er binnenkomt en waaraan het wordt uitgegeven. Wat de servers kosten, dag voor dag, staat op de pagina [Statistieken](/nl/stats/).
+Donaties gaan naar [ons Open Collective](https://opencollective.com/{{< param "openCollective" >}}). Het geld wordt beheerd door Open Source Collective, een non-profitorganisatie die geld beheert voor opensourceprojecten. Elke donatie en elke uitgave staat daar openbaar vermeld, dus iedereen kan zien wat er binnenkomt en waaraan het wordt uitgegeven. Wat de servers kosten, dag voor dag, staat op de pagina [Kosten](/nl/costs/).
 
 Open Source Collective houdt 10% van elke donatie in voor zijn werk, en de betaaldienst (Stripe of PayPal) rekent zijn eigen kosten. Open Collective kan een vrijwillige fooi voor zichzelf voorstellen, die je kunt aanpassen. Donaties zijn niet fiscaal aftrekbaar.
 
