@@ -115,6 +115,9 @@ priority = -1
   siteRepo = "incognitochat-web/website"
   signerIdentity = "https://github.com/incognitochat/incognitochat.github.io/.github/workflows/deploy.yml@refs/heads/main"
 
+  # The project's Open Collective (opencollective.com/<this>), for the Donate page.
+  openCollective = "incognitochat"
+
   contactEmail = "contact@incognitochat.me"
   securityEmail = "security@incognitochat.me"
   privacyEmail = "privacy@incognitochat.me"
