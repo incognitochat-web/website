@@ -46,5 +46,10 @@ priority = -1
   contactEmail = "contact@incognitochat.me"
   securityEmail = "security@incognitochat.me"
   privacyEmail = "privacy@incognitochat.me"
-  # Empty until the project key exists.
 
+  # The Stats page shows messages and media once these say from which day
+  # (UTC, yyyy-mm-dd) production counts them: the day the release that
+  # counts them went live. Empty: "counted from the next release".
+  [params.statsCountedFrom]
+    messages = ""
+    media = ""
