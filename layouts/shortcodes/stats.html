@@ -13,7 +13,7 @@
 {{- $metrics := slice "accounts" "messages" "media_bytes" -}}
 {{- /* How this language writes a list and a day of a month. */ -}}
 {{- $comma := cond (in (slice "fa" "ar") site.Language.Lang) "، " ", " -}}
-{{- $dayMonth := cond (in (slice "es" "pt-br") site.Language.Lang) "2 de January" "2 January" -}}
+{{- $dayMonth := cond (in (slice "es" "pt-br") site.Language.Lang) "2 de January" (cond (eq site.Language.Lang "de") "2. January" "2 January") -}}
 {{- $months := slice -}}
 {{- range $s.months | default slice }}{{ if gt .totals.hours 0 }}{{ $months = $months | append . }}{{ end }}{{ end -}}
 {{- if not $months }}
