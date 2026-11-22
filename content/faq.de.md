@@ -61,7 +61,7 @@ Ja. Wenn du eine Nachricht löschst, wird sie standardmäßig auf beiden Seiten 
 
 ### Kann ich die App auf einem anderen Handy oder Computer benutzen?
 
-Nur auf einem Gerät gleichzeitig. Wenn du die App auf einem anderen Gerät einrichtest, ersetzt das dein Konto: Dein alter Link funktioniert nicht mehr, und solange Links eine Einladung erfordern, brauchst du eine neue Einladung, um wieder einen Link zu bekommen. Deine alten Chats bleiben auf dem alten Gerät, wo du sie nur noch lesen kannst. Nichts wird übertragen und nichts wird gesichert. Wenn du also dein Handy verlierst oder Telegram oder das Handy die Daten der App löscht, sind die Chats darauf weg. Richte die App auf einem neuen Handy neu ein: Das beendet das alte Konto sofort.
+Nur auf einem Gerät gleichzeitig. Wenn du die App auf einem anderen Gerät einrichtest, ersetzt das dein Konto: Dein alter Link funktioniert nicht mehr, und solange Links eine Einladung erfordern, brauchst du eine neue Einladung, um wieder einen Link zu bekommen. Deine alten Chats bleiben auf dem alten Gerät, wo du sie nur noch lesen kannst. Nichts wird übertragen und nichts wird gesichert. Wenn du also dein Handy verlierst oder wenn Telegram oder das Handy die Daten der App löscht, sind die Chats darauf weg. Richte die App auf einem neuen Handy neu ein: Das beendet das alte Konto sofort.
 
 ### Wie lösche ich mein Konto?
 
