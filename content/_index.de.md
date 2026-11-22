@@ -40,7 +40,7 @@ features:
     - title: "Öffentlich gebaut"
       text: "Ein öffentlicher GitHub-Workflow baut die App aus dem öffentlichen Code, und GitHub Pages liefert sie aus, nicht unsere Server. Jeder Build ist reproduzierbar und signiert, und die Signaturen stehen in einem öffentlichen Protokoll."
     - title: "Kostenlos, ohne Werbung, ohne Tracker"
-      text: "Freie Software unter der AGPL. Keine Webanalyse in der App oder auf dieser Website. Finanziert durch Spenden."
+      text: "Freie Software unter der AGPL. Keine Webanalyse in der App oder auf dieser Website. Spenden werden helfen, die Kosten zu decken."
 
 roadmap:
   title: "Pläne"
