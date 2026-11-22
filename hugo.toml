@@ -119,6 +119,14 @@ weight = 11
 [languages.fr.params]
 fonts = ["inter", "newsreader"]
 
+[languages.de]
+label = "Deutsch"
+locale = "de"
+direction = "ltr"
+weight = 12
+[languages.de.params]
+fonts = ["inter", "newsreader"]
+
 [sitemap]
 changeFreq = ""
 priority = -1
