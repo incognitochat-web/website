@@ -7,7 +7,7 @@
       <h1>{{ i18n "tagline" }}</h1>
       <p class="lead">{{ $p.lead }}</p>
       <div class="actions">
-        <a class="button" href="https://t.me/{{ site.Params.botUsername }}/{{ site.Params.appName }}" target="_blank" rel="noopener noreferrer">{{ i18n "openInTelegram" }}{{ $new }}</a>
+        <a class="button" href="https://t.me/{{ site.Params.botUsername }}?startapp" target="_blank" rel="noopener noreferrer">{{ i18n "openInTelegram" }}{{ $new }}</a>
         <a class="button secondary" href="https://github.com/{{ site.Params.codeRepo }}" target="_blank" rel="noopener noreferrer">{{ i18n "readSource" }}{{ $new }}</a>
       </div>
       <p class="note">{{ i18n "officialHint" }} <a href="{{ (site.GetPage "official").RelPermalink }}">{{ i18n "officialLink" }}</a></p>
