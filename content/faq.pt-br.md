@@ -57,7 +57,7 @@ Bloqueie a pessoa: ela não é avisada, e nada do que ela enviar chega até voc�
 
 ### Posso apagar o que enviei?
 
-Sim. Por padrão, quando você apaga uma mensagem, ela é apagada para os dois lados, lida ou não. Você também pode apagar um chat inteiro para os dois lados.
+Sim. Por padrão, quando você apaga uma mensagem, ela é apagada para os dois lados, lida ou não. Você também pode apagar um chat inteiro para os dois lados, ou os chats da sua lista ao apagar sua conta.
 
 ### Posso usar em outro celular ou computador?
 
@@ -65,7 +65,7 @@ Um dispositivo por vez. Configurar em outro dispositivo substitui sua conta: seu
 
 ### Como apago minha conta?
 
-Na aba **Meu link**, toque em **Apagar conta**. Enquanto o app continuar aberto, o servidor apaga em poucos minutos o que guarda para você, e depois o app apaga seus chats e chaves deste dispositivo (em alguns dispositivos, podem ficar vestígios nos arquivos de armazenamento do app). Os anexos que você enviou continuam disponíveis para a outra pessoa baixar até expirarem, em até 30 dias.
+Na aba **Meu link**, toque em **Apagar conta**. Enquanto o app continuar aberto, o servidor apaga em poucos minutos o que guarda para você, e depois o app apaga seus chats e chaves deste dispositivo (em alguns dispositivos, podem ficar vestígios nos arquivos de armazenamento do app). Os anexos que você enviou continuam disponíveis para a outra pessoa baixar até expirarem, em até 30 dias, a menos que você marque **Apagar também meus chats para a outra pessoa**: nesse caso, em cada chat da sua lista, o app da outra pessoa recebe um pedido para apagá-lo, e os anexos que você enviou ali são apagados do servidor (os que sobrarem também expiram em até 30 dias).
 
 ### Por quanto tempo as coisas ficam guardadas?
 

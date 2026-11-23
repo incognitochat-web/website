@@ -57,7 +57,7 @@ Block them: they aren't told, and nothing they send arrives. Someone who sets up
 
 ### Can I delete what I sent?
 
-Yes. Deleting a message removes it for both sides by default, read or not. You can delete a whole chat for both sides too.
+Yes. Deleting a message removes it for both sides by default, read or not. You can delete a whole chat for both sides too, or the chats in your list when you delete your account.
 
 ### Can I use it on another phone or computer?
 
@@ -65,7 +65,7 @@ One device at a time. Setting up on another device replaces your account: your o
 
 ### How do I delete my account?
 
-On the **My link** tab, tap **Delete account**. While the app stays open, the server deletes what it holds for you within minutes, then the app deletes your chats and keys from this device (on some devices, traces can stay in the app's storage files). Attachments you sent stay for the other side to fetch until they expire, within 30 days.
+On the **My link** tab, tap **Delete account**. While the app stays open, the server deletes what it holds for you within minutes, then the app deletes your chats and keys from this device (on some devices, traces can stay in the app's storage files). Attachments you sent stay for the other side to fetch until they expire, within 30 days, unless you tick **Also delete my chats for the other side**: then, for each chat in your list, the other person's app is asked to delete it, and the attachments you sent there are deleted from the server (any left still expire within 30 days).
 
 ### How long is anything kept?
 

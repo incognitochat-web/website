@@ -57,7 +57,7 @@ Onu engelleyin: bundan haberdar edilmez ve gönderdiği hiçbir şey size ulaşm
 
 ### Gönderdiğim bir şeyi silebilir miyim?
 
-Evet. Bir mesajı silmek, okunmuş olsun olmasın, onu varsayılan olarak iki taraftan da kaldırır. Bütün bir sohbeti de iki taraftan silebilirsiniz.
+Evet. Bir mesajı silmek, okunmuş olsun olmasın, onu varsayılan olarak iki taraftan da kaldırır. Bütün bir sohbeti de iki taraftan silebilirsiniz; hesabınızı silerken de listenizdeki sohbetleri.
 
 ### Başka bir telefonda ya da bilgisayarda kullanabilir miyim?
 
@@ -65,7 +65,7 @@ Aynı anda yalnızca bir cihazda. Başka bir cihazda kurulum yapmak hesabınız�
 
 ### Hesabımı nasıl silerim?
 
-**Bağlantım** sekmesinde **Hesabı sil** düğmesine dokunun. Uygulama açık kaldığı sürece sunucu, sizin için tuttuklarını birkaç dakika içinde siler; ardından uygulama sohbetlerinizi ve anahtarlarınızı bu cihazdan siler (bazı cihazlarda uygulamanın depolama dosyalarında izler kalabilir). Gönderdiğiniz ekler, karşı taraf indirebilsin diye süreleri dolana kadar kalır; bu da en geç 30 gün içinde olur.
+**Bağlantım** sekmesinde **Hesabı sil** düğmesine dokunun. Uygulama açık kaldığı sürece sunucu, sizin için tuttuklarını birkaç dakika içinde siler; ardından uygulama sohbetlerinizi ve anahtarlarınızı bu cihazdan siler (bazı cihazlarda uygulamanın depolama dosyalarında izler kalabilir). Gönderdiğiniz ekler, karşı taraf indirebilsin diye süreleri dolana kadar kalır; bu da en geç 30 gün içinde olur. **Sohbetlerimi karşı taraftan da sil** seçeneğini işaretlerseniz ise listenizdeki her sohbet için karşı tarafın uygulamasından o sohbeti silmesi istenir ve oraya gönderdiğiniz ekler sunucudan silinir (kalan ekler yine en geç 30 gün içinde silinir).
 
 ### Hangi veri ne kadar süre saklanır?
 

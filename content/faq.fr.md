@@ -57,7 +57,7 @@ Bloquez cette personne : elle n’en est pas informée, et rien de ce qu’elle
 
 ### Puis-je supprimer ce que j’ai envoyé ?
 
-Oui. Par défaut, supprimer un message le supprime des deux côtés, qu’il ait été lu ou non. Vous pouvez aussi supprimer tout un échange des deux côtés.
+Oui. Par défaut, supprimer un message le supprime des deux côtés, qu’il ait été lu ou non. Vous pouvez aussi supprimer tout un échange des deux côtés, ou les échanges de votre liste en supprimant votre compte.
 
 ### Puis-je l’utiliser sur un autre téléphone ou ordinateur ?
 
@@ -65,7 +65,7 @@ Sur un seul appareil à la fois. Configurer l’application sur un autre apparei
 
 ### Comment supprimer mon compte ?
 
-Dans l’onglet **Mon lien**, appuyez sur **Supprimer le compte**. Tant que l’application reste ouverte, le serveur supprime en quelques minutes ce qu’il conserve pour vous, puis l’application supprime vos échanges et vos clés de cet appareil (sur certains appareils, des traces peuvent rester dans les fichiers de stockage de l’application). Les pièces jointes que vous avez envoyées restent disponibles pour que l’autre personne les récupère, jusqu’à ce qu’elles expirent, au plus tard au bout de 30 jours.
+Dans l’onglet **Mon lien**, appuyez sur **Supprimer le compte**. Tant que l’application reste ouverte, le serveur supprime en quelques minutes ce qu’il conserve pour vous, puis l’application supprime vos échanges et vos clés de cet appareil (sur certains appareils, des traces peuvent rester dans les fichiers de stockage de l’application). Les pièces jointes que vous avez envoyées restent disponibles pour que l’autre personne les récupère, jusqu’à ce qu’elles expirent, au plus tard au bout de 30 jours, sauf si vous cochez **Supprimer aussi mes échanges de l’autre côté** : alors, pour chaque échange de votre liste, l’application de l’autre personne reçoit la demande de le supprimer, et les pièces jointes que vous y avez envoyées sont supprimées du serveur (s’il en reste, elles expirent elles aussi au plus tard au bout de 30 jours).
 
 ### Combien de temps les données sont-elles conservées ?
 
