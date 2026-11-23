@@ -57,7 +57,7 @@ Bloquez cette personne : elle n’en est pas informée, et rien de ce qu’elle
 
 ### Puis-je supprimer ce que j’ai envoyé ?
 
-Oui. Par défaut, supprimer un message le supprime des deux côtés, qu’il ait été lu ou non. Vous pouvez aussi supprimer tout un échange des deux côtés, ou tous vos échanges en supprimant votre compte.
+Oui. Par défaut, supprimer un message le supprime des deux côtés, qu’il ait été lu ou non. Vous pouvez aussi supprimer tout un échange des deux côtés, ou les échanges de votre liste en supprimant votre compte.
 
 ### Puis-je l’utiliser sur un autre téléphone ou ordinateur ?
 

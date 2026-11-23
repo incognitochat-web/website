@@ -57,7 +57,7 @@ Zablokuj tę osobę: nie zostanie o tym powiadomiona, a nic, co wyśle, nie dotr
 
 ### Czy mogę usuwać wysłane wiadomości?
 
-Tak. Usunięcie wiadomości domyślnie usuwa ją po obu stronach, niezależnie od tego, czy została przeczytana. Cały czat też możesz usunąć po obu stronach, a przy usuwaniu konta – wszystkie swoje czaty.
+Tak. Usunięcie wiadomości domyślnie usuwa ją po obu stronach, niezależnie od tego, czy została przeczytana. Cały czat też możesz usunąć po obu stronach, a przy usuwaniu konta – czaty z twojej listy.
 
 ### Czy mogę używać aplikacji na innym telefonie lub komputerze?
 

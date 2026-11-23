@@ -57,7 +57,7 @@ Block them: they aren't told, and nothing they send arrives. Someone who sets up
 
 ### Can I delete what I sent?
 
-Yes. Deleting a message removes it for both sides by default, read or not. You can delete a whole chat for both sides too, or all your chats when you delete your account.
+Yes. Deleting a message removes it for both sides by default, read or not. You can delete a whole chat for both sides too, or the chats in your list when you delete your account.
 
 ### Can I use it on another phone or computer?
 

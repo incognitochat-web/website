@@ -57,7 +57,7 @@ Bloquea a esa persona: no se le avisa, y no te llega nada de lo que envíe. Si c
 
 ### ¿Puedo eliminar lo que envié?
 
-Sí. Al eliminar un mensaje, se elimina para ambos de forma predeterminada, se haya leído o no. También puedes eliminar un chat entero para ambos, o todos tus chats al eliminar tu cuenta.
+Sí. Al eliminar un mensaje, se elimina para ambos de forma predeterminada, se haya leído o no. También puedes eliminar un chat entero para ambos, o los chats de tu lista al eliminar tu cuenta.
 
 ### ¿Puedo usarlo en otro teléfono o computadora?
 

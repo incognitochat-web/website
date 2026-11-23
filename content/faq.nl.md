@@ -57,7 +57,7 @@ Blokkeer die persoon: die wordt niet ingelicht, en niets wat die stuurt, komt no
 
 ### Kan ik verwijderen wat ik heb gestuurd?
 
-Ja. Als je een bericht verwijdert, wordt het standaard aan beide kanten verwijderd, gelezen of niet. Je kunt ook een hele chat aan beide kanten verwijderen, of al je chats wanneer je je account verwijdert.
+Ja. Als je een bericht verwijdert, wordt het standaard aan beide kanten verwijderd, gelezen of niet. Je kunt ook een hele chat aan beide kanten verwijderen, of de chats in je lijst wanneer je je account verwijdert.
 
 ### Kan ik het op een andere telefoon of computer gebruiken?
 

@@ -57,7 +57,7 @@ Bloqueie a pessoa: ela não é avisada, e nada do que ela enviar chega até voc�
 
 ### Posso apagar o que enviei?
 
-Sim. Por padrão, quando você apaga uma mensagem, ela é apagada para os dois lados, lida ou não. Você também pode apagar um chat inteiro para os dois lados, ou todos os seus chats ao apagar sua conta.
+Sim. Por padrão, quando você apaga uma mensagem, ela é apagada para os dois lados, lida ou não. Você também pode apagar um chat inteiro para os dois lados, ou os chats da sua lista ao apagar sua conta.
 
 ### Posso usar em outro celular ou computador?
 
