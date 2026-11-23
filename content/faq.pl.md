@@ -57,7 +57,7 @@ Zablokuj tę osobę: nie zostanie o tym powiadomiona, a nic, co wyśle, nie dotr
 
 ### Czy mogę usuwać wysłane wiadomości?
 
-Tak. Usunięcie wiadomości domyślnie usuwa ją po obu stronach, niezależnie od tego, czy została przeczytana. Cały czat też możesz usunąć po obu stronach.
+Tak. Usunięcie wiadomości domyślnie usuwa ją po obu stronach, niezależnie od tego, czy została przeczytana. Cały czat też możesz usunąć po obu stronach, a przy usuwaniu konta – wszystkie swoje czaty.
 
 ### Czy mogę używać aplikacji na innym telefonie lub komputerze?
 
@@ -65,7 +65,7 @@ Na jednym urządzeniu naraz. Konfiguracja na innym urządzeniu zastępuje twoje 
 
 ### Jak usunąć konto?
 
-Na karcie **Mój link** dotknij przycisku **Usuń konto**. Dopóki aplikacja jest otwarta, serwer w ciągu kilku minut usuwa to, co dla ciebie przechowuje, a potem aplikacja usuwa twoje czaty i klucze z tego urządzenia (na niektórych urządzeniach ślady mogą pozostać w plikach pamięci aplikacji). Wysłane przez ciebie załączniki druga strona może pobrać, dopóki nie wygasną, czyli w ciągu 30 dni.
+Na karcie **Mój link** dotknij przycisku **Usuń konto**. Dopóki aplikacja jest otwarta, serwer w ciągu kilku minut usuwa to, co dla ciebie przechowuje, a potem aplikacja usuwa twoje czaty i klucze z tego urządzenia (na niektórych urządzeniach ślady mogą pozostać w plikach pamięci aplikacji). Wysłane przez ciebie załączniki druga strona może pobrać, dopóki nie wygasną, czyli w ciągu 30 dni, chyba że zaznaczysz **Usuń też moje czaty u drugiej strony**: wtedy w każdym czacie z twojej listy aplikacja drugiej strony dostanie prośbę o jego usunięcie, a załączniki wysłane przez ciebie w tym czacie zostaną usunięte z serwera (jeśli któreś z nich tam pozostaną, i tak wygasną w ciągu 30 dni).
 
 ### Co i jak długo jest przechowywane?
 

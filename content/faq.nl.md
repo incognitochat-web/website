@@ -57,7 +57,7 @@ Blokkeer die persoon: die wordt niet ingelicht, en niets wat die stuurt, komt no
 
 ### Kan ik verwijderen wat ik heb gestuurd?
 
-Ja. Als je een bericht verwijdert, wordt het standaard aan beide kanten verwijderd, gelezen of niet. Je kunt ook een hele chat aan beide kanten verwijderen.
+Ja. Als je een bericht verwijdert, wordt het standaard aan beide kanten verwijderd, gelezen of niet. Je kunt ook een hele chat aan beide kanten verwijderen, of al je chats wanneer je je account verwijdert.
 
 ### Kan ik het op een andere telefoon of computer gebruiken?
 
@@ -65,7 +65,7 @@ Op één apparaat tegelijk. Als je de app op een ander apparaat instelt, vervang
 
 ### Hoe verwijder ik mijn account?
 
-Tik op het tabblad **Mijn link** op **Account verwijderen**. Zolang de app open blijft, verwijdert de server binnen enkele minuten wat hij voor je bewaart, en daarna verwijdert de app je chats en sleutels van dit apparaat (op sommige apparaten kunnen sporen achterblijven in de opslagbestanden van de app). Bijlagen die je hebt gestuurd, kan de ander nog ophalen tot ze verlopen, binnen 30 dagen.
+Tik op het tabblad **Mijn link** op **Account verwijderen**. Zolang de app open blijft, verwijdert de server binnen enkele minuten wat hij voor je bewaart, en daarna verwijdert de app je chats en sleutels van dit apparaat (op sommige apparaten kunnen sporen achterblijven in de opslagbestanden van de app). Bijlagen die je hebt gestuurd, kan de ander nog ophalen tot ze verlopen, binnen 30 dagen, tenzij je **Ook mijn chats verwijderen voor de ander** aanvinkt: dan krijgt bij elke chat in je lijst de app van de ander het verzoek die chat te verwijderen, en worden de bijlagen die je daar stuurde van de server verwijderd (wat overblijft, verloopt nog steeds binnen 30 dagen).
 
 ### Hoe lang wordt wat bewaard?
 

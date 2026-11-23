@@ -57,7 +57,7 @@ Blockiere die Person: Sie wird nicht darüber informiert, und nichts, was sie se
 
 ### Kann ich löschen, was ich gesendet habe?
 
-Ja. Wenn du eine Nachricht löschst, wird sie standardmäßig auf beiden Seiten entfernt, ob gelesen oder nicht. Du kannst auch einen ganzen Chat auf beiden Seiten löschen.
+Ja. Wenn du eine Nachricht löschst, wird sie standardmäßig auf beiden Seiten entfernt, ob gelesen oder nicht. Du kannst auch einen ganzen Chat auf beiden Seiten löschen, oder alle deine Chats, wenn du dein Konto löschst.
 
 ### Kann ich die App auf einem anderen Handy oder Computer benutzen?
 
@@ -65,7 +65,7 @@ Nur auf einem Gerät gleichzeitig. Wenn du die App auf einem anderen Gerät einr
 
 ### Wie lösche ich mein Konto?
 
-Tippe im Tab **Mein Link** auf **Konto löschen**. Solange die App geöffnet bleibt, löscht der Server innerhalb weniger Minuten, was er für dich aufbewahrt, danach löscht die App deine Chats und Schlüssel von diesem Gerät (auf manchen Geräten können Spuren in den Speicherdateien der App bleiben). Anhänge, die du gesendet hast, kann die andere Seite noch abrufen, bis sie ablaufen, spätestens nach 30 Tagen.
+Tippe im Tab **Mein Link** auf **Konto löschen**. Solange die App geöffnet bleibt, löscht der Server innerhalb weniger Minuten, was er für dich aufbewahrt, danach löscht die App deine Chats und Schlüssel von diesem Gerät (auf manchen Geräten können Spuren in den Speicherdateien der App bleiben). Anhänge, die du gesendet hast, kann die andere Seite noch abrufen, bis sie ablaufen, spätestens nach 30 Tagen, außer du setzt das Häkchen bei **Auch meine Chats auf der anderen Seite löschen**: Dann wird bei jedem Chat in deiner Liste die App der anderen Seite gebeten, ihn zu löschen, und die Anhänge, die du dort gesendet hast, werden vom Server gelöscht (was übrig ist, läuft trotzdem spätestens nach 30 Tagen ab).
 
 ### Wie lange wird etwas aufbewahrt?
 

@@ -57,7 +57,7 @@ Blokir dia: dia tidak diberi tahu, dan apa pun yang dia kirim tidak sampai. Oran
 
 ### Bisakah saya menghapus pesan yang sudah saya kirim?
 
-Bisa. Secara bawaan, pesan yang Anda hapus terhapus di kedua sisi, baik sudah dibaca maupun belum. Anda juga bisa menghapus seluruh obrolan di kedua sisi.
+Bisa. Secara bawaan, pesan yang Anda hapus terhapus di kedua sisi, baik sudah dibaca maupun belum. Anda juga bisa menghapus seluruh obrolan di kedua sisi, atau semua obrolan Anda saat menghapus akun.
 
 ### Bisakah saya memakainya di ponsel atau komputer lain?
 
@@ -65,7 +65,7 @@ Hanya di satu perangkat dalam satu waktu. Menyiapkan akun di perangkat lain akan
 
 ### Bagaimana cara menghapus akun saya?
 
-Di tab **Tautan saya**, ketuk **Hapus akun**. Selama aplikasi tetap terbuka, server menghapus apa yang disimpannya untuk Anda dalam beberapa menit, lalu aplikasi menghapus obrolan dan kunci Anda dari perangkat ini (di beberapa perangkat, jejaknya bisa tertinggal di berkas penyimpanan aplikasi). Lampiran yang Anda kirim tetap bisa diambil oleh penerimanya sampai kedaluwarsa, dalam waktu 30 hari.
+Di tab **Tautan saya**, ketuk **Hapus akun**. Selama aplikasi tetap terbuka, server menghapus apa yang disimpannya untuk Anda dalam beberapa menit, lalu aplikasi menghapus obrolan dan kunci Anda dari perangkat ini (di beberapa perangkat, jejaknya bisa tertinggal di berkas penyimpanan aplikasi). Lampiran yang Anda kirim tetap bisa diambil oleh penerimanya sampai kedaluwarsa, dalam waktu 30 hari, kecuali Anda mencentang **Hapus juga obrolan saya untuk pihak lain**: maka, untuk setiap obrolan di daftar Anda, aplikasi pihak lain diminta menghapusnya, dan lampiran yang Anda kirim di sana dihapus dari server (yang tersisa tetap kedaluwarsa dalam waktu 30 hari).
 
 ### Berapa lama data disimpan?
 
