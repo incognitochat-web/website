@@ -65,7 +65,7 @@ En un solo dispositivo a la vez. Configurar la app en otro dispositivo reemplaza
 
 ### ¿Cómo elimino mi cuenta?
 
-En la pestaña **Mi enlace**, toca **Eliminar cuenta**. Mientras la app siga abierta, el servidor elimina en cuestión de minutos lo que guarda para ti, y después la app elimina tus chats y tus claves de este dispositivo (en algunos dispositivos, pueden quedar rastros en los archivos de almacenamiento de la app). Los archivos adjuntos que enviaste se quedan disponibles para que la otra persona los descargue hasta que expiren, en un plazo de 30 días, salvo que marques **Eliminar también mis chats para la otra persona**: entonces, en cada chat de tu lista, se le pide a la app de la otra persona que lo elimine, y los archivos adjuntos que enviaste ahí se eliminan del servidor (los que queden igualmente expiran en un plazo de 30 días).
+En la pestaña **Mi enlace**, toca **Eliminar cuenta**. Mientras la app siga abierta, el servidor elimina en cuestión de minutos lo que guarda para ti, y después la app elimina tus chats y tus claves de este dispositivo (en algunos dispositivos, pueden quedar rastros en los archivos de almacenamiento de la app). Los archivos adjuntos que enviaste se quedan disponibles para que la otra persona los descargue hasta que expiren, en un plazo de 30 días, salvo que marques **Eliminar también mis chats para la otra persona**: entonces, en cada chat de tu lista, se le pide a la app de la otra persona que lo elimine, y los archivos adjuntos que enviaste ahí se eliminan del servidor (los que queden expiran de todos modos en un plazo de 30 días).
 
 ### ¿Cuánto tiempo se conserva todo?
 

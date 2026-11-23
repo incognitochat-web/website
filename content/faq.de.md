@@ -57,7 +57,7 @@ Blockiere die Person: Sie wird nicht darüber informiert, und nichts, was sie se
 
 ### Kann ich löschen, was ich gesendet habe?
 
-Ja. Wenn du eine Nachricht löschst, wird sie standardmäßig auf beiden Seiten entfernt, ob gelesen oder nicht. Du kannst auch einen ganzen Chat auf beiden Seiten löschen, oder alle deine Chats, wenn du dein Konto löschst.
+Ja. Wenn du eine Nachricht löschst, wird sie standardmäßig auf beiden Seiten entfernt, ob gelesen oder nicht. Du kannst auch einen ganzen Chat auf beiden Seiten löschen oder alle deine Chats, wenn du dein Konto löschst.
 
 ### Kann ich die App auf einem anderen Handy oder Computer benutzen?
 

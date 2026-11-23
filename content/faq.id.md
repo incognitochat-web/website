@@ -57,7 +57,7 @@ Blokir dia: dia tidak diberi tahu, dan apa pun yang dia kirim tidak sampai. Oran
 
 ### Bisakah saya menghapus pesan yang sudah saya kirim?
 
-Bisa. Secara bawaan, pesan yang Anda hapus terhapus di kedua sisi, baik sudah dibaca maupun belum. Anda juga bisa menghapus seluruh obrolan di kedua sisi, atau semua obrolan Anda saat menghapus akun.
+Bisa. Secara bawaan, pesan yang Anda hapus terhapus di kedua sisi, baik sudah dibaca maupun belum. Anda juga bisa menghapus seluruh obrolan di kedua sisi, atau semua obrolan Anda saat menghapus akun Anda.
 
 ### Bisakah saya memakainya di ponsel atau komputer lain?
 
