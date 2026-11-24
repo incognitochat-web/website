@@ -13,7 +13,7 @@
       "Amazon API Gateway": 0.0002,
       "Amazon DynamoDB": 0.0004,
       "Amazon Simple Storage Service": 0.0015,
-      "Tax": 0.58
+      "Tax": 0.7
     },
     "2026-11-09": {
       "AWS Secrets Manager": 0.0136,
@@ -88,6 +88,13 @@
       "Amazon DynamoDB": 0.0004,
       "Amazon Simple Storage Service": 0.0047,
       "AmazonCloudWatch": 0.1431
+    },
+    "2026-11-23": {
+      "AWS Cost Explorer": 0.01,
+      "AWS WAF": 0.3668,
+      "Amazon DynamoDB": 0.0002,
+      "Amazon Simple Storage Service": 0.0039,
+      "AmazonCloudWatch": 0.1468
     }
   },
   "estimated": [
@@ -112,7 +119,8 @@
     "2026-11-19",
     "2026-11-20",
     "2026-11-21",
-    "2026-11-22"
+    "2026-11-22",
+    "2026-11-23"
   ],
   "month": "2026-11"
 }
