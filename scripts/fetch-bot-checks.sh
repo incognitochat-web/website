@@ -5,8 +5,9 @@
 #
 #   scripts/fetch-bot-checks.sh data/botcheck.json
 #
-# Needs gh (GH_TOKEN with actions: read) and jq. With no result, or no
-# access, it writes {} and the page says the check hasn't run yet.
+# Needs gh (GH_TOKEN with actions: read) and jq. With no result it writes {}
+# and the page says the check hasn't run yet; if the runs can't be listed,
+# it writes a couldn't-run result.
 set -euo pipefail
 
 out=${1:?usage: $0 <output.json>}
@@ -61,7 +62,8 @@ while read -r id conclusion updated; do
                and (.value | IN("passed", "failed", "unknown", "na")))))}
     ' "$tmp/run/bot-check.json" >"$tmp/next.json" 2>/dev/null || rm -f "$tmp/next.json"
   fi
-  if [ -s "$tmp/next.json" ]; then
+  # Exactly one result: a file with two would break the site's build.
+  if [ -s "$tmp/next.json" ] && [ "$(jq -s length "$tmp/next.json" 2>/dev/null)" = 1 ]; then
     mv "$tmp/next.json" "$tmp/latest.json"
     break
   fi

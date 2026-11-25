@@ -213,6 +213,10 @@ jq -e '.result == "failed" and .run_url == "https://github.com/example/site/acti
 { cat "$work/bot-passed.json"; echo 'garbage'; } >"$a/bot-check-61.json"
 fetch fetch-bot-checks.sh 61 9
 jq -e '.run_url == "https://github.com/example/site/actions/runs/9"' "$work/fetched.json" >/dev/null || fail "fetch: a result followed by garbage was taken"
+# Two results in one file: neither is taken.
+cat "$work/bot-passed.json" "$work/bot-passed.json" >"$a/bot-check-62.json"
+fetch fetch-bot-checks.sh 62 9
+jq -e '.run_url == "https://github.com/example/site/actions/runs/9"' "$work/fetched.json" >/dev/null || fail "fetch: a file with two results was taken"
 fetch fetch-bot-checks.sh "20:schedule:example/site:success" 10
 jq -e '.run_url == "https://github.com/example/site/actions/runs/10"' "$work/fetched.json" >/dev/null || fail "fetch: a skipped run wasn't passed over"
 # A list that can't be read: couldn't run, rather than an older result from the other.
