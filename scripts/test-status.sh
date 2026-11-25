@@ -63,10 +63,14 @@ build "$work/error.json" "$work/out-error"
 page=$(cat "$work/out-error/status/index.html")
 [[ $page == *'class="status-banner status-error"'* && $page == *'A check couldn&#39;t run'* ]] || fail "an error: the banner doesn't say a check couldn't run"
 
-# Every language has the page.
+# Every language has the page, and its top bar links to that language's Donate page.
 for l in fa ru ar nl es pt-br id tr uk fr de pl; do
   [ -s "$work/out-passed/$l/status/index.html" ] || fail "no $l Status page"
+  nav=$(sed -n '/<nav class="nav"/,/<\/nav>/p' "$work/out-passed/$l/status/index.html")
+  [[ $nav == *"href=\"/$l/donate/\""* ]] || fail "the $l top bar doesn't link to Donate"
 done
+nav=$(sed -n '/<nav class="nav"/,/<\/nav>/p' "$work/out-passed/status/index.html")
+[[ $nav == *'href="/donate/"'* ]] || fail "the top bar doesn't link to Donate"
 
 # The bot check: its group, its rows, and the banner it counts in.
 bot_id=$(sed -nE 's/^ *botId = ([0-9]+)$/\1/p' "$root/hugo.toml")
