@@ -69,12 +69,13 @@ needs = {"st_bot_bot_desc": ["{{ .Handle }}", "{{ .ID }}"], "st_bot_main_desc": 
 for lang in ["en", *others]:
     strings = toml(pathlib.Path(f"i18n/{lang}.toml"))
     for key, value in strings.items():
-        if key.startswith("st_") and any(c in str(value) for c in "<>&"):
+        if (key.startswith("st_") or key == "newTab") and any(c in str(value) for c in "<>&"):
             fail(f"i18n/{lang}.toml: {key} has <, > or &, which the Status page would read as HTML")
+        if key.startswith("st_bot_") and any(t in str(value) for t in ("/start", "@", "t.me/")):
+            fail(f"i18n/{lang}.toml: {key} types the bot's handle, link or /start in; use the placeholders (kept left to right)")
     for key, placeholders in needs.items():
-        value = str(strings.get(key, ""))
-        if any(p not in value for p in placeholders) or "/start" in value or "@" in value or "t.me/" in value:
-            fail(f"i18n/{lang}.toml: {key} must use {placeholders} (kept left to right), not type them in")
+        if any(p not in str(strings.get(key, "")) for p in placeholders):
+            fail(f"i18n/{lang}.toml: {key} must use {placeholders}")
 PY
 
 tmp=$(mktemp -d)
