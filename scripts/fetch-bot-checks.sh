@@ -5,9 +5,9 @@
 #
 #   scripts/fetch-bot-checks.sh data/botcheck.json
 #
-# Needs gh (GH_TOKEN with actions: read) and jq. With no result it writes {}
-# and the page says the check hasn't run yet; if the runs can't be listed,
-# it writes a couldn't-run result.
+# Needs gh (GH_TOKEN with actions: read) and jq. With no run it writes {} and
+# the page says the check hasn't run yet. If the runs can't be listed, or the
+# newest one failed without a result, it writes a couldn't-run result.
 set -euo pipefail
 
 out=${1:?usage: $0 <output.json>}
