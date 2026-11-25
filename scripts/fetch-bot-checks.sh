@@ -19,8 +19,9 @@ echo '{}' >"$tmp/latest.json"
 # Only this repository's own runs, scheduled or started by hand: a pull
 # request from a fork can name its branch main and change the workflow.
 # GitHub is asked for those events alone, so other runs, however many, can't
-# push them off the page. If either list can't be read, nothing is shown
-# rather than an older result from the other.
+# push them off the page. If either list can't be read, the check shows as
+# couldn't run (linking to the workflow), rather than an older result from
+# the other list, or nothing, which would leave the banner to the app checks.
 runs=$(for event in schedule workflow_dispatch; do
     gh api "repos/${repo}/actions/workflows/check-bot.yml/runs?branch=main&event=${event}&status=completed&per_page=30" 2>/dev/null \
       || touch "$tmp/unread"
@@ -28,7 +29,12 @@ runs=$(for event in schedule workflow_dispatch; do
       | select((.event == "schedule" or .event == "workflow_dispatch")
           and .head_branch == "main" and .head_repository.full_name == $repo)]
       | sort_by(-.id) | .[] | "\(.id) \(.conclusion // "-") \(.updated_at // "-")"' 2>/dev/null || true)
-[ -e "$tmp/unread" ] && runs=""
+if [ -e "$tmp/unread" ]; then
+  jq -n --arg at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" --arg url "https://github.com/${repo}/actions/workflows/check-bot.yml" \
+    '{result: "error", checked_at: $at, bot_id: null, run_url: $url, checks: {bot: "unknown", main: "unknown", menu: "unknown", welcome: "unknown"}}' \
+    >"$tmp/latest.json"
+  runs=""
+fi
 
 # Newest first: the first run with a well-formed result. A run that failed,
 # ran out of time or was cancelled without one couldn't check (a checkout or
@@ -53,7 +59,7 @@ while read -r id conclusion updated; do
            | with_entries(select(
                (.key | IN("bot", "main", "menu", "welcome"))
                and (.value | IN("passed", "failed", "unknown", "na")))))}
-    ' "$tmp/run/bot-check.json" >"$tmp/next.json" 2>/dev/null || true
+    ' "$tmp/run/bot-check.json" >"$tmp/next.json" 2>/dev/null || rm -f "$tmp/next.json"
   fi
   if [ -s "$tmp/next.json" ]; then
     mv "$tmp/next.json" "$tmp/latest.json"

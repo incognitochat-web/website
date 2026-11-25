@@ -195,7 +195,7 @@ fetch fetch-bot-checks.sh
 # The newest run failed, ran out of time or was cancelled without a result
 # (a checkout or the install failed): it couldn't check, and an older
 # "passed" doesn't stay up. One that succeeded without a result was skipped.
-for c in failure timed_out cancelled; do
+for c in failure timed_out cancelled startup_failure; do
   fetch fetch-bot-checks.sh "50:schedule:example/site:$c" 10
   jq -e '.result == "error" and .bot_id == null and .checked_at == "2026-11-25T11:41:07Z"
     and .run_url == "https://github.com/example/site/actions/runs/50" and ([.checks[]] | unique) == ["unknown"]' "$work/fetched.json" >/dev/null \
@@ -204,11 +204,23 @@ done
 fetch fetch-bot-checks.sh "11:schedule:example/site:failure" 10
 jq -e '.result == "error" and .run_url == "https://github.com/example/site/actions/runs/11"' "$work/fetched.json" >/dev/null \
   || fail "fetch: a failed run with a broken result didn't show as couldn't run"
+# A run that found a wrong address uploads its result, then fails: "failed".
+cp "$work/bot-failed.json" "$a/bot-check-60.json"
+fetch fetch-bot-checks.sh "60:schedule:example/site:failure" 10
+jq -e '.result == "failed" and .run_url == "https://github.com/example/site/actions/runs/60"' "$work/fetched.json" >/dev/null \
+  || fail "fetch: a failed check with its result didn't show as failed: $(cat "$work/fetched.json")"
+# A result followed by garbage isn't taken in part.
+{ cat "$work/bot-passed.json"; echo 'garbage'; } >"$a/bot-check-61.json"
+fetch fetch-bot-checks.sh 61 9
+jq -e '.run_url == "https://github.com/example/site/actions/runs/9"' "$work/fetched.json" >/dev/null || fail "fetch: a result followed by garbage was taken"
 fetch fetch-bot-checks.sh "20:schedule:example/site:success" 10
 jq -e '.run_url == "https://github.com/example/site/actions/runs/10"' "$work/fetched.json" >/dev/null || fail "fetch: a skipped run wasn't passed over"
-# A list that can't be read: nothing, rather than an older result from the other.
-UNREADABLE=schedule fetch fetch-bot-checks.sh 10 9:workflow_dispatch
-[ "$(cat "$work/fetched.json")" = '{}' ] || fail "fetch: with one list unreadable, a result was shown: $(cat "$work/fetched.json")"
+# A list that can't be read: couldn't run, rather than an older result from the other.
+for unreadable in schedule workflow_dispatch; do
+  UNREADABLE=$unreadable fetch fetch-bot-checks.sh 10 9:workflow_dispatch
+  jq -e '.result == "error" and .bot_id == null and .run_url == "https://github.com/example/site/actions/workflows/check-bot.yml"' "$work/fetched.json" >/dev/null \
+    || fail "fetch: with the $unreadable list unreadable, not couldn't run: $(cat "$work/fetched.json")"
+done
 
 # A run started by hand counts as much as a scheduled one; newest first across both.
 fetch fetch-bot-checks.sh 10:workflow_dispatch 9
@@ -267,6 +279,9 @@ refused() { # file, old, new, what
 refused i18n/fa.toml '{{ .Start }}' '/start' "/start typed into a Persian bot row"
 refused i18n/de.toml 'st_bot_menu_desc = "' 'st_bot_menu_desc = "@IncognitoChat_app ' "a handle typed into a German bot row"
 refused i18n/fr.toml 'st_bot_menu = "' 'st_bot_menu = "<b>' "markup in a French Status row"
+refused i18n/nl.toml 'st_bot_menu_desc = "' 'st_bot_menu_desc = "/start ' "/start typed into a Dutch bot row"
+refused i18n/es.toml 'st_bot_menu_desc = "' 'st_bot_menu_desc = "t.me/x ' "a link typed into a Spanish bot row"
+refused i18n/pl.toml 'newTab = "' 'newTab = "<b>' "markup in Polish newTab"
 build "$work/none.json" "$work/out-nobot" >/dev/null 2>&1
 sed -i '/^ *botId = /d' "$work/site/hugo.toml"
 if hugo --quiet --source "$work/site" --destination "$work/out-nobot2" >/dev/null 2>&1; then fail "the site built without params.botId"; fi
