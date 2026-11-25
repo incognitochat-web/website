@@ -40,7 +40,7 @@ features:
     - title: "Dibangun secara terbuka"
       text: "Alur kerja GitHub yang publik membangun aplikasi dari kode publik, dan GitHub Pages yang menyajikannya, bukan server kami. Setiap build dapat direproduksi dan ditandatangani di log publik."
     - title: "Gratis, tanpa iklan, tanpa pelacak"
-      text: "Perangkat lunak bebas dengan lisensi AGPL. Tanpa analitik, baik di aplikasi maupun di situs ini. Donasi akan membantu membiayainya."
+      text: "Perangkat lunak bebas dengan lisensi AGPL. Tanpa analitik, baik di aplikasi maupun di situs ini. Donasi membantu membiayainya."
 
 roadmap:
   title: "Rencana ke depan"

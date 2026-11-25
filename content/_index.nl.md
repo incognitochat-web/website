@@ -40,7 +40,7 @@ features:
     - title: "Openbaar gebouwd"
       text: "Een openbare GitHub-workflow bouwt de app uit de openbare code, en GitHub Pages levert hem, niet onze servers. Elke build is reproduceerbaar en ondertekend in een openbaar logboek."
     - title: "Gratis, geen advertenties, geen trackers"
-      text: "Vrije software onder de AGPL. Geen analysetools in de app of op deze site. Donaties zullen helpen de kosten te betalen."
+      text: "Vrije software onder de AGPL. Geen analysetools in de app of op deze site. Donaties helpen de kosten te betalen."
 
 roadmap:
   title: "Plannen"

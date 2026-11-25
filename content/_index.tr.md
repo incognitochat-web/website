@@ -40,7 +40,7 @@ features:
     - title: "Herkesin gözü önünde derlenir"
       text: "Uygulamayı herkese açık koddan, herkese açık bir GitHub iş akışı derler ve onu bizim sunucularımız değil, GitHub Pages sunar. Her derleme yeniden üretilebilir; imzalanıp herkese açık bir kayda işlenir."
     - title: "Ücretsiz; reklam ve izleme aracı yok"
-      text: "AGPL lisanslı özgür yazılım. Uygulamada da bu sitede de analiz aracı yok. Bağışlar masrafların karşılanmasına yardımcı olacak."
+      text: "AGPL lisanslı özgür yazılım. Uygulamada da bu sitede de analiz aracı yok. Bağışlar masrafların karşılanmasına yardımcı oluyor."
 
 roadmap:
   title: "Yol haritası"

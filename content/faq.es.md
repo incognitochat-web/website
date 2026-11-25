@@ -75,7 +75,7 @@ En el servidor: los mensajes cifrados, hasta que tu dispositivo los recibe; los 
 
 ### ¿Es gratis? ¿Quién lo paga?
 
-Es gratis, sin anuncios ni rastreadores. Por ahora, nosotros pagamos lo que cuesta mantenerlo (consulta [Costos](/es/costs/)); las donaciones ayudarán cuando se abran. Incognito Chat es software libre bajo la licencia AGPL, desarrollado a la vista de todos: [el código](https://github.com/{{< param "codeRepo" >}}) y [este sitio](https://github.com/{{< param "siteRepo" >}}) están en GitHub.
+Es gratis, sin anuncios ni rastreadores. Nosotros pagamos lo que cuesta mantenerlo (consulta [Costos](/es/costs/)), y las [donaciones](/es/donate/) ayudan. Incognito Chat es software libre bajo la licencia AGPL, desarrollado a la vista de todos: [el código](https://github.com/{{< param "codeRepo" >}}) y [este sitio](https://github.com/{{< param "siteRepo" >}}) están en GitHub.
 
 ### ¿Cómo puedo comprobar todo esto?
 

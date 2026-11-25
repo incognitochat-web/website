@@ -75,7 +75,7 @@ Auf dem Server: verschlüsselte Nachrichten, bis dein Gerät sie hat, Anhänge, 
 
 ### Ist das kostenlos? Wer bezahlt dafür?
 
-Ja, es ist kostenlos, ohne Werbung und ohne Tracker. Vorerst bezahlen wir, was der Betrieb kostet (siehe [Kosten](/de/costs/)); sobald man spenden kann, werden Spenden dabei helfen. Incognito Chat ist freie Software unter der AGPL und wird öffentlich gebaut: [Der Code](https://github.com/{{< param "codeRepo" >}}) und [diese Website](https://github.com/{{< param "siteRepo" >}}) liegen auf GitHub.
+Ja, es ist kostenlos, ohne Werbung und ohne Tracker. Wir bezahlen, was der Betrieb kostet (siehe [Kosten](/de/costs/)), und [Spenden](/de/donate/) helfen dabei. Incognito Chat ist freie Software unter der AGPL und wird öffentlich gebaut: [Der Code](https://github.com/{{< param "codeRepo" >}}) und [diese Website](https://github.com/{{< param "siteRepo" >}}) liegen auf GitHub.
 
 ### Wie kann ich das alles prüfen?
 
