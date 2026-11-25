@@ -285,8 +285,9 @@ jq -e '.result == "failed"' "$work/runner/result/bot-check.json" >/dev/null || f
 grep -q 'site/scripts/ensure-bot-result.sh "$RUNNER_TEMP/result/bot-check.json"' "$root/.github/workflows/check-bot.yml" \
   || fail "check-bot.yml doesn't run ensure-bot-result.sh on its result"
 
-# check.sh refuses markup in a Status row and a bot row that types the
-# handle, the link or /start in; the page's build refuses a missing bot ID.
+# check.sh refuses markup in a Status row, and a bot row or group line that
+# types the handle, the link, /start or the app's address in; the page's
+# build refuses a missing bot ID or app address.
 refused() { # file, old, new, what
   build "$work/none.json" "$work/out-refuse" >/dev/null 2>&1 || true
   sed -i "s|$2|$3|" "$work/site/$1"
@@ -302,9 +303,13 @@ refused i18n/tr.toml 'st_group_bot_desc = "' 'st_group_bot_desc = "incognitochat
 refused i18n/de.toml 'st_bot_menu_desc = "' 'st_bot_menu_desc = "https://example.org ' "an address typed into a German bot row"
 build "$work/none.json" "$work/out-nobot" >/dev/null 2>&1
 sed -i '/^ *botId = /d' "$work/site/hugo.toml"
-if hugo --quiet --source "$work/site" --destination "$work/out-nobot2" >/dev/null 2>&1; then fail "the site built without params.botId"; fi
+out=$(hugo --source "$work/site" --destination "$work/out-nobot2" 2>&1) && fail "the site built without params.botId"
+[[ $out == *"status.html: hugo.toml needs"* ]] || fail "without params.botId, the build didn't fail on the Status page's own check"
+
 build "$work/none.json" "$work/out-noorigin" >/dev/null 2>&1
 sed -i '/^ *appOrigin = /d' "$work/site/hugo.toml"
-if hugo --quiet --source "$work/site" --destination "$work/out-noorigin2" >/dev/null 2>&1; then fail "the site built without params.appOrigin"; fi
+# (Other pages also need it: the Status page's own message is what's checked.)
+out=$(hugo --source "$work/site" --destination "$work/out-noorigin2" 2>&1) && fail "the site built without params.appOrigin"
+[[ $out == *"status.html: hugo.toml needs"* ]] || fail "without params.appOrigin, the build didn't fail on the Status page's own check"
 
 echo "ok: status page"
