@@ -16,8 +16,16 @@ trap 'rm -rf "$tmp"' EXIT
 mkdir -p "$(dirname "$out")"
 echo '{}' >"$tmp/all.json"
 
-runs=$(gh api "repos/${repo}/actions/workflows/check-app.yml/runs?branch=main&status=completed&per_page=60" \
-  --jq '.workflow_runs[].id' 2>/dev/null || true)
+# Only this repository's own runs, scheduled or started by hand: a pull
+# request from a fork can name its branch main and change the workflow.
+# GitHub is asked for those events alone, so other runs, however many, can't
+# push them off the page.
+runs=$(for event in schedule workflow_dispatch; do
+    gh api "repos/${repo}/actions/workflows/check-app.yml/runs?branch=main&event=${event}&status=completed&per_page=60" 2>/dev/null || true
+  done | jq -rs --arg repo "$repo" '[.[].workflow_runs[]?
+      | select((.event == "schedule" or .event == "workflow_dispatch")
+          and .head_branch == "main" and .head_repository.full_name == $repo)]
+      | sort_by(-.id) | .[].id' 2>/dev/null || true)
 for id in $runs; do
   [[ $id =~ ^[0-9]+$ ]] || continue
   [ "$(jq 'has("hourly") and has("rebuild")' "$tmp/all.json")" = true ] && break

@@ -147,6 +147,9 @@ priority = -1
 # Everything about the production deployment lives here, in one place.
 [params]
   botUsername = "IncognitoChat_app"
+  # The bot's Telegram ID: the Status page fails the bot check if the bot
+  # under that username has another one (a new bot with the same name).
+  botId = 9210344894
   appOrigin = "https://incognitochat.github.io"
   codeRepo = "incognitochat/incognitochat"
   hostingRepo = "incognitochat/incognitochat.github.io"

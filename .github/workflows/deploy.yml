@@ -54,10 +54,18 @@ jobs:
       - name: Test the statistics pipeline
         run: scripts/test-stats.sh
 
+      - name: Test the Status page
+        run: scripts/test-status.sh
+
       - name: Fetch the latest app checks
         env:
           GH_TOKEN: ${{ github.token }}
         run: scripts/fetch-app-checks.sh data/appcheck.json
+
+      - name: Fetch the latest bot check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: scripts/fetch-bot-checks.sh data/botcheck.json
 
       # The statistics the stats workflow keeps in the data branch. Until
       # that branch exists, the Stats page says there are no numbers yet.
