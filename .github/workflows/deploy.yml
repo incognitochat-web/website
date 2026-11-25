@@ -54,6 +54,9 @@ jobs:
       - name: Test the statistics pipeline
         run: scripts/test-stats.sh
 
+      - name: Test the Status page
+        run: scripts/test-status.sh
+
       - name: Fetch the latest app checks
         env:
           GH_TOKEN: ${{ github.token }}
