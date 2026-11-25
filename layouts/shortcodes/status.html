@@ -1,16 +1,29 @@
-{{- /* The latest automatic checks of the app, from data/appcheck.json (written at deploy time by scripts/fetch-app-checks.sh): the hourly checks, and the daily rebuild. */ -}}
+{{- /* The latest automatic checks: of the app, from data/appcheck.json (written at deploy time by scripts/fetch-app-checks.sh): the hourly checks, and the daily rebuild; and of what the bot opens, from data/botcheck.json (scripts/fetch-bot-checks.sh). */ -}}
 {{- $d := hugo.Data.appcheck | default dict -}}
 {{- $h := index $d "hourly" -}}
 {{- $r := index $d "rebuild" -}}
+{{- $b := hugo.Data.botcheck | default dict -}}
 {{- $new := printf `<span class="visually-hidden"> %s</span>` (i18n "newTab") | safeHTML -}}
 {{- $results := slice -}}
 {{- with $h }}{{ $results = $results | append .result }}{{ end -}}
 {{- with $r }}{{ $results = $results | append .result }}{{ end -}}
+{{- /* The bot: its own checks, and its Telegram ID against the one expected
+     (params.botId): another ID is a new bot with the same name. */ -}}
+{{- $botRow := "" -}}
+{{- with $b }}
+  {{- $results = $results | append .result }}
+  {{- $botRow = index (.checks | default dict) "bot" }}
+  {{- if and .bot_id site.Params.botId (ne (int .bot_id) (int site.Params.botId)) }}
+    {{- $botRow = "failed" }}
+    {{- $results = $results | append "failed" }}
+  {{- end }}
+{{- end -}}
 {{- $overall := "none" -}}
 {{- if in $results "failed" }}{{ $overall = "failed" }}{{ else if in $results "error" }}{{ $overall = "error" }}{{ else if $results }}{{ $overall = "passed" }}{{ end -}}
 {{- $last := "" -}}
 {{- with $h }}{{ $last = .checked_at }}{{ end -}}
 {{- with $r }}{{ if gt .checked_at $last }}{{ $last = .checked_at }}{{ end }}{{ end -}}
+{{- with $b }}{{ if gt .checked_at $last }}{{ $last = .checked_at }}{{ end }}{{ end -}}
 
 <div class="status-banner status-{{ $overall }}">
   {{ partial "icon.html" (cond (eq $overall "passed") "circle-check" (cond (eq $overall "none") "circle-minus" "circle-x")) }}
@@ -22,8 +35,10 @@
   </div>
 </div>
 
-{{- range $group := slice (dict "name" "hourly" "run" $h "checks" (slice "address" "domain" "source" "latest" "signed" "deployed" "files"))
-                           (dict "name" "daily" "run" $r "checks" (slice "rebuild")) }}
+{{- $names := dict "Bot" site.Params.botUsername "ID" site.Params.botId -}}
+{{- range $group := slice (dict "name" "hourly" "run" $h "keys" "st_" "checks" (slice "address" "domain" "source" "latest" "signed" "deployed" "files"))
+                           (dict "name" "daily" "run" $r "keys" "st_" "checks" (slice "rebuild"))
+                           (dict "name" "bot" "run" $b "keys" "st_bot_" "checks" (slice "bot" "main" "menu" "welcome")) }}
 <table class="status-table">
   <thead>
     <tr class="status-group">
@@ -42,12 +57,14 @@
   <tbody>
     {{- $checks := index ($group.run | default dict) "checks" | default dict }}
     {{- range $group.checks }}
+    {{- $s := index $checks . }}
+    {{- if and (eq $group.name "bot") (eq . "bot") $botRow }}{{ $s = $botRow }}{{ end }}
     <tr>
       <th scope="row">
-        <span class="check-name">{{ i18n (printf "st_%s" .) }}</span>
-        <span class="check-desc">{{ i18n (printf "st_%s_desc" .) }}</span>
+        <span class="check-name">{{ i18n (printf "%s%s" $group.keys .) $names }}</span>
+        <span class="check-desc">{{ i18n (printf "%s%s_desc" $group.keys .) $names }}</span>
       </th>
-      <td>{{ partial "status-icon.html" (index $checks .) }}</td>
+      <td>{{ partial "status-icon.html" $s }}</td>
     </tr>
     {{- end }}
   </tbody>

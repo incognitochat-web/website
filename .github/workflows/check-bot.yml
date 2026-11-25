@@ -1,0 +1,149 @@
+# Checks what the bot opens, as a test Telegram account sees it, with the
+# code repository's own scripts/verify-bot.py, from main, every hour: the
+# bot's Main Mini App (which every link opens), its menu button and its reply
+# to /start must open exactly the app's address. The bot and the address are
+# this site's (hugo.toml: params.botUsername, params.appOrigin). Then
+# redeploys this site, whose Status page shows the latest result
+# (scripts/fetch-bot-checks.sh) and links to its log here.
+#
+# The test account's login (TG_API_ID, TG_API_HASH, TG_SESSION) is in the
+# botcheck environment, which only main can use. The script and its package
+# list come from the code repository's main, so whoever can change that
+# branch could read the login: the same maintainers as this repository's.
+# One run at a time: Telegram ends a session used from two places at once.
+# Without the secrets, the run says so and stops.
+#
+# A failed check fails the run, so GitHub notifies the maintainers.
+name: Check the bot
+
+on:
+  schedule:
+    - cron: '41 * * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: check-bot
+  cancel-in-progress: false
+
+env:
+  CODE_REPO: incognitochat/incognitochat
+
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: botcheck
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ${{ env.CODE_REPO }}
+          ref: main
+          persist-credentials: false
+
+      # This repository too, for the bot and the address in hugo.toml.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: site
+          persist-credentials: false
+
+      # As docs/verifying.md says: pinned by hash, setuptools first (to build
+      # pyaes, published as source only), so every download is checked.
+      - name: Install the script's packages
+        run: |
+          python3 -m venv "$RUNNER_TEMP/verify-bot"
+          pip="$RUNNER_TEMP/verify-bot/bin/pip"
+          "$pip" install --disable-pip-version-check --require-hashes --only-binary :all: -r scripts/verify-bot.build.txt
+          "$pip" install --disable-pip-version-check --require-hashes --no-build-isolation -r scripts/verify-bot.requirements.txt
+
+      - name: Run verify-bot.py
+        env:
+          TG_API_ID: ${{ secrets.TG_API_ID }}
+          TG_API_HASH: ${{ secrets.TG_API_HASH }}
+          TG_SESSION: ${{ secrets.TG_SESSION }}
+        run: |
+          if [ -z "$TG_API_ID" ] || [ -z "$TG_API_HASH" ] || [ -z "$TG_SESSION" ]; then
+            echo "::notice::The botcheck environment doesn't have the test account's login yet; nothing checked"
+            echo "RESULT=skipped" >> "$GITHUB_ENV"
+            exit 0
+          fi
+          read -r bot origin < <(python3 - site/hugo.toml <<'EOF'
+          import re, sys, tomllib
+          params = tomllib.load(open(sys.argv[1], "rb"))["params"]
+          bot, origin = params["botUsername"], params["appOrigin"]
+          assert re.fullmatch(r"[A-Za-z][A-Za-z0-9_]{3,31}", bot) and re.fullmatch(r"https://[a-z0-9.-]+", origin)
+          print(bot, origin)
+          EOF
+          ) || true
+          if [ -z "${bot:-}" ] || [ -z "${origin:-}" ]; then
+            echo "::error::hugo.toml has no valid params.botUsername and params.appOrigin"
+            exit 1
+          fi
+          mkdir -p "$RUNNER_TEMP/result"
+          summary="$RUNNER_TEMP/result/bot-check.json"
+          # Exit codes: 0 verified, 1 verification failed, 2 couldn't run or
+          # finish (network, Telegram, no reply to /start). Only the last is
+          # tried again.
+          for try in 1 2; do
+            set +e
+            "$RUNNER_TEMP/verify-bot/bin/python" scripts/verify-bot.py "$bot" "$origin" --summary "$summary"
+            code=$?
+            set -e
+            if [ "$code" = 2 ] && [ "$try" = 1 ]; then
+              echo "Couldn't run the check; trying again in two minutes"
+              sleep 120
+              continue
+            fi
+            break
+          done
+          echo "RESULT=$(jq -r .result "$summary")" >> "$GITHUB_ENV"
+
+      # The install failed, the script crashed or the job ran out of time:
+      # the page says the check couldn't run, rather than keep the last result.
+      - name: Note a run that left no result
+        if: always() && env.RESULT != 'skipped'
+        run: |
+          result="$RUNNER_TEMP/result/bot-check.json"
+          if [ ! -s "$result" ]; then
+            mkdir -p "$RUNNER_TEMP/result"
+            jq -n --arg at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+              '{result: "error", checked_at: $at, bot_id: null, checks: {bot: "unknown", main: "unknown", menu: "unknown", welcome: "unknown"}}' >"$result"
+            echo "RESULT=error" >> "$GITHUB_ENV"
+          fi
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always() && env.RESULT != 'skipped'
+        with:
+          name: bot-check
+          path: ${{ runner.temp }}/result/bot-check.json
+          retention-days: 14
+          if-no-files-found: error
+
+      - name: Fail unless verified
+        if: env.RESULT != 'passed' && env.RESULT != 'skipped'
+        run: |
+          echo "The check didn't pass: ${RESULT:-no result}"
+          exit 1
+
+  publish:
+    name: Show the result on the site
+    needs: check
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Redeploy the site
+        run: gh workflow run deploy.yml --repo "$GITHUB_REPOSITORY" --ref main
+
+      # GitHub turns off scheduled workflows of a public repository after 60
+      # days without activity; re-enabling counts as activity.
+      - name: Keep the schedule on
+        run: gh api -X PUT "repos/${GITHUB_REPOSITORY}/actions/workflows/check-bot.yml/enable"
