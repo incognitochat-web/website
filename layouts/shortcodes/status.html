@@ -38,6 +38,7 @@
 {{- /* The bot's handle, link, ID and /start for its rows, each kept left to
      right (in Persian and Arabic an "@" or "/" would move to the wrong end):
      the rows are the site's own strings, so safe as HTML. */ -}}
+{{- if not (and site.Params.botUsername site.Params.botId) }}{{ errorf "status.html: hugo.toml needs params.botUsername and params.botId" }}{{ end -}}
 {{- $bot := site.Params.botUsername | htmlEscape -}}
 {{- $names := dict
       "Handle" (printf `<span dir="ltr">@%s</span>` $bot)

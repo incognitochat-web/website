@@ -60,6 +60,21 @@ for lang in others:
     theirs = keys(lang)
     if theirs != english:
         fail(f"i18n/{lang}.toml's keys differ from i18n/en.toml's: missing {sorted(english - theirs)}, extra {sorted(theirs - english)}")
+
+# The Status page's rows go into the page as HTML (status.html): no markup in
+# them. And the bot rows take the bot's handle, link, ID and /start as the
+# placeholders the page keeps left to right, never typed in.
+needs = {"st_bot_bot_desc": ["{{ .Handle }}", "{{ .ID }}"], "st_bot_main_desc": ["{{ .Link }}"],
+         "st_bot_welcome": ["{{ .Start }}"], "st_bot_welcome_desc": ["{{ .Start }}"]}
+for lang in ["en", *others]:
+    strings = toml(pathlib.Path(f"i18n/{lang}.toml"))
+    for key, value in strings.items():
+        if key.startswith("st_") and any(c in str(value) for c in "<>&"):
+            fail(f"i18n/{lang}.toml: {key} has <, > or &, which the Status page would read as HTML")
+    for key, placeholders in needs.items():
+        value = str(strings.get(key, ""))
+        if any(p not in value for p in placeholders) or "/start" in value or "@" in value or "t.me/" in value:
+            fail(f"i18n/{lang}.toml: {key} must use {placeholders} (kept left to right), not type them in")
 PY
 
 tmp=$(mktemp -d)

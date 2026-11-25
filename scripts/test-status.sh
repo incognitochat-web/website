@@ -133,12 +133,15 @@ cat >"$work/gh/bin/gh" <<'GH'
 #!/usr/bin/env bash
 case "$1 $2" in
   "api repos/"*)
-    [[ $2 == *"?branch=main&status=completed&"* ]] || { echo "stand-in gh: unexpected query: $2" >&2; exit 1; }
+    # Like GitHub: the page holds at most per_page of the runs with that event.
+    [[ $2 =~ \?branch=main\&event=([a-z_]+)\&status=completed\&per_page=([0-9]+)$ ]] || { echo "stand-in gh: unexpected query: $2" >&2; exit 1; }
+    want=${BASH_REMATCH[1]} page=${BASH_REMATCH[2]}
     for r in $RUNS; do
       IFS=: read -r id event head <<<"$r"
+      [ "${event:-schedule}" = "$want" ] || continue
       jq -n --argjson id "$id" --arg event "${event:-schedule}" --arg head "${head:-example/site}" \
         '{id: $id, event: $event, head_branch: "main", head_repository: {full_name: $head}}'
-    done | jq -s '{workflow_runs: .}' ;;
+    done | head -n "$((page * 5))" | jq -s --argjson page "$page" '{workflow_runs: .[:$page]}' ;;
   "run download")
     id=$3; name=$(sed -E 's/.* --name ([^ ]+).*/\1/' <<<"$*"); dir=$(sed -E 's/.* --dir ([^ ]+).*/\1/' <<<"$*")
     [ -f "$ARTIFACTS/$name-$id.json" ] || exit 1
@@ -187,29 +190,51 @@ fetch fetch-bot-checks.sh 20 11
 fetch fetch-bot-checks.sh
 [ "$(cat "$work/fetched.json")" = '{}' ] || fail "fetch: no runs, but not {}"
 
-# The app checks' fetch too: a fork's "passed" doesn't hide this repository's failure.
+# A run started by hand counts as much as a scheduled one; newest first across both.
+fetch fetch-bot-checks.sh 10:workflow_dispatch 9
+jq -e '.run_url == "https://github.com/example/site/actions/runs/10"' "$work/fetched.json" >/dev/null || fail "fetch: a run started by hand wasn't taken"
+fetch fetch-bot-checks.sh 10 9:workflow_dispatch
+jq -e '.run_url == "https://github.com/example/site/actions/runs/10"' "$work/fetched.json" >/dev/null || fail "fetch: not the newest across scheduled and by-hand runs"
+# However many other runs come after it, this repository's last check stays found.
+flood=""
+for i in $(seq 100 160); do flood="$i:pull_request:someone/site $flood"; cp "$a/bot-check-30.json" "$a/bot-check-$i.json"; done
+fetch fetch-bot-checks.sh $flood 9
+jq -e '.result == "failed" and .run_url == "https://github.com/example/site/actions/runs/9"' "$work/fetched.json" >/dev/null \
+  || fail "fetch: other runs pushed this repository's check out of reach: $(cat "$work/fetched.json")"
+
+# The app checks' fetch too: each half of the rule on its own, a run started
+# by hand, and a flood of other runs.
 jq '.hourly | .mode = "hourly"' "$work/passed.json" >"$a/app-check-40.json"
 jq '.hourly | .mode = "hourly" | .result = "failed"' "$work/passed.json" >"$a/app-check-41.json"
-fetch fetch-app-checks.sh 40:pull_request:someone/site 41
-jq -e '.hourly.result == "failed" and .hourly.run_url == "https://github.com/example/site/actions/runs/41"' "$work/fetched.json" >/dev/null \
-  || fail "fetch-app-checks: a fork's run was taken: $(cat "$work/fetched.json")"
+for i in 42 43 $(seq 200 270); do cp "$a/app-check-40.json" "$a/app-check-$i.json"; done
+app_fetch() { # expect run id, runs...
+  local want=$1; shift
+  fetch fetch-app-checks.sh "$@"
+  jq -e --arg url "https://github.com/example/site/actions/runs/$want" '.hourly.run_url == $url' "$work/fetched.json" >/dev/null \
+    || fail "fetch-app-checks: not run $want from $*: $(jq -c .hourly.run_url "$work/fetched.json")"
+}
+app_fetch 41 40:pull_request 41
+app_fetch 41 42:schedule:someone/site 41
+app_fetch 43 43:workflow_dispatch 41
+app_flood=""
+for i in $(seq 200 270); do app_flood="$i:pull_request:someone/site $app_flood"; done
+app_fetch 41 $app_flood 41
 
-# check-bot.yml: a run that leaves no result says it couldn't run.
-python3 - "$root/.github/workflows/check-bot.yml" >"$work/note.sh" <<'PY'
-import sys, yaml
-steps = yaml.safe_load(open(sys.argv[1]))["jobs"]["check"]["steps"]
-print(next(s["run"] for s in steps if s.get("name") == "Note a run that left no result"))
-PY
+# check-bot.yml's last step before the upload (scripts/ensure-bot-result.sh):
+# a run that leaves no result, or a broken one, says it couldn't run.
 mkdir -p "$work/runner"
-: >"$work/genv"
-RUNNER_TEMP="$work/runner" GITHUB_ENV="$work/genv" bash -e "$work/note.sh"
+note() { "$root/scripts/ensure-bot-result.sh" "$work/runner/result/bot-check.json"; }
+[ "$(note)" = wrote ] || fail "ensure-bot-result: nothing written for a run that left no result"
 jq -e '.result == "error" and .bot_id == null and ([.checks[]] | unique) == ["unknown"]' "$work/runner/result/bot-check.json" >/dev/null \
-  || fail "check-bot.yml: no error result for a run that left none"
-grep -qx 'RESULT=error' "$work/genv" || fail "check-bot.yml: RESULT isn't error for a run that left no result"
+  || fail "ensure-bot-result: not a couldn't-run result"
+printf '{"result": "pass' >"$work/runner/result/bot-check.json"
+[ "$(note)" = wrote ] || fail "ensure-bot-result: a cut-off result was kept"
+echo '{"result": "maybe"}' >"$work/runner/result/bot-check.json"
+[ "$(note)" = wrote ] || fail "ensure-bot-result: a result that isn't one was kept"
 cp "$work/bot-failed.json" "$work/runner/result/bot-check.json"
-: >"$work/genv"
-RUNNER_TEMP="$work/runner" GITHUB_ENV="$work/genv" bash -e "$work/note.sh"
-jq -e '.result == "failed"' "$work/runner/result/bot-check.json" >/dev/null || fail "check-bot.yml: a real result was overwritten"
-[ ! -s "$work/genv" ] || fail "check-bot.yml: RESULT changed for a run with a result"
+[ -z "$(note)" ] || fail "ensure-bot-result: a real result was overwritten"
+jq -e '.result == "failed"' "$work/runner/result/bot-check.json" >/dev/null || fail "ensure-bot-result: a real result changed"
+grep -q 'site/scripts/ensure-bot-result.sh "$RUNNER_TEMP/result/bot-check.json"' "$root/.github/workflows/check-bot.yml" \
+  || fail "check-bot.yml doesn't run ensure-bot-result.sh on its result"
 
 echo "ok: status page"

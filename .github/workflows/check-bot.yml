@@ -34,7 +34,7 @@ jobs:
   check:
     name: Check
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     environment: botcheck
     permissions:
       contents: read
@@ -51,16 +51,7 @@ jobs:
           path: site
           persist-credentials: false
 
-      # As docs/verifying.md says: pinned by hash, setuptools first (to build
-      # pyaes, published as source only), so every download is checked.
-      - name: Install the script's packages
-        run: |
-          python3 -m venv "$RUNNER_TEMP/verify-bot"
-          pip="$RUNNER_TEMP/verify-bot/bin/pip"
-          "$pip" install --disable-pip-version-check --require-hashes --only-binary :all: -r scripts/verify-bot.build.txt
-          "$pip" install --disable-pip-version-check --require-hashes --no-build-isolation -r scripts/verify-bot.requirements.txt
-
-      - name: Run verify-bot.py
+      - name: Check the test account's login is set
         env:
           TG_API_ID: ${{ secrets.TG_API_ID }}
           TG_API_HASH: ${{ secrets.TG_API_HASH }}
@@ -69,8 +60,27 @@ jobs:
           if [ -z "$TG_API_ID" ] || [ -z "$TG_API_HASH" ] || [ -z "$TG_SESSION" ]; then
             echo "::notice::The botcheck environment doesn't have the test account's login yet; nothing checked"
             echo "RESULT=skipped" >> "$GITHUB_ENV"
-            exit 0
           fi
+
+      # As docs/verifying.md says: pinned by hash, setuptools first (to build
+      # pyaes, published as source only), so every download is checked.
+      - name: Install the script's packages
+        if: env.RESULT != 'skipped'
+        timeout-minutes: 5
+        run: |
+          python3 -m venv "$RUNNER_TEMP/verify-bot"
+          pip="$RUNNER_TEMP/verify-bot/bin/pip"
+          "$pip" install --disable-pip-version-check --require-hashes --only-binary :all: -r scripts/verify-bot.build.txt
+          "$pip" install --disable-pip-version-check --require-hashes --no-build-isolation -r scripts/verify-bot.requirements.txt
+
+      - name: Run verify-bot.py
+        if: env.RESULT != 'skipped'
+        timeout-minutes: 10
+        env:
+          TG_API_ID: ${{ secrets.TG_API_ID }}
+          TG_API_HASH: ${{ secrets.TG_API_HASH }}
+          TG_SESSION: ${{ secrets.TG_SESSION }}
+        run: |
           read -r bot origin < <(python3 - site/hugo.toml <<'EOF'
           import re, sys, tomllib
           params = tomllib.load(open(sys.argv[1], "rb"))["params"]
@@ -107,11 +117,7 @@ jobs:
       - name: Note a run that left no result
         if: always() && env.RESULT != 'skipped'
         run: |
-          result="$RUNNER_TEMP/result/bot-check.json"
-          if [ ! -s "$result" ]; then
-            mkdir -p "$RUNNER_TEMP/result"
-            jq -n --arg at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-              '{result: "error", checked_at: $at, bot_id: null, checks: {bot: "unknown", main: "unknown", menu: "unknown", welcome: "unknown"}}' >"$result"
+          if [ "$(site/scripts/ensure-bot-result.sh "$RUNNER_TEMP/result/bot-check.json")" = wrote ]; then
             echo "RESULT=error" >> "$GITHUB_ENV"
           fi
 
