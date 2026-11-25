@@ -1,7 +1,7 @@
 ---
 title: "Status"
 linkTitle: "Status"
-description: "Automatic checks that the live app is exactly the published code, every hour and every day with a rebuild from source, and that the bot opens it."
+description: "Automatic checks that the live app is exactly the published code, every hour and every day with a rebuild from source, and that the bot opens the app."
 ---
 
 {{< status >}}

@@ -76,6 +76,8 @@ botrun=https://github.com/example/site/actions/runs/2
 jq -n --arg at "2026-11-25T10:41:00Z" --arg run "$botrun" --argjson id "$bot_id" \
   '{result: "passed", checked_at: $at, bot_id: $id, run_url: $run, checks: {bot: "passed", main: "passed", menu: "passed", welcome: "passed"}}' >"$work/bot-passed.json"
 bot_section() { sed -n '/What the bot opens, every hour/,/<\/table>/p' "$1"; }
+# The bot's group in any language: the last table on the page.
+bot_section_l() { awk '/<table class="status-table">/{buf=""} {buf=buf $0 "\n"} END{printf "%s", buf}' "$1"; }
 
 build "$work/none.json" "$work/out-bot-none"
 grep -q 'What the bot opens, every hour' "$work/out-bot-none/status/index.html" || fail "no bot result: no bot group"
@@ -87,8 +89,20 @@ section=$(bot_section "$work/out-bot-passed/status/index.html")
 [[ $page == *'class="status-banner status-passed"'* ]] || fail "bot passed: the banner isn't 'passed'"
 [ "$(grep -o 'class="st st-passed"' <<<"$section" | wc -l)" = 4 ] || fail "bot passed: not 4 passed bot rows"
 [[ $section == *"href=\"$botrun\""* ]] || fail "bot passed: no link to the bot check's log"
-[[ $section == *"@$bot is still the bot it was (Telegram ID $bot_id)"* ]] || fail "bot passed: the bot row doesn't name the bot and its ID"
-[[ $section == *"t.me/$bot?startapp, which every Incognito Chat link uses"* ]] || fail "bot passed: the links row doesn't name the link"
+[[ $section == *"<span dir=\"ltr\">@$bot</span> is still the bot it was (Telegram ID <span dir=\"ltr\">$bot_id</span>)"* ]] || fail "bot passed: the bot row doesn't name the bot and its ID"
+[[ $section == *"<span dir=\"ltr\">t.me/$bot?startapp</span>, which every Incognito Chat link uses"* ]] || fail "bot passed: the links row doesn't name the link"
+[[ $section == *'The reply to <span dir="ltr">/start</span>'* ]] || fail "bot passed: the /start row doesn't name /start"
+# Kept left to right in Persian and Arabic too, where an "@" or "/" would
+# otherwise move to the wrong end; every language fills every placeholder.
+for l in fa ar; do
+  sec=$(bot_section_l "$work/out-bot-passed/$l/status/index.html")
+  [[ $sec == *"<span dir=\"ltr\">@$bot</span>"* && $sec == *'<span dir="ltr">/start</span>'* && $sec == *"<span dir=\"ltr\">t.me/$bot?startapp</span>"* ]] \
+    || fail "$l: the bot's handle, link or /start isn't kept left to right"
+done
+for f in "$work"/out-bot-passed/status/index.html "$work"/out-bot-passed/*/status/index.html; do
+  if grep -q 'no value\|{{' "$f"; then fail "a placeholder isn't filled in $f"; fi
+  [ "$(grep -o 'class="st st-passed"' "$f" | wc -l)" = 12 ] || fail "not 12 passed rows in $f"
+done
 [[ $page == *'Last checked <time datetime="2026-11-25T10:41:00Z"'* ]] || fail "bot passed: 'Last checked' isn't the newest check (the bot's)"
 
 jq '.result = "failed" | .checks.main = "failed"' "$work/bot-passed.json" >"$work/bot-failed.json"

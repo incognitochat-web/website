@@ -35,7 +35,15 @@
   </div>
 </div>
 
-{{- $names := dict "Bot" site.Params.botUsername "ID" site.Params.botId -}}
+{{- /* The bot's handle, link, ID and /start for its rows, each kept left to
+     right (in Persian and Arabic an "@" or "/" would move to the wrong end):
+     the rows are the site's own strings, so safe as HTML. */ -}}
+{{- $bot := site.Params.botUsername | htmlEscape -}}
+{{- $names := dict
+      "Handle" (printf `<span dir="ltr">@%s</span>` $bot)
+      "Link" (printf `<span dir="ltr">t.me/%s?startapp</span>` $bot)
+      "Start" `<span dir="ltr">/start</span>`
+      "ID" (printf `<span dir="ltr">%v</span>` site.Params.botId) -}}
 {{- range $group := slice (dict "name" "hourly" "run" $h "keys" "st_" "checks" (slice "address" "domain" "source" "latest" "signed" "deployed" "files"))
                            (dict "name" "daily" "run" $r "keys" "st_" "checks" (slice "rebuild"))
                            (dict "name" "bot" "run" $b "keys" "st_bot_" "checks" (slice "bot" "main" "menu" "welcome")) }}
@@ -61,8 +69,8 @@
     {{- if and (eq $group.name "bot") (eq . "bot") $botRow }}{{ $s = $botRow }}{{ end }}
     <tr>
       <th scope="row">
-        <span class="check-name">{{ i18n (printf "%s%s" $group.keys .) $names }}</span>
-        <span class="check-desc">{{ i18n (printf "%s%s_desc" $group.keys .) $names }}</span>
+        <span class="check-name">{{ i18n (printf "%s%s" $group.keys .) $names | safeHTML }}</span>
+        <span class="check-desc">{{ i18n (printf "%s%s_desc" $group.keys .) $names | safeHTML }}</span>
       </th>
       <td>{{ partial "status-icon.html" $s }}</td>
     </tr>
