@@ -2,7 +2,7 @@
 title: "Vragen en antwoorden"
 linkTitle: "Vragen"
 description: "Korte antwoorden over wat Incognito Chat beschermt, wat het niet kan beschermen en hoe je het gebruikt."
-updated: "2026-11-22"
+updated: "2026-11-25"
 ---
 
 ## Privacy

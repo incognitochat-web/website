@@ -35,9 +35,10 @@
   </div>
 </div>
 
-{{- /* The bot's handle, link, ID and /start for its rows, each kept left to
-     right (in Persian and Arabic an "@" or "/" would move to the wrong end):
-     the rows are the site's own strings, so safe as HTML. */ -}}
+{{- /* The bot's handle, link, ID and /start for its rows, and the app's
+     address for the group's line, each kept left to right (in Persian and
+     Arabic an "@" or "/" would move to the wrong end): the rows are the
+     site's own strings, so safe as HTML. */ -}}
 {{- if not (and site.Params.botUsername site.Params.botId site.Params.appOrigin) }}{{ errorf "status.html: hugo.toml needs params.botUsername, params.botId and params.appOrigin" }}{{ end -}}
 {{- $bot := site.Params.botUsername | htmlEscape -}}
 {{- $names := dict

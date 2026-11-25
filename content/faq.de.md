@@ -2,7 +2,7 @@
 title: "Fragen und Antworten"
 linkTitle: "Fragen"
 description: "Kurze Antworten darauf, was Incognito Chat schützt, was die App nicht schützen kann und wie du sie benutzt."
-updated: "2026-11-22"
+updated: "2026-11-25"
 ---
 
 ## Privatsphäre

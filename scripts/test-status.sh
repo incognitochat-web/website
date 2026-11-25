@@ -71,6 +71,10 @@ for l in fa ru ar nl es pt-br id tr uk fr de pl; do
 done
 nav=$(sed -n '/<nav class="nav"/,/<\/nav>/p' "$work/out-passed/status/index.html")
 [[ $nav == *'href="/donate/"'* ]] || fail "the top bar doesn't link to Donate"
+# On the Donate page, its link (and only it) is marked as the current page.
+nav=$(sed -n '/<nav class="nav"/,/<\/nav>/p' "$work/out-passed/donate/index.html")
+[ "$(grep -o 'aria-current="page"' <<<"$nav" | wc -l)" = 1 ] && [[ $nav == *'href="/donate/" aria-current="page"'* ]] \
+  || fail "on the Donate page, the top bar doesn't mark Donate (alone) as the current page"
 
 # The bot check: its group, its rows, and the banner it counts in.
 bot_id=$(sed -nE 's/^ *botId = ([0-9]+)$/\1/p' "$root/hugo.toml")
@@ -294,9 +298,13 @@ refused i18n/fr.toml 'st_bot_menu = "' 'st_bot_menu = "<b>' "markup in a French 
 refused i18n/nl.toml 'st_bot_menu_desc = "' 'st_bot_menu_desc = "/start ' "/start typed into a Dutch bot row"
 refused i18n/es.toml 'st_bot_menu_desc = "' 'st_bot_menu_desc = "t.me/x ' "a link typed into a Spanish bot row"
 refused i18n/pl.toml 'newTab = "' 'newTab = "<b>' "markup in Polish newTab"
-refused i18n/tr.toml '{{ .Address }}' 'https://incognitochat.github.io/' "the address typed into the Turkish group line"
+refused i18n/tr.toml 'st_group_bot_desc = "' 'st_group_bot_desc = "incognitochat.github.io ' "the address typed into the Turkish group line, next to its placeholder"
+refused i18n/de.toml 'st_bot_menu_desc = "' 'st_bot_menu_desc = "https://example.org ' "an address typed into a German bot row"
 build "$work/none.json" "$work/out-nobot" >/dev/null 2>&1
 sed -i '/^ *botId = /d' "$work/site/hugo.toml"
 if hugo --quiet --source "$work/site" --destination "$work/out-nobot2" >/dev/null 2>&1; then fail "the site built without params.botId"; fi
+build "$work/none.json" "$work/out-noorigin" >/dev/null 2>&1
+sed -i '/^ *appOrigin = /d' "$work/site/hugo.toml"
+if hugo --quiet --source "$work/site" --destination "$work/out-noorigin2" >/dev/null 2>&1; then fail "the site built without params.appOrigin"; fi
 
 echo "ok: status page"
