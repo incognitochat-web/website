@@ -63,15 +63,24 @@ build "$work/error.json" "$work/out-error"
 page=$(cat "$work/out-error/status/index.html")
 [[ $page == *'class="status-banner status-error"'* && $page == *'A check couldn&#39;t run'* ]] || fail "an error: the banner doesn't say a check couldn't run"
 
-# Every language has the page.
+# Every language has the page, and its top bar links to that language's Donate page.
 for l in fa ru ar nl es pt-br id tr uk fr de pl; do
   [ -s "$work/out-passed/$l/status/index.html" ] || fail "no $l Status page"
+  nav=$(sed -n '/<nav class="nav"/,/<\/nav>/p' "$work/out-passed/$l/status/index.html")
+  [[ $nav == *"href=\"/$l/donate/\""* ]] || fail "the $l top bar doesn't link to Donate"
 done
+nav=$(sed -n '/<nav class="nav"/,/<\/nav>/p' "$work/out-passed/status/index.html")
+[[ $nav == *'href="/donate/"'* ]] || fail "the top bar doesn't link to Donate"
+# On the Donate page, its link (and only it) is marked as the current page.
+nav=$(sed -n '/<nav class="nav"/,/<\/nav>/p' "$work/out-passed/donate/index.html")
+[ "$(grep -o 'aria-current="page"' <<<"$nav" | wc -l)" = 1 ] && [[ $nav == *'href="/donate/" aria-current="page"'* ]] \
+  || fail "on the Donate page, the top bar doesn't mark Donate (alone) as the current page"
 
 # The bot check: its group, its rows, and the banner it counts in.
 bot_id=$(sed -nE 's/^ *botId = ([0-9]+)$/\1/p' "$root/hugo.toml")
 bot=$(sed -nE 's/^ *botUsername = "([^"]+)"$/\1/p' "$root/hugo.toml")
-[ -n "$bot_id" ] && [ -n "$bot" ] || fail "hugo.toml has no params.botId or params.botUsername"
+origin=$(sed -nE 's/^ *appOrigin = "([^"]+)"$/\1/p' "$root/hugo.toml")
+[ -n "$bot_id" ] && [ -n "$bot" ] && [ -n "$origin" ] || fail "hugo.toml has no params.botId, params.botUsername or params.appOrigin"
 botrun=https://github.com/example/site/actions/runs/2
 jq -n --arg at "2026-11-25T10:41:00Z" --arg run "$botrun" --argjson id "$bot_id" \
   '{result: "passed", checked_at: $at, bot_id: $id, run_url: $run, checks: {bot: "passed", main: "passed", menu: "passed", welcome: "passed"}}' >"$work/bot-passed.json"
@@ -90,14 +99,17 @@ section=$(bot_section "$work/out-bot-passed/status/index.html")
 [ "$(grep -o 'class="st st-passed"' <<<"$section" | wc -l)" = 4 ] || fail "bot passed: not 4 passed bot rows"
 [[ $section == *"href=\"$botrun\""* ]] || fail "bot passed: no link to the bot check's log"
 [[ $section == *"<span dir=\"ltr\">@$bot</span> is still the bot it was (Telegram ID <span dir=\"ltr\">$bot_id</span>)"* ]] || fail "bot passed: the bot row doesn't name the bot and its ID"
-[[ $section == *"<span dir=\"ltr\">t.me/$bot?startapp</span>, which every Incognito Chat link uses"* ]] || fail "bot passed: the links row doesn't name the link"
+[[ $section == *"Every Incognito Chat link starts with <span dir=\"ltr\">t.me/$bot?startapp</span>"* ]] || fail "bot passed: the links row doesn't name the link"
+[[ $section == *"must open exactly <span dir=\"ltr\">$origin/</span>, the app as published on GitHub Pages"* ]] || fail "bot passed: the group doesn't say which address its links and buttons must open"
+[ "$(grep -o "$origin/" <<<"$section" | wc -l)" = 1 ] || fail "bot passed: the address isn't said once, for the whole group"
 [[ $section == *'The reply to <span dir="ltr">/start</span>'* ]] || fail "bot passed: the /start row doesn't name /start"
 # Kept left to right in Persian and Arabic too, where an "@" or "/" would
 # otherwise move to the wrong end; every language fills every placeholder.
 for l in fa ar; do
   sec=$(bot_section_l "$work/out-bot-passed/$l/status/index.html")
-  [[ $sec == *"<span dir=\"ltr\">@$bot</span>"* && $sec == *'<span dir="ltr">/start</span>'* && $sec == *"<span dir=\"ltr\">t.me/$bot?startapp</span>"* ]] \
-    || fail "$l: the bot's handle, link or /start isn't kept left to right"
+  [[ $sec == *"<span dir=\"ltr\">@$bot</span>"* && $sec == *'<span dir="ltr">/start</span>'* && $sec == *"<span dir=\"ltr\">t.me/$bot?startapp</span>"* \
+     && $sec == *"<span dir=\"ltr\">$origin/</span>"* ]] \
+    || fail "$l: the bot's handle, link, /start or the app's address isn't kept left to right"
 done
 for f in "$work"/out-bot-passed/status/index.html "$work"/out-bot-passed/*/status/index.html; do
   if grep -q 'no value\|{{' "$f"; then fail "a placeholder isn't filled in $f"; fi
@@ -273,8 +285,9 @@ jq -e '.result == "failed"' "$work/runner/result/bot-check.json" >/dev/null || f
 grep -q 'site/scripts/ensure-bot-result.sh "$RUNNER_TEMP/result/bot-check.json"' "$root/.github/workflows/check-bot.yml" \
   || fail "check-bot.yml doesn't run ensure-bot-result.sh on its result"
 
-# check.sh refuses markup in a Status row and a bot row that types the
-# handle, the link or /start in; the page's build refuses a missing bot ID.
+# check.sh refuses markup in a Status row, and a bot row or group line that
+# types the handle, the link, /start or the app's address in; the page's
+# build refuses a missing bot ID or app address.
 refused() { # file, old, new, what
   build "$work/none.json" "$work/out-refuse" >/dev/null 2>&1 || true
   sed -i "s|$2|$3|" "$work/site/$1"
@@ -286,8 +299,17 @@ refused i18n/fr.toml 'st_bot_menu = "' 'st_bot_menu = "<b>' "markup in a French 
 refused i18n/nl.toml 'st_bot_menu_desc = "' 'st_bot_menu_desc = "/start ' "/start typed into a Dutch bot row"
 refused i18n/es.toml 'st_bot_menu_desc = "' 'st_bot_menu_desc = "t.me/x ' "a link typed into a Spanish bot row"
 refused i18n/pl.toml 'newTab = "' 'newTab = "<b>' "markup in Polish newTab"
+refused i18n/tr.toml 'st_group_bot_desc = "' 'st_group_bot_desc = "incognitochat.github.io ' "the address typed into the Turkish group line, next to its placeholder"
+refused i18n/de.toml 'st_bot_menu_desc = "' 'st_bot_menu_desc = "https://example.org ' "an address typed into a German bot row"
 build "$work/none.json" "$work/out-nobot" >/dev/null 2>&1
 sed -i '/^ *botId = /d' "$work/site/hugo.toml"
-if hugo --quiet --source "$work/site" --destination "$work/out-nobot2" >/dev/null 2>&1; then fail "the site built without params.botId"; fi
+out=$(hugo --source "$work/site" --destination "$work/out-nobot2" 2>&1) && fail "the site built without params.botId"
+[[ $out == *"status.html: hugo.toml needs"* ]] || fail "without params.botId, the build didn't fail on the Status page's own check"
+
+build "$work/none.json" "$work/out-noorigin" >/dev/null 2>&1
+sed -i '/^ *appOrigin = /d' "$work/site/hugo.toml"
+# (Other pages also need it: the Status page's own message is what's checked.)
+out=$(hugo --source "$work/site" --destination "$work/out-noorigin2" 2>&1) && fail "the site built without params.appOrigin"
+[[ $out == *"status.html: hugo.toml needs"* ]] || fail "without params.appOrigin, the build didn't fail on the Status page's own check"
 
 echo "ok: status page"

@@ -376,6 +376,7 @@ table.official .hint { font-size: 0.82rem; color: var(--muted); }
 [dir="rtl"] .status-table .group-name { font-family: var(--font); font-size: 1.02rem; font-weight: 700; }
 .status-table .group-meta { display: block; color: var(--muted); font-size: 0.84rem; font-weight: 400; margin-top: 0.1rem; }
 .status-table .group-meta code { font-size: 0.8rem; }
+.status-table .group-desc { display: block; color: var(--text-2); font-size: 0.9rem; font-weight: 400; margin-top: 0.35rem; }
 .status-table .check-name { display: block; color: var(--text); font-weight: 600; }
 .status-table .check-desc { display: block; color: var(--muted); font-size: 0.86rem; margin-top: 0.15rem; }
 .st { display: inline-flex; }
@@ -454,9 +455,9 @@ table.official .hint { font-size: 0.82rem; color: var(--muted); }
 
 /* Smaller screens */
 /* The header in two rows (name and tools, then the links) below the width
-   the longest language needs for one row: about 940px in Portuguese and
-   Russian. Above it, links that still don't fit wrap inside the nav. */
-@media (max-width: 1000px) {
+   the longest language needs for one row: about 1080px in Russian, with
+   Donate in the links. Above it, links that still don't fit wrap inside the nav. */
+@media (max-width: 1120px) {
   .header-row { flex-wrap: wrap; padding-block: 0.75rem; row-gap: 0.6rem; }
   .header-tools { order: 2; margin-inline-start: auto; }
   .nav { order: 3; width: 100%; margin-inline-start: 0; }

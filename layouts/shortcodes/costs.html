@@ -57,8 +57,8 @@
 </div>
 {{- end }}
 
-{{- /* Once the Donate page is published (Hugo skips a draft, so no link
-     until then). */}}
+{{- /* A link to the Donate page (if it's ever made a draft again, Hugo
+     skips it and this link goes with it). */}}
 {{- with site.GetPage "donate" }}
 <p class="stats-more">{{ i18n "costs_see_donate" }} <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></p>
 {{- end }}

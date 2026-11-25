@@ -2,7 +2,7 @@
 title: "Tanya jawab"
 linkTitle: "Tanya jawab"
 description: "Jawaban singkat tentang apa yang dilindungi Incognito Chat, apa yang tidak bisa dilindunginya, dan cara memakainya."
-updated: "2026-11-22"
+updated: "2026-11-25"
 ---
 
 ## Privasi
@@ -75,7 +75,7 @@ Di server: pesan terenkripsi sampai perangkat Anda menerimanya, lampiran sampai 
 
 ### Apakah gratis? Siapa yang membiayainya?
 
-Gratis, tanpa iklan dan tanpa pelacak. Untuk saat ini, kami yang membayar biaya untuk menjalankannya (lihat [Biaya](/id/costs/)); donasi akan membantu begitu donasi sudah bisa diberikan. Incognito Chat adalah perangkat lunak bebas dengan lisensi AGPL yang dibangun secara terbuka: [kodenya](https://github.com/{{< param "codeRepo" >}}) dan [situs ini](https://github.com/{{< param "siteRepo" >}}) ada di GitHub.
+Gratis, tanpa iklan dan tanpa pelacak. Kami yang membayar biaya untuk menjalankannya (lihat [Biaya](/id/costs/)), dan [donasi](/id/donate/) ikut membantu. Incognito Chat adalah perangkat lunak bebas dengan lisensi AGPL yang dibangun secara terbuka: [kodenya](https://github.com/{{< param "codeRepo" >}}) dan [situs ini](https://github.com/{{< param "siteRepo" >}}) ada di GitHub.
 
 ### Bagaimana saya bisa memeriksa semua ini?
 

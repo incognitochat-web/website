@@ -2,7 +2,7 @@
 title: "Vragen en antwoorden"
 linkTitle: "Vragen"
 description: "Korte antwoorden over wat Incognito Chat beschermt, wat het niet kan beschermen en hoe je het gebruikt."
-updated: "2026-11-22"
+updated: "2026-11-25"
 ---
 
 ## Privacy
@@ -75,7 +75,7 @@ Op de server: versleutelde berichten tot je apparaat ze heeft, bijlagen tot ze w
 
 ### Is het gratis? Wie betaalt het?
 
-Het is gratis, zonder advertenties en zonder trackers. Voorlopig betalen wij wat het kost om de dienst te laten draaien (zie [Kosten](/nl/costs/)); donaties zullen helpen zodra doneren mogelijk is. Incognito Chat is vrije software onder de AGPL en wordt openbaar gebouwd: [de code](https://github.com/{{< param "codeRepo" >}}) en [deze site](https://github.com/{{< param "siteRepo" >}}) staan op GitHub.
+Het is gratis, zonder advertenties en zonder trackers. Wij betalen wat het kost om de dienst te laten draaien (zie [Kosten](/nl/costs/)), en [donaties](/nl/donate/) helpen daarbij. Incognito Chat is vrije software onder de AGPL en wordt openbaar gebouwd: [de code](https://github.com/{{< param "codeRepo" >}}) en [deze site](https://github.com/{{< param "siteRepo" >}}) staan op GitHub.
 
 ### Hoe kan ik dit allemaal controleren?
 

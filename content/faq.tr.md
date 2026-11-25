@@ -2,7 +2,7 @@
 title: "Sorular ve yanıtlar"
 linkTitle: "SSS"
 description: "Incognito Chat neyi korur, neyi koruyamaz ve nasıl kullanılır: kısa yanıtlar."
-updated: "2026-11-22"
+updated: "2026-11-25"
 ---
 
 ## Gizlilik
@@ -75,7 +75,7 @@ Sunucuda: şifreli mesajlar cihazınız onları alana kadar, ekler silinene kada
 
 ### Ücretsiz mi? Masraflarını kim karşılıyor?
 
-Ücretsiz; reklam ve izleme aracı yok. Şimdilik hizmetin çalışma masraflarını biz karşılıyoruz ([Maliyetler](/tr/costs/) sayfasına bakın); bağışlar ise kabul edilmeye başlandığında buna yardımcı olacak. Incognito Chat, AGPL lisanslı ve herkesin gözü önünde geliştirilen özgür bir yazılımdır: [kod](https://github.com/{{< param "codeRepo" >}}) ve [bu site](https://github.com/{{< param "siteRepo" >}}) GitHub'da.
+Ücretsiz; reklam ve izleme aracı yok. Hizmetin çalışma masraflarını biz karşılıyoruz ([Maliyetler](/tr/costs/) sayfasına bakın) ve [bağışlar](/tr/donate/) buna yardımcı oluyor. Incognito Chat, AGPL lisanslı ve herkesin gözü önünde geliştirilen özgür bir yazılımdır: [kod](https://github.com/{{< param "codeRepo" >}}) ve [bu site](https://github.com/{{< param "siteRepo" >}}) GitHub'da.
 
 ### Bunların hepsini nasıl kontrol edebilirim?
 

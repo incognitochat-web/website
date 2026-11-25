@@ -35,15 +35,17 @@
   </div>
 </div>
 
-{{- /* The bot's handle, link, ID and /start for its rows, each kept left to
-     right (in Persian and Arabic an "@" or "/" would move to the wrong end):
-     the rows are the site's own strings, so safe as HTML. */ -}}
-{{- if not (and site.Params.botUsername site.Params.botId) }}{{ errorf "status.html: hugo.toml needs params.botUsername and params.botId" }}{{ end -}}
+{{- /* The bot's handle, link, ID and /start for its rows, and the app's
+     address for the group's line, each kept left to right (in Persian and
+     Arabic an "@" or "/" would move to the wrong end): the rows are the
+     site's own strings, so safe as HTML. */ -}}
+{{- if not (and site.Params.botUsername site.Params.botId site.Params.appOrigin) }}{{ errorf "status.html: hugo.toml needs params.botUsername, params.botId and params.appOrigin" }}{{ end -}}
 {{- $bot := site.Params.botUsername | htmlEscape -}}
 {{- $names := dict
       "Handle" (printf `<span dir="ltr">@%s</span>` $bot)
       "Link" (printf `<span dir="ltr">t.me/%s?startapp</span>` $bot)
       "Start" `<span dir="ltr">/start</span>`
+      "Address" (printf `<span dir="ltr">%s/</span>` (site.Params.appOrigin | htmlEscape))
       "ID" (printf `<span dir="ltr">%v</span>` site.Params.botId) -}}
 {{- range $group := slice (dict "name" "hourly" "run" $h "keys" "st_" "checks" (slice "address" "domain" "source" "latest" "signed" "deployed" "files"))
                            (dict "name" "daily" "run" $r "keys" "st_" "checks" (slice "rebuild"))
@@ -53,6 +55,10 @@
     <tr class="status-group">
       <th scope="colgroup" colspan="2">
         <span class="group-name">{{ i18n (printf "st_group_%s" $group.name) }}</span>
+        {{- /* The bot's group: what its links and buttons must open, said once. */}}
+        {{- if eq $group.name "bot" }}
+        <span class="group-desc">{{ i18n "st_group_bot_desc" $names | safeHTML }}</span>
+        {{- end }}
         {{- with $group.run }}
         <span class="group-meta"><time datetime="{{ .checked_at }}" dir="ltr">{{ time.Format "2006-01-02 15:04 UTC" .checked_at }}</time>
           {{- with .ref }} · <code>{{ if hasPrefix . "v" }}{{ . }}{{ else }}{{ substr . 0 12 }}{{ end }}</code>{{ end }}

@@ -40,7 +40,7 @@ features:
     - title: "Compilado em público"
       text: "Um fluxo de trabalho público do GitHub compila o app a partir do código público, e quem o entrega é o GitHub Pages, não nossos servidores. Cada compilação é reproduzível e assinada em um registro público."
     - title: "Gratuito, sem anúncios, sem rastreadores"
-      text: "Software livre sob a AGPL. Nenhuma ferramenta de análise no app nem neste site. As doações vão ajudar a pagar os custos."
+      text: "Software livre sob a AGPL. Nenhuma ferramenta de análise no app nem neste site. As doações ajudam a pagar os custos."
 
 roadmap:
   title: "Próximos passos"

@@ -2,7 +2,7 @@
 title: "Questions and answers"
 linkTitle: "FAQ"
 description: "Short answers about what Incognito Chat protects, what it can't, and how to use it."
-updated: "2026-11-22"
+updated: "2026-11-25"
 ---
 
 ## Privacy
@@ -75,7 +75,7 @@ On the server: encrypted messages until your device has them, attachments until 
 
 ### Is it free? Who pays for it?
 
-It's free, with no ads and no trackers. For now we pay what it costs to run (see [Costs](/costs/)); donations will help once they open. Incognito Chat is free software under the AGPL, built in public: [the code](https://github.com/{{< param "codeRepo" >}}) and [this site](https://github.com/{{< param "siteRepo" >}}) are on GitHub.
+It's free, with no ads and no trackers. We pay what it costs to run (see [Costs](/costs/)), and [donations](/donate/) help. Incognito Chat is free software under the AGPL, built in public: [the code](https://github.com/{{< param "codeRepo" >}}) and [this site](https://github.com/{{< param "siteRepo" >}}) are on GitHub.
 
 ### How can I check any of this?
 

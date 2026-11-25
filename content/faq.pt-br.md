@@ -2,7 +2,7 @@
 title: "Perguntas e respostas"
 linkTitle: "Perguntas"
 description: "Respostas curtas sobre o que o Incognito Chat protege, o que ele não consegue proteger e como usá-lo."
-updated: "2026-11-22"
+updated: "2026-11-25"
 ---
 
 ## Privacidade
@@ -75,7 +75,7 @@ No servidor: as mensagens criptografadas, até seu dispositivo recebê-las; os a
 
 ### É gratuito? Quem paga por isso?
 
-É gratuito, sem anúncios e sem rastreadores. Por enquanto, nós pagamos o que custa mantê-lo no ar (veja [Custos](/pt-br/costs/)); as doações vão ajudar quando forem abertas. O Incognito Chat é software livre sob a AGPL, desenvolvido de forma aberta: [o código](https://github.com/{{< param "codeRepo" >}}) e [este site](https://github.com/{{< param "siteRepo" >}}) estão no GitHub.
+É gratuito, sem anúncios e sem rastreadores. Nós pagamos o que custa mantê-lo no ar (veja [Custos](/pt-br/costs/)), e as [doações](/pt-br/donate/) ajudam. O Incognito Chat é software livre sob a AGPL, desenvolvido de forma aberta: [o código](https://github.com/{{< param "codeRepo" >}}) e [este site](https://github.com/{{< param "siteRepo" >}}) estão no GitHub.
 
 ### Como posso verificar tudo isso?
 
