@@ -13,9 +13,9 @@ Sem anúncios e sem nada para vender, as doações ajudam a pagar o serviço: os
 
 {{< collective "balance" >}}
 
-O saldo é o que sobra das doações depois de descontar as taxas e o que já foi pago. Aqui aparecem só valores e datas. Quem doou, no caso das pessoas que escolheram aparecer com o nome, e cada doação e cada gasto desde o início estão no [Open Collective](https://opencollective.com/{{< param "openCollective" >}}/transactions).
+O saldo é o que sobra das doações depois de descontar as taxas e o que já foi pago; os demais valores são o que foi doado, antes de descontar as taxas. Aqui aparecem só valores e datas. Quem doou, no caso das pessoas que escolheram aparecer com o nome, e cada doação e cada gasto desde o início estão no [Open Collective](https://opencollective.com/{{< param "openCollective" >}}/transactions).
 
-### Apoios recorrentes
+### Doações recorrentes
 
 Doações mensais e anuais que continuam ativas, com o valor de cada uma:
 

@@ -48,7 +48,7 @@ roadmap:
     - title: "Ein Server, der beweist, was auf ihm läuft"
       text: "Wir planen, den Server in eine attestierte Enklave zu verlegen: einen abgeschotteten Teil des Rechners, dessen Code jeder prüfen kann. Dann müsstest du uns nicht mehr einfach glauben, was der Server tut, und nicht einmal wir könnten erkennen, welchem Telegram-Konto ein Link gehört."
     - title: "Zahlen, die niemand fälschen kann"
-      text: "Die Seite [Statistik](stats/) zeigt pro Stunde neue Konten, gesendete Nachrichten und die Menge an Medien, die Seite [Kosten](costs/), was der Betrieb des Dienstes kostet, alles automatisch veröffentlicht und signiert. Sobald die Enklave läuft, wird sie die Zahlen selbst zählen und signieren, sodass niemand sie fälschen kann, nicht einmal wir."
+      text: "Die Seite [Statistik](stats/) zeigt pro Stunde neue Konten, gesendete Nachrichten und die Menge an Medien, die Seite [Spenden und Kosten](donate/#costs), was der Betrieb des Dienstes kostet, alles automatisch veröffentlicht und signiert. Sobald die Enklave läuft, wird sie die Zahlen selbst zählen und signieren, sodass niemand sie fälschen kann, nicht einmal wir."
 
 verify:
   title: "Prüf es selbst"

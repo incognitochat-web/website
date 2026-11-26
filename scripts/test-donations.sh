@@ -62,10 +62,14 @@ since=$(jq -r '.variables.since' "$work/sent.json")
 d=$(($(date -u +%s) - $(date -u -d "$since" +%s) - 30 * 86400))
 [ "${d#-}" -lt 120 ] || fail "not the last 30 days: from $since"
 q=$(jq -r .query "$work/sent.json")
-# (Its one account is the collective, by its name: account(slug: $slug).)
-for word in name Account email description payee memo tags; do
-  [[ $q != *"$word"* ]] || fail "the query asks for '$word': $q"
-done
+# Every word in the query is one of these (its one account is the
+# collective, by its name), so nothing else can be asked for unnoticed.
+allowed=" query slug String since DateTime account currency stats balance valueInCents orders filter INCOMING status ACTIVE frequency MONTHLY YEARLY limit totalCount nodes amount transactions type CREDIT kind CONTRIBUTION dateFrom createdAt isRefunded "
+while read -r word; do
+  [[ $allowed == *" $word "* ]] || fail "the query asks for '$word': $q"
+done < <(grep -oE '[A-Za-z_]+' <<<"$q" | sort -u)
+# Bounded, so a slow or rate-limited API can't hold up the deploy.
+[[ $(cat "$work/args") == *"--retry-max-time 60"* && $(cat "$work/args") == *"--connect-timeout 10"* ]] || fail "the request isn't bounded: $(cat "$work/args")"
 
 # What it keeps: the balance, each regular donation's amount and how often
 # (biggest first, monthly ones first), each donation's day and amount
@@ -90,6 +94,7 @@ refused "no account" '.data.account = null'
 refused "another currency" '.data.account.currency = "EUR"'
 refused "a balance in another currency" '.data.account.stats.balance.currency = "EUR"'
 refused "a balance that isn't a whole number" '.data.account.stats.balance.valueInCents = 1.5'
+refused "a negative balance" '.data.account.stats.balance.valueInCents = -5050'
 refused "a regular donation in another currency" '.data.account.orders.nodes[0].amount.currency = "EUR"'
 refused "a weekly donation" '.data.account.orders.nodes[0].frequency = "WEEKLY"'
 refused "a regular donation of nothing" '.data.account.orders.nodes[0].amount.valueInCents = 0'
@@ -103,6 +108,10 @@ refused "no list" '.data.account.transactions.nodes = null'
 echo 'not json' >"$work/bad-answer.json"
 fetch "$work/bad-answer.json" "$work/bad.json" || fail "an unreadable answer failed the script"
 [ "$(jq -c . "$work/bad.json")" = '{}' ] || fail "an unreadable answer was accepted"
+# Why it couldn't, as a warning on the deploy's page.
+jq '.errors = [{message: "Field x is not known"}]' "$work/answer.json" >"$work/bad-answer.json"
+log=$(PATH="$work/bin:$PATH" STUB_ARGS=$work/args STUB_SENT=$work/sent.json STUB_ANSWER=$work/bad-answer.json "$work/site/scripts/fetch-collective.sh" "$work/bad.json")
+[[ $log == *"::warning::collective: couldn't load (the API answered with an error: Field x is not known)"* ]] || fail "no warning saying why: $log"
 STUB_FAIL=1 fetch "$work/answer.json" "$work/bad.json" 2>/dev/null || fail "an unreachable API failed the script"
 [ "$(jq -c . "$work/bad.json")" = '{}' ] || fail "an unreachable API wrote something"
 # A collective's name that could be anything else in hugo.toml: refused.
@@ -121,18 +130,21 @@ build "$work/out.json" "$work/pub"
 en=$(cat "$work/pub/donate/index.html")
 [[ $en == *'<h1>Donations and costs</h1>'* ]] || fail "the page's title"
 [[ $en == *'<p class="tile-value" dir="ltr">$1,234.56</p><p class="tile-name">Balance</p>'* ]] || fail "the balance tile"
-[[ $en == *'<p class="tile-value">3</p><p class="tile-name">Regular supporters</p>'* ]] || fail "the regular supporters tile"
+[[ $en == *'<p class="tile-value">3</p><p class="tile-name">Regular donations</p>'* ]] || fail "the regular donations tile"
 [[ $en == *'<p class="tile-value" dir="ltr">$30.00</p><p class="tile-name">Given each month</p>'* ]] || fail "the monthly total"
 [[ $en == *'<p class="tile-value" dir="ltr">$100.00</p><p class="tile-name">Given each year</p>'* ]] || fail "the yearly total"
 [[ $en == *'<li><span dir="ltr">$25.00</span> a month</li>'* ]] || fail "a regular donation's amount"
 [[ $en == *'<li><span dir="ltr">$100.00</span> a year</li>'* ]] || fail "a yearly donation's amount"
-[[ $en == *'<time datetime="2026-11-25">Nov 25, 2026</time></td><td dir="ltr">$25.00</td>'* ]] || fail "a donation's row"
+[[ $en == *'<time datetime="2026-11-25">Nov 25, 2026</time></td><td><span dir="ltr">$25.00</span></td>'* ]] || fail "a donation's row"
 [[ $en != *'$7.00'* ]] || fail "a refunded donation is shown"
 [[ $en == *'href="https://opencollective.com/'"$slug"'/transactions"'* ]] || fail "no link to the donations on Open Collective"
 [[ $en == *'<h2 id="costs">'* && $en == *'<h2 id="donations">'* ]] || fail "the sections' anchors"
 if grep -rq 'Example' "$work/pub"; then fail "a name is on the site"; fi
-# Newest first, and the regular ones in the order fetched.
+# Newest first; the regular ones monthly first, the biggest first.
 [[ $en =~ 2026-11-25.*2026-11-20 ]] || fail "the donations aren't newest first"
+[[ $en =~ '$25.00</span> a month'.*'$5.00</span> a month'.*'$100.00</span> a year' ]] || fail "the regular donations' order"
+# The Stats page links the costs section, in each language its own.
+grep -q 'href="/fa/donate/#costs"' "$work/pub/fa/stats/index.html" || fail "the Persian Stats page doesn't link its costs section"
 # In German, the amounts its way; in Persian and Arabic, left to right.
 de=$(cat "$work/pub/de/donate/index.html")
 nbsp=$(printf '\302\240') # U+00A0, whatever the locale
@@ -147,7 +159,7 @@ if grep -q 'Given each year' "$work/pub2/donate/index.html"; then fail "a yearly
 # None yet: each part says so.
 jq '.supporters = [] | .recent = []' "$work/out.json" >"$work/none.json"
 build "$work/none.json" "$work/pub3"
-grep -q 'No regular supporters yet.' "$work/pub3/donate/index.html" || fail "no regular supporters isn't said"
+grep -q 'No regular donations yet.' "$work/pub3/donate/index.html" || fail "no regular donations isn't said"
 grep -q 'No donations in the last 30 days.' "$work/pub3/donate/index.html" || fail "no donations isn't said"
 # Couldn't load ({} or no file): each part says so, and the site still builds.
 echo '{}' >"$work/empty.json"
@@ -158,7 +170,8 @@ for data in "$work/empty.json" none; do
 done
 # A part the shortcode doesn't know stops the build.
 printf -- '---\ntitle: "x"\n---\n{{< collective "everything" >}}\n' >"$work/site/content/oc-bad.md"
-if hugo --quiet --source "$work/site" --destination "$work/pub5" >/dev/null 2>&1; then fail "an unknown part was built"; fi
+if err=$(hugo --source "$work/site" --destination "$work/pub5" 2>&1); then fail "an unknown part was built"; fi
+[[ $err == *'collective.html: unknown part "everything"'* ]] || fail "an unknown part didn't stop the build on its own check: $err"
 rm "$work/site/content/oc-bad.md"
 
 echo "ok: donations"

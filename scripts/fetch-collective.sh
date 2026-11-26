@@ -33,7 +33,8 @@ jq -n --arg slug "$slug" --arg since "$since" '{
 }' >"$tmp/query.json"
 
 echo '{}' >"$tmp/out.json"
-if curl -sS --fail -m 30 --retry 2 --retry-all-errors -H 'Content-Type: application/json' \
+# Bounded: a slow or rate-limited API can't hold the deploy up.
+if curl -sS --fail --connect-timeout 10 -m 30 --retry 2 --retry-all-errors --retry-max-time 60 -H 'Content-Type: application/json' \
   --data-binary "@$tmp/query.json" https://api.opencollective.com/graphql/v2 >"$tmp/answer.json" 2>"$tmp/curl.err"; then
   # Every part must be there and well formed, or nothing is shown: a part
   # missing would read as "no donations". Refunded donations are left out.
@@ -44,7 +45,7 @@ if curl -sS --fail -m 30 --retry 2 --retry-all-errors -H 'Content-Type: applicat
       and ((.[0:10] + "T00:00:00Z" | try fromdateiso8601 catch null) as $t | $t != null and ($t | strftime("%Y-%m-%d")) == .[0:10]);
     (.data.account // null) as $a
     | if .errors != null or ($a | type) != "object" or $a.currency != "USD"
-        or ($a.stats.balance | usd | not)
+        or ($a.stats.balance | usd | not) or $a.stats.balance.valueInCents < 0
         or ($a.orders.nodes | type) != "array" or $a.orders.totalCount != ($a.orders.nodes | length)
         or ($a.transactions.nodes | type) != "array" or $a.transactions.totalCount != ($a.transactions.nodes | length)
         or ([$a.orders.nodes[] | (.frequency == "MONTHLY" or .frequency == "YEARLY") and (.amount | usd) and .amount.valueInCents > 0] | all | not)
@@ -58,12 +59,16 @@ if curl -sS --fail -m 30 --retry 2 --retry-all-errors -H 'Content-Type: applicat
         recent: ([$a.transactions.nodes[] | select(.isRefunded | not) | {date: .createdAt[0:10], amount: .amount.valueInCents}]
           | sort_by(.date, .amount) | reverse)
       } end' "$tmp/answer.json" >"$tmp/out.json" 2>/dev/null || echo '{}' >"$tmp/out.json"
+  # Why, for the log (an API error is about the query, never about donors).
+  why=$(jq -r 'if (.errors | type) == "array" then "the API answered with an error: \(.errors[0].message // "" | tostring | .[0:200])"
+    else "the answer had an unexpected shape" end' "$tmp/answer.json" 2>/dev/null || echo "the answer wasn't JSON")
 else
-  echo "Open Collective couldn't be reached: $(head -c 300 "$tmp/curl.err")" >&2
+  why="Open Collective couldn't be reached: $(head -c 300 "$tmp/curl.err" | tr '\n' ' ')"
 fi
 mv "$tmp/out.json" "$out"
 if [ "$(jq -c . "$out")" = '{}' ]; then
-  echo "collective: couldn't load; the page says so"
+  # A warning on the deploy's page, so it's seen; the deploy goes on.
+  echo "::warning::collective: couldn't load (${why:-unknown}); the page says so"
 else
   echo "collective: $(jq -r '"balance \(.balance) cents, \(.supporters | length) regular, \(.recent | length) in 30 days"' "$out")"
 fi

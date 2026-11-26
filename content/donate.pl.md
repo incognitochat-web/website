@@ -13,9 +13,9 @@ Nie mamy reklam ani niczego do sprzedania, więc darowizny pomagają opłacić u
 
 {{< collective "balance" >}}
 
-Saldo to kwota, która została z darowizn po odliczeniu opłat i tego, co już wypłacono. Widać tu tylko kwoty i daty. Na [Open Collective](https://opencollective.com/{{< param "openCollective" >}}/transactions) widać, kto wpłacił (jeśli darczyńca zdecydował się podać swoją nazwę), a także każdą darowiznę i każdy wydatek od samego początku.
+Saldo to kwota, która została z darowizn po odliczeniu opłat i tego, co już wypłacono. Pozostałe kwoty są podane w takiej wysokości, w jakiej je wpłacono, czyli przed odliczeniem opłat. Widać tu tylko kwoty i daty. Na [Open Collective](https://opencollective.com/{{< param "openCollective" >}}/transactions) widać, kto wpłacił (jeśli darczyńca zdecydował się podać swoją nazwę), a także każdą darowiznę i każdy wydatek od samego początku.
 
-### Stali darczyńcy
+### Regularne darowizny
 
 Comiesięczne i coroczne darowizny, które wciąż są aktywne – kwota każdej z nich:
 

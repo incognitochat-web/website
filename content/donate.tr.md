@@ -13,9 +13,9 @@ Reklam yok, satacak bir şeyimiz de yok; bu yüzden bağışlar hizmetin masrafl
 
 {{< collective "balance" >}}
 
-Bakiye, bağışlardan ücretler ve yapılan ödemeler düşüldükten sonra kalan tutardır. Burada yalnızca tutarlar ve tarihler gösterilir. Adının görünmesini seçen bağışçıların kim olduğu ve başından beri yapılan her bağış ve her harcama [Open Collective](https://opencollective.com/{{< param "openCollective" >}}/transactions) üzerinde yer alır.
+Bakiye, bağışlardan ücretler ve yapılan ödemeler düşüldükten sonra kalan tutardır; diğer tutarlar ise ücretler düşülmeden önce, bağışçıların verdiği gibidir. Burada yalnızca tutarlar ve tarihler gösterilir. Adının görünmesini seçen bağışçıların kim olduğu ve başından beri yapılan her bağış ve her harcama [Open Collective](https://opencollective.com/{{< param "openCollective" >}}/transactions) üzerinde yer alır.
 
-### Düzenli destekçiler
+### Düzenli bağışlar
 
 Hâlâ devam eden aylık ve yıllık bağışlar, her birinin tutarıyla:
 

@@ -13,9 +13,9 @@ Sin anuncios y sin nada que vender, las donaciones ayudan a pagar el servicio: l
 
 {{< collective "balance" >}}
 
-El saldo es lo que queda de las donaciones tras descontar las comisiones y lo que se ha pagado. Aquí solo se muestran montos y fechas. Quién donó, en el caso de quienes eligieron aparecer con su nombre, y cada donación y cada gasto desde el inicio están en [Open Collective](https://opencollective.com/{{< param "openCollective" >}}/transactions).
+El saldo es lo que queda de las donaciones tras descontar las comisiones y lo que se ha pagado; los demás montos son lo que se donó, antes de descontar las comisiones. Aquí solo se muestran montos y fechas. Quién donó, en el caso de quienes eligieron aparecer con su nombre, y cada donación y cada gasto desde el inicio están en [Open Collective](https://opencollective.com/{{< param "openCollective" >}}/transactions).
 
-### Donantes recurrentes
+### Donaciones recurrentes
 
 Donaciones mensuales y anuales que siguen activas, con el monto de cada una:
 

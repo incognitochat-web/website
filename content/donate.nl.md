@@ -13,9 +13,9 @@ Er zijn geen advertenties en we verkopen niets, dus helpen donaties de dienst te
 
 {{< collective "balance" >}}
 
-Het saldo is wat er van de donaties over is na aftrek van de vergoedingen en van wat er is uitbetaald. Hier staan alleen bedragen en datums. Wie er gaf, bij donateurs die ervoor kozen met hun naam vermeld te worden, en elke donatie en elke uitgave sinds het begin staan op [Open Collective](https://opencollective.com/{{< param "openCollective" >}}/transactions).
+Het saldo is wat er van de donaties over is na aftrek van de vergoedingen en van wat er is uitbetaald; de overige bedragen zijn wat er gegeven is, vóór aftrek van de vergoedingen. Hier staan alleen bedragen en datums. Wie er gaf, bij donateurs die ervoor kozen met hun naam vermeld te worden, en elke donatie en elke uitgave sinds het begin staan op [Open Collective](https://opencollective.com/{{< param "openCollective" >}}/transactions).
 
-### Vaste donateurs
+### Vaste donaties
 
 Maandelijkse en jaarlijkse donaties die nog lopen, met het bedrag van elk:
 

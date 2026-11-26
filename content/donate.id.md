@@ -13,9 +13,9 @@ Karena tidak ada iklan dan tidak ada yang kami jual, donasi membantu membiayai l
 
 {{< collective "balance" >}}
 
-Saldo adalah sisa donasi setelah dipotong biaya platform dan pembayaran, serta dana yang sudah dibayarkan. Di sini hanya ditampilkan jumlah dan tanggal. Siapa yang berdonasi (bagi donatur yang memilih untuk disebutkan namanya), serta setiap donasi dan setiap pengeluaran sejak awal, ada di [Open Collective](https://opencollective.com/{{< param "openCollective" >}}/transactions).
+Saldo adalah sisa donasi setelah dipotong biaya platform dan pembayaran, serta dana yang sudah dibayarkan. Jumlah lainnya ditampilkan sebesar yang diberikan donatur, sebelum dipotong biaya platform dan pembayaran. Di sini hanya ditampilkan jumlah dan tanggal. Siapa yang berdonasi (bagi donatur yang memilih untuk disebutkan namanya), serta setiap donasi dan setiap pengeluaran sejak awal, ada di [Open Collective](https://opencollective.com/{{< param "openCollective" >}}/transactions).
 
-### Pendukung tetap
+### Donasi rutin
 
 Donasi bulanan dan tahunan yang masih berjalan, beserta jumlah masing-masing:
 

@@ -48,7 +48,7 @@ roadmap:
     - title: "Ne çalıştırdığını kanıtlayan bir sunucu"
       text: "Sunucuyu doğrulanabilir bir güvenli bölgeye taşımayı planlıyoruz: makinenin, kodunu herkesin kontrol edebileceği mühürlü bir bölümüne. O zaman sunucunun ne yaptığı konusunda sözümüze güvenmeniz gerekmezdi ve bir bağlantının hangi Telegram hesabına ait olduğunu biz bile anlayamazdık."
     - title: "Kimsenin uyduramayacağı sayılar"
-      text: "[İstatistikler sayfası](stats/), saat saat oluşturulan hesapları, gönderilen mesajları ve medya hacmini, [Maliyetler sayfası](costs/) ise hizmeti çalıştırmanın maliyetini gösterir; hepsi otomatik olarak yayımlanır ve imzalanır. Güvenli bölge devreye girdiğinde bu sayıları kendisi sayıp imzalayacak; böylece kimse, biz bile, onları uyduramayacak."
+      text: "[İstatistikler sayfası](stats/), saat saat oluşturulan hesapları, gönderilen mesajları ve medya hacmini, [Bağışlar ve maliyetler sayfası](donate/#costs) ise hizmeti çalıştırmanın maliyetini gösterir; hepsi otomatik olarak yayımlanır ve imzalanır. Güvenli bölge devreye girdiğinde bu sayıları kendisi sayıp imzalayacak; böylece kimse, biz bile, onları uyduramayacak."
 
 verify:
   title: "Kendiniz kontrol edin"
