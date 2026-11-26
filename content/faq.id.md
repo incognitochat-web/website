@@ -65,11 +65,11 @@ Hanya di satu perangkat dalam satu waktu. Menyiapkan akun di perangkat lain akan
 
 ### Bagaimana cara menghapus akun saya?
 
-Di tab **Tautan saya**, ketuk **Hapus akun**. Selama aplikasi tetap terbuka, server menghapus apa yang disimpannya untuk Anda dalam beberapa menit, lalu aplikasi menghapus obrolan dan kunci Anda dari perangkat ini (di beberapa perangkat, jejaknya bisa tertinggal di berkas penyimpanan aplikasi). Lampiran yang Anda kirim tetap bisa diambil oleh penerimanya sampai kedaluwarsa, dalam waktu 30 hari, kecuali Anda mencentang **Hapus juga obrolan saya untuk pihak lain**: maka, untuk setiap obrolan di daftar Anda, aplikasi pihak lain diminta menghapusnya, dan lampiran yang Anda kirim di sana dihapus dari server (yang tersisa tetap kedaluwarsa dalam waktu 30 hari).
+Di tab **Pengaturan**, ketuk **Hapus akun**. Selama aplikasi tetap terbuka, server menghapus apa yang disimpannya untuk Anda dalam beberapa menit, lalu aplikasi menghapus obrolan dan kunci Anda dari perangkat ini (di beberapa perangkat, jejaknya bisa tertinggal di berkas penyimpanan aplikasi). Lampiran yang Anda kirim tetap bisa diambil oleh penerimanya sampai kedaluwarsa, dalam waktu 30 hari, kecuali Anda mencentang **Hapus juga obrolan saya untuk pihak lain**: maka, untuk setiap obrolan di daftar Anda, aplikasi pihak lain diminta menghapusnya, dan lampiran yang Anda kirim di sana dihapus dari server (yang tersisa tetap kedaluwarsa dalam waktu 30 hari).
 
 ### Berapa lama data disimpan?
 
-Di server: pesan terenkripsi sampai perangkat Anda menerimanya, lampiran sampai dihapus, paling lama 30 hari untuk keduanya. Akun Anda (termasuk tautan Anda, ID Telegram yang diacak, dan bulan terakhir Anda membuka aplikasi) tetap ada sampai Anda menghapusnya, atau sampai aplikasi tidak dibuka selama 12 bulan. Di perangkat Anda: obrolan Anda, sampai Anda menghapusnya. Anda memilih berapa lama lampiran disimpan (selamanya, sebulan, atau seminggu) di **Data dan penyimpanan**, di tab **Tautan saya**.
+Di server: pesan terenkripsi sampai perangkat Anda menerimanya, lampiran sampai dihapus, paling lama 30 hari untuk keduanya. Akun Anda (termasuk tautan Anda, ID Telegram yang diacak, dan bulan terakhir Anda membuka aplikasi) tetap ada sampai Anda menghapusnya, atau sampai aplikasi tidak dibuka selama 12 bulan. Di perangkat Anda: obrolan Anda, sampai Anda menghapusnya. Anda memilih berapa lama lampiran disimpan (selamanya, sebulan, atau seminggu) di **Data dan penyimpanan**, di tab **Pengaturan**.
 
 ## Tentang proyek ini
 

@@ -65,11 +65,11 @@ Um dispositivo por vez. Configurar em outro dispositivo substitui sua conta: seu
 
 ### Como apago minha conta?
 
-Na aba **Meu link**, toque em **Apagar conta**. Enquanto o app continuar aberto, o servidor apaga em poucos minutos o que guarda para você, e depois o app apaga seus chats e chaves deste dispositivo (em alguns dispositivos, podem ficar vestígios nos arquivos de armazenamento do app). Os anexos que você enviou continuam disponíveis para a outra pessoa baixar até expirarem, em até 30 dias, a menos que você marque **Apagar também meus chats para a outra pessoa**: nesse caso, em cada chat da sua lista, o app da outra pessoa recebe um pedido para apagá-lo, e os anexos que você enviou ali são apagados do servidor (os que sobrarem também expiram em até 30 dias).
+Na aba **Configurações**, toque em **Apagar conta**. Enquanto o app continuar aberto, o servidor apaga em poucos minutos o que guarda para você, e depois o app apaga seus chats e chaves deste dispositivo (em alguns dispositivos, podem ficar vestígios nos arquivos de armazenamento do app). Os anexos que você enviou continuam disponíveis para a outra pessoa baixar até expirarem, em até 30 dias, a menos que você marque **Apagar também meus chats para a outra pessoa**: nesse caso, em cada chat da sua lista, o app da outra pessoa recebe um pedido para apagá-lo, e os anexos que você enviou ali são apagados do servidor (os que sobrarem também expiram em até 30 dias).
 
 ### Por quanto tempo as coisas ficam guardadas?
 
-No servidor: as mensagens criptografadas, até seu dispositivo recebê-las; os anexos, até serem apagados; no máximo 30 dias, nos dois casos. Sua conta (incluindo seu link, o ID do Telegram embaralhado e o mês em que você abriu o app pela última vez) fica guardada até você apagá-la, ou até o app passar 12 meses sem ser aberto. No seu dispositivo: seus chats, até você apagá-los. Em **Dados e armazenamento**, na aba **Meu link**, você escolhe por quanto tempo os anexos ficam guardados (sempre, 1 mês ou 1 semana).
+No servidor: as mensagens criptografadas, até seu dispositivo recebê-las; os anexos, até serem apagados; no máximo 30 dias, nos dois casos. Sua conta (incluindo seu link, o ID do Telegram embaralhado e o mês em que você abriu o app pela última vez) fica guardada até você apagá-la, ou até o app passar 12 meses sem ser aberto. No seu dispositivo: seus chats, até você apagá-los. Em **Dados e armazenamento**, na aba **Configurações**, você escolhe por quanto tempo os anexos ficam guardados (sempre, 1 mês ou 1 semana).
 
 ## O projeto
 
