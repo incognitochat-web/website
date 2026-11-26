@@ -2,7 +2,7 @@
 title: "Vragen en antwoorden"
 linkTitle: "Vragen"
 description: "Korte antwoorden over wat Incognito Chat beschermt, wat het niet kan beschermen en hoe je het gebruikt."
-updated: "2026-11-25"
+updated: "2026-11-26"
 ---
 
 ## Privacy
@@ -21,7 +21,7 @@ Niets wat hij opslaat, zegt dat: berichten gaan via willekeurige postvakken, nie
 
 ### Kunnen jullie zien welk Telegram-account bij een link hoort?
 
-Op dit moment wel, als we ervoor zouden kiezen om te kijken. De server bewaart een versluierde vorm van het Telegram-ID van elk account, en wie de sleutels van de server heeft, kan het ID daaruit afleiden. Voor de meeste links maakt dat weinig uit: een link is bedoeld om ergens te plaatsen of te versturen, dus wie hem heeft, weet meestal al van wie hij is. En weten van wie de link is, zegt niets over wie er naar jou schrijft, want berichten worden verstuurd zonder in te loggen. De server naar een enclave verhuizen, [een van onze plannen](/nl/#roadmap), zou dit ook voor ons onmogelijk maken.
+Op dit moment wel, als we ervoor zouden kiezen om te kijken. De server bewaart een versluierde vorm van het Telegram-ID van elk account, en wie de sleutels van de server heeft, kan het ID daaruit afleiden. Voor de meeste links maakt dat weinig uit: een link is bedoeld om ergens te plaatsen of te versturen, dus wie hem heeft, weet meestal al van wie hij is. En weten van wie de link is, zegt niets over wie er naar jou schrijft, want berichten worden verstuurd zonder in te loggen.
 
 ### Wat ziet Telegram?
 
@@ -35,7 +35,7 @@ Wie de bot beheert, bepaalt welke pagina Telegram opent, en Telegram biedt geen 
 
 ### Iemand die live meekijkt {#live}
 
-Wie de servers beheert, of Amazon, waar ze draaien, zou verzoeken live kunnen volgen en mensen aan elkaar kunnen koppelen via timing en IP-adres: een bericht dat binnenkomt, dan een melding, dan een antwoord of een “Gelezen”. Telegram zou mensen ook via timing aan elkaar kunnen koppelen. Een kopie van de opgeslagen gegevens laat dit niet zien, maar met de sleutels van de server is een deel ervan te zien in gegevens die tot een dag worden bewaard, soms een paar dagen langer. Ook met de enclave zouden timing en IP-adressen nog steeds te zien zijn.
+Wie de servers beheert, of Amazon, waar ze draaien, zou verzoeken live kunnen volgen en mensen aan elkaar kunnen koppelen via timing en IP-adres: een bericht dat binnenkomt, dan een melding, dan een antwoord of een “Gelezen”. Telegram zou mensen ook via timing aan elkaar kunnen koppelen. Een kopie van de opgeslagen gegevens laat dit niet zien, maar met de sleutels van de server is een deel ervan te zien in gegevens die tot een dag worden bewaard, soms een paar dagen langer.
 
 ### Je eigen apparaat
 

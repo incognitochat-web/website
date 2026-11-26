@@ -2,7 +2,7 @@
 title: "Tanya jawab"
 linkTitle: "Tanya jawab"
 description: "Jawaban singkat tentang apa yang dilindungi Incognito Chat, apa yang tidak bisa dilindunginya, dan cara memakainya."
-updated: "2026-11-25"
+updated: "2026-11-26"
 ---
 
 ## Privasi
@@ -21,7 +21,7 @@ Tidak ada yang disimpannya yang menunjukkan hal itu: pesan berpindah lewat kotak
 
 ### Apakah tim Incognito Chat bisa tahu akun Telegram mana yang memiliki sebuah tautan?
 
-Saat ini bisa, jika kami memilih untuk melihatnya. Server menyimpan ID Telegram setiap akun dalam bentuk yang diacak, dan siapa pun yang memegang kunci server bisa mengetahui ID itu dari bentuk tersebut. Untuk sebagian besar tautan, hal ini tidak terlalu penting: tautan memang dibuat untuk dibagikan atau dikirim, jadi siapa pun yang mendapatkannya biasanya sudah tahu tautan itu milik siapa. Selain itu, mengetahui pemilik tautan tidak mengungkapkan siapa yang menulis kepada Anda, karena pesan dikirim tanpa login. Memindahkan server ke enclave, [yang sudah ada dalam rencana](/id/#roadmap), juga akan membuat kami sendiri tidak bisa lagi mengetahui pemilik tautan.
+Saat ini bisa, jika kami memilih untuk melihatnya. Server menyimpan ID Telegram setiap akun dalam bentuk yang diacak, dan siapa pun yang memegang kunci server bisa mengetahui ID itu dari bentuk tersebut. Untuk sebagian besar tautan, hal ini tidak terlalu penting: tautan memang dibuat untuk dibagikan atau dikirim, jadi siapa pun yang mendapatkannya biasanya sudah tahu tautan itu milik siapa. Selain itu, mengetahui pemilik tautan tidak mengungkapkan siapa yang menulis kepada Anda, karena pesan dikirim tanpa login.
 
 ### Apa yang dilihat Telegram?
 
@@ -35,7 +35,7 @@ Siapa pun yang mengendalikan bot menentukan halaman mana yang dibuka Telegram, d
 
 ### Seseorang yang memantau secara langsung {#live}
 
-Siapa pun yang menjalankan server, atau Amazon, penyedia hosting-nya, bisa saja memantau permintaan secara langsung dan mengaitkan orang-orang lewat kecocokan waktu dan alamat IP: sebuah pesan masuk, lalu notifikasi, lalu balasan atau tanda “Dibaca”. Telegram juga bisa saja mengaitkan orang-orang lewat kecocokan waktu. Salinan data yang tersimpan tidak menunjukkan hal ini, tetapi dengan kunci server, catatan yang disimpan hingga sehari, terkadang beberapa hari lebih lama, menunjukkan sebagian darinya. Bahkan dengan enclave, waktu dan alamat IP tetap akan terlihat.
+Siapa pun yang menjalankan server, atau Amazon, penyedia hosting-nya, bisa saja memantau permintaan secara langsung dan mengaitkan orang-orang lewat kecocokan waktu dan alamat IP: sebuah pesan masuk, lalu notifikasi, lalu balasan atau tanda “Dibaca”. Telegram juga bisa saja mengaitkan orang-orang lewat kecocokan waktu. Salinan data yang tersimpan tidak menunjukkan hal ini, tetapi dengan kunci server, catatan yang disimpan hingga sehari, terkadang beberapa hari lebih lama, menunjukkan sebagian darinya.
 
 ### Perangkat Anda sendiri
 

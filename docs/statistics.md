@@ -56,6 +56,3 @@ the start in the month it falls in.
 
 - That shows a number came through this public job unchanged. It can't show
   that what AWS holds is true: whoever runs the AWS account could change it.
-  Once the server runs in an attested enclave (see the roadmap on the
-  [home page](https://incognitochat.me/)), it will count and sign the
-  numbers itself.

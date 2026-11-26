@@ -42,14 +42,6 @@ features:
     - title: "Bezpłatnie, bez reklam i śledzenia"
       text: "Wolne oprogramowanie na licencji AGPL. Żadnej analityki w aplikacji ani na tej stronie. Darowizny pomagają pokryć koszty."
 
-roadmap:
-  title: "Plany"
-  items:
-    - title: "Serwer, który dowodzi, co na nim działa"
-      text: "Planujemy przenieść serwer do atestowanej enklawy: odizolowanej części maszyny, której kod każdy może sprawdzić. Wtedy nie trzeba by było wierzyć nam na słowo w to, co robi serwer, a nawet my nie moglibyśmy ustalić, do którego konta w Telegramie należy dany link."
-    - title: "Liczby nie do sfałszowania"
-      text: "[Strona Statystyki](stats/) pokazuje w podziale na godziny liczbę utworzonych kont i wysłanych wiadomości oraz objętość multimediów, a [strona „Darowizny i koszty”](donate/#costs) – ile kosztuje działanie usługi; wszystko jest publikowane automatycznie i podpisywane. Gdy enklawa zacznie działać, sama będzie liczyć i podpisywać te liczby, więc nikt nie będzie mógł ich sfałszować, nawet my."
-
 verify:
   title: "Sprawdź to samodzielnie"
   text: "Kod aplikacji jest publiczny, każda kompilacja jest powtarzalna i podpisana, a skrypt sprawdza, czy aplikacja, którą otwiera Telegram, to dokładnie ta kompilacja. Kod serwera też jest publiczny, ale na razie musisz ufać naszym zapisom o tym, co na nim działa."

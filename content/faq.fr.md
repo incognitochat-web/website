@@ -2,7 +2,7 @@
 title: "Questions et réponses"
 linkTitle: "Questions"
 description: "Des réponses courtes sur ce qu’Incognito Chat protège, ce qu’il ne peut pas protéger et comment l’utiliser."
-updated: "2026-11-25"
+updated: "2026-11-26"
 ---
 
 ## Confidentialité
@@ -21,7 +21,7 @@ Rien de ce qu’il stocke ne l’indique : les messages transitent par des boî
 
 ### Pouvez-vous savoir à quel compte Telegram appartient un lien ?
 
-Aujourd’hui, oui, si nous décidions de regarder. Le serveur conserve une forme brouillée de l’identifiant Telegram de chaque compte, et quiconque détient les clés du serveur peut en retrouver l’identifiant. Pour la plupart des liens, cela compte peu : un lien est fait pour être publié ou envoyé, donc la personne qui l’a sait généralement déjà à qui il appartient. Et savoir à qui il appartient n’apprend à personne qui vous écrit, puisque les messages sont envoyés sans connexion à un compte. Déplacer le serveur dans une enclave, comme le prévoit notre [feuille de route](/fr/#roadmap), nous retirerait cette possibilité, à nous aussi.
+Aujourd’hui, oui, si nous décidions de regarder. Le serveur conserve une forme brouillée de l’identifiant Telegram de chaque compte, et quiconque détient les clés du serveur peut en retrouver l’identifiant. Pour la plupart des liens, cela compte peu : un lien est fait pour être publié ou envoyé, donc la personne qui l’a sait généralement déjà à qui il appartient. Et savoir à qui il appartient n’apprend à personne qui vous écrit, puisque les messages sont envoyés sans connexion à un compte.
 
 ### Que voit Telegram ?
 
@@ -35,7 +35,7 @@ La personne qui contrôle le bot décide de la page qu’ouvre Telegram, et Tele
 
 ### Quelqu’un qui observe en direct {#live}
 
-Ceux qui gèrent les serveurs, ou Amazon, qui les héberge, pourraient observer les requêtes au moment où elles arrivent et relier des personnes entre elles en recoupant les horaires et les adresses IP : un message qui arrive, puis une notification, puis une réponse ou un « Vu ». Telegram pourrait aussi relier des personnes grâce aux horaires. Une copie des données stockées ne le montre pas, mais, avec les clés du serveur, des enregistrements conservés jusqu’à un jour, parfois quelques jours de plus, en montrent une partie. Même avec l’enclave, les horaires et les adresses IP resteraient visibles.
+Ceux qui gèrent les serveurs, ou Amazon, qui les héberge, pourraient observer les requêtes au moment où elles arrivent et relier des personnes entre elles en recoupant les horaires et les adresses IP : un message qui arrive, puis une notification, puis une réponse ou un « Vu ». Telegram pourrait aussi relier des personnes grâce aux horaires. Une copie des données stockées ne le montre pas, mais, avec les clés du serveur, des enregistrements conservés jusqu’à un jour, parfois quelques jours de plus, en montrent une partie.
 
 ### Votre propre appareil
 

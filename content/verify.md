@@ -51,4 +51,4 @@ Both scripts run on a schedule, in public: `verify-site.sh` against the live app
 ## What this can't prove
 
 - **What other people are shown inside Telegram.** The bot's owner could point the app at another address for chosen people only, or for a few minutes between checks. The hourly check sees only what its own account is shown, and your own run only what you are shown. A page on another address has none of your keys; to get anywhere it would have to make you set up again, which ends your account loudly on your old device and changes your link.
-- **What the server runs.** The design doesn't depend on it: a malicious server can drop or delay messages and watch timing, but can't read them or forge them, because the app checks every key itself. Proving the server's code is a future step (an attested enclave).
+- **What the server runs.** The design doesn't depend on it: a malicious server can drop or delay messages and watch timing, but can't read them or forge them, because the app checks every key itself. Proving what the server runs isn't possible yet.

@@ -2,7 +2,7 @@
 title: "Fragen und Antworten"
 linkTitle: "Fragen"
 description: "Kurze Antworten darauf, was Incognito Chat schützt, was die App nicht schützen kann und wie du sie benutzt."
-updated: "2026-11-25"
+updated: "2026-11-26"
 ---
 
 ## Privatsphäre
@@ -21,7 +21,7 @@ Nichts, was er speichert, sagt das aus: Nachrichten laufen über zufällige Post
 
 ### Könnt ihr erkennen, welchem Telegram-Konto ein Link gehört?
 
-Derzeit ja, wenn wir nachsehen wollten. Der Server speichert die Telegram-ID jedes Kontos in verschleierter Form, und wer die Schlüssel des Servers hat, kann die ID daraus ermitteln. Bei den meisten Links spielt das kaum eine Rolle: Ein Link ist dazu da, gepostet oder verschickt zu werden, also weiß, wer ihn hat, meist ohnehin schon, wem er gehört. Und den Inhaber zu kennen verrät niemandem, wer dir schreibt, denn Nachrichten werden ohne Anmeldung gesendet. Den Server in eine Enklave zu verlegen, wie [in unseren Plänen](/de/#roadmap) vorgesehen, würde auch uns diese Möglichkeit nehmen.
+Derzeit ja, wenn wir nachsehen wollten. Der Server speichert die Telegram-ID jedes Kontos in verschleierter Form, und wer die Schlüssel des Servers hat, kann die ID daraus ermitteln. Bei den meisten Links spielt das kaum eine Rolle: Ein Link ist dazu da, gepostet oder verschickt zu werden, also weiß, wer ihn hat, meist ohnehin schon, wem er gehört. Und den Inhaber zu kennen verrät niemandem, wer dir schreibt, denn Nachrichten werden ohne Anmeldung gesendet.
 
 ### Was sieht Telegram?
 
@@ -35,7 +35,7 @@ Wer den Bot kontrolliert, bestimmt, welche Seite Telegram öffnet, und Telegram 
 
 ### Jemand, der live mitschaut {#live}
 
-Wer die Server betreibt, oder Amazon, das sie hostet, könnte Anfragen live beobachten und Personen über Zeitpunkte und IP-Adressen miteinander in Verbindung bringen: Eine Nachricht kommt an, dann eine Mitteilung, dann eine Antwort oder ein „Gesehen“. Auch Telegram könnte Personen über Zeitpunkte miteinander in Verbindung bringen. Eine Kopie der gespeicherten Daten zeigt das nicht, aber mit den Schlüsseln des Servers zeigen Aufzeichnungen, die bis zu einem Tag aufbewahrt werden, manchmal ein paar Tage länger, einen Teil davon. Auch mit der Enklave wären Zeitpunkte und IP-Adressen weiterhin sichtbar.
+Wer die Server betreibt, oder Amazon, das sie hostet, könnte Anfragen live beobachten und Personen über Zeitpunkte und IP-Adressen miteinander in Verbindung bringen: Eine Nachricht kommt an, dann eine Mitteilung, dann eine Antwort oder ein „Gesehen“. Auch Telegram könnte Personen über Zeitpunkte miteinander in Verbindung bringen. Eine Kopie der gespeicherten Daten zeigt das nicht, aber mit den Schlüsseln des Servers zeigen Aufzeichnungen, die bis zu einem Tag aufbewahrt werden, manchmal ein paar Tage länger, einen Teil davon.
 
 ### Dein eigenes Gerät
 

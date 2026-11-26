@@ -41,7 +41,7 @@
 </section>
 {{ end }}
 
-{{ range $key := slice "features" "roadmap" }}
+{{ range $key := slice "features" }}
 {{ with index $p $key }}
 <section class="section" id="{{ $key }}">
   <div class="container section-grid">

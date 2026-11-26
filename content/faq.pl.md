@@ -2,7 +2,7 @@
 title: "Pytania i odpowiedzi"
 linkTitle: "Pytania"
 description: "Krótkie odpowiedzi o tym, co Incognito Chat chroni, przed czym chronić nie może i jak z niego korzystać."
-updated: "2026-11-25"
+updated: "2026-11-26"
 ---
 
 ## Prywatność
@@ -21,7 +21,7 @@ Nic z tego, co przechowuje, o tym nie mówi: wiadomości przechodzą przez losow
 
 ### Czy możecie ustalić, do którego konta w Telegramie należy link?
 
-Obecnie tak, gdybyśmy zechcieli to sprawdzić. Serwer przechowuje Telegram ID każdego konta w zamaskowanej postaci, a ten, kto ma klucze serwera, może odtworzyć z niej to ID. W przypadku większości linków ma to niewielkie znaczenie: link powstaje po to, by go opublikować lub komuś wysłać, więc ten, kto go ma, zwykle i tak wie, czyj jest. A to, że ktoś wie, czyj jest link, nie mówi mu, kto do ciebie pisze, bo wiadomości są wysyłane bez logowania. Przeniesienie serwera do enklawy, [które jest w naszych planach](/pl/#roadmap), odebrałoby tę możliwość także nam.
+Obecnie tak, gdybyśmy zechcieli to sprawdzić. Serwer przechowuje Telegram ID każdego konta w zamaskowanej postaci, a ten, kto ma klucze serwera, może odtworzyć z niej to ID. W przypadku większości linków ma to niewielkie znaczenie: link powstaje po to, by go opublikować lub komuś wysłać, więc ten, kto go ma, zwykle i tak wie, czyj jest. A to, że ktoś wie, czyj jest link, nie mówi mu, kto do ciebie pisze, bo wiadomości są wysyłane bez logowania.
 
 ### Co widzi Telegram?
 
@@ -35,7 +35,7 @@ Ten, kto kontroluje bota, decyduje, którą stronę otwiera Telegram, a Telegram
 
 ### Obserwacja na żywo {#live}
 
-Ten, kto prowadzi serwery, albo Amazon, u którego działają, mógłby obserwować żądania na żywo i powiązać ze sobą ludzi na podstawie czasu i adresu IP: nadchodzi wiadomość, potem powiadomienie, potem odpowiedź albo „Wyświetlono”. Telegram też mógłby powiązać ludzi na podstawie czasu. Kopia przechowywanych danych tego nie pokazuje, ale z kluczami serwera część z tego widać w zapisach przechowywanych do jednej doby, czasem o kilka dni dłużej. Nawet z enklawą czas i adresy IP nadal byłyby widoczne.
+Ten, kto prowadzi serwery, albo Amazon, u którego działają, mógłby obserwować żądania na żywo i powiązać ze sobą ludzi na podstawie czasu i adresu IP: nadchodzi wiadomość, potem powiadomienie, potem odpowiedź albo „Wyświetlono”. Telegram też mógłby powiązać ludzi na podstawie czasu. Kopia przechowywanych danych tego nie pokazuje, ale z kluczami serwera część z tego widać w zapisach przechowywanych do jednej doby, czasem o kilka dni dłużej.
 
 ### Twoje własne urządzenie
 

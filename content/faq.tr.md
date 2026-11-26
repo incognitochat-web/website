@@ -2,7 +2,7 @@
 title: "Sorular ve yanıtlar"
 linkTitle: "SSS"
 description: "Incognito Chat neyi korur, neyi koruyamaz ve nasıl kullanılır: kısa yanıtlar."
-updated: "2026-11-25"
+updated: "2026-11-26"
 ---
 
 ## Gizlilik
@@ -21,7 +21,7 @@ Sakladığı hiçbir şey bunu söylemez: mesajlar hesap üzerinden değil, rast
 
 ### Bir bağlantının hangi Telegram hesabına ait olduğunu anlayabilir misiniz?
 
-Şu an için evet, bakmak istersek. Sunucu her hesabın Telegram kimliğini karıştırılmış bir biçimde tutar ve sunucunun anahtarlarına sahip olan kişi kimliği bu biçimden çıkarabilir. Çoğu bağlantı için bunun pek önemi yoktur: bağlantı bir yerde paylaşılmak ya da birine gönderilmek için oluşturulur, bu yüzden onu elinde bulunduran kişi genellikle kime ait olduğunu zaten bilir. Bağlantının sahibini bilmek de size kimin yazdığını kimseye söylemez, çünkü mesajlar giriş yapılmadan gönderilir. Sunucuyu bir güvenli bölgeye taşımak ([yol haritasında](/tr/#roadmap) yer alıyor) bu imkânı bizden de alırdı.
+Şu an için evet, bakmak istersek. Sunucu her hesabın Telegram kimliğini karıştırılmış bir biçimde tutar ve sunucunun anahtarlarına sahip olan kişi kimliği bu biçimden çıkarabilir. Çoğu bağlantı için bunun pek önemi yoktur: bağlantı bir yerde paylaşılmak ya da birine gönderilmek için oluşturulur, bu yüzden onu elinde bulunduran kişi genellikle kime ait olduğunu zaten bilir. Bağlantının sahibini bilmek de size kimin yazdığını kimseye söylemez, çünkü mesajlar giriş yapılmadan gönderilir.
 
 ### Telegram neleri görür?
 
@@ -35,7 +35,7 @@ Botu kim kontrol ediyorsa, Telegram'ın hangi sayfayı açacağına o karar veri
 
 ### Canlı izleme {#live}
 
-Sunucuları işleten kişi ya da onları barındıran Amazon, istekleri gerçekleştikleri anda izleyebilir ve insanları zamanlama ve IP adresi üzerinden ilişkilendirebilir: bir mesaj gelir, ardından bir bildirim, ardından bir yanıt ya da bir “Görüldü” bilgisi. Telegram da insanları zamanlamaya bakarak ilişkilendirebilir. Saklanan verilerin bir kopyası bunu göstermez, ancak sunucunun anahtarlarıyla, bir güne kadar, bazen birkaç gün daha uzun süre tutulan kayıtlar bunun bir kısmını gösterir. Sunucu güvenli bölgeye taşınsa bile zamanlama ve IP adresleri yine görünürdü.
+Sunucuları işleten kişi ya da onları barındıran Amazon, istekleri gerçekleştikleri anda izleyebilir ve insanları zamanlama ve IP adresi üzerinden ilişkilendirebilir: bir mesaj gelir, ardından bir bildirim, ardından bir yanıt ya da bir “Görüldü” bilgisi. Telegram da insanları zamanlamaya bakarak ilişkilendirebilir. Saklanan verilerin bir kopyası bunu göstermez, ancak sunucunun anahtarlarıyla, bir güne kadar, bazen birkaç gün daha uzun süre tutulan kayıtlar bunun bir kısmını gösterir.
 
 ### Kendi cihazınız
 
