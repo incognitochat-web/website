@@ -26,14 +26,28 @@ mkdir -p "$work/bin"
 cat >"$work/bin/curl" <<'EOF'
 #!/usr/bin/env bash
 echo "$*" >"$STUB_ARGS"
-args=" $* "
+args=" $* " to=/dev/stdout
 while [ $# -gt 0 ]; do
-  case $1 in --data-binary) cp "${2#@}" "$STUB_SENT"; shift 2 ;; *) shift ;; esac
+  case $1 in
+    --data-binary) cp "${2#@}" "$STUB_SENT"; shift 2 ;;
+    -o) to=$2; shift 2 ;;
+    *) shift ;;
+  esac
 done
+: >"$to"
+# STUB_RETRY=1: a busy first try, then the answer. Written to a file (-o),
+# curl empties it before the retry; to its output, both would be there.
+if [ "${STUB_RETRY:-}" = 1 ]; then
+  echo '{"errors":[{"message":"busy"}]}' >>"$to"
+  [ "$to" = /dev/stdout ] || : >"$to"
+  cat "$STUB_ANSWER" >>"$to"
+  exit 0
+fi
 [ "${STUB_FAIL:-}" != 1 ] || { echo "stand-in: unreachable" >&2; exit 7; }
 # STUB_EXIT=22: an HTTP error. Like curl, the body is written only with
 # --fail-with-body (--fail drops it).
-if [ "${STUB_EXIT:-0}" = 0 ] || [[ $args == *" --fail-with-body "* ]]; then cat "$STUB_ANSWER"; fi
+if [ "${STUB_EXIT:-0}" = 0 ] || [[ $args == *" --fail-with-body "* ]]; then cat "$STUB_ANSWER" >"$to"; fi
+[ "${STUB_EXIT:-0}" = 0 ] || echo "curl: (22) The requested URL returned error: 400" >&2
 exit "${STUB_EXIT:-0}"
 EOF
 chmod +x "$work/bin/curl"
@@ -111,6 +125,16 @@ refused "no list" '.data.account.transactions.nodes = null'
 echo 'not json' >"$work/bad-answer.json"
 fetch "$work/bad-answer.json" "$work/bad.json" || fail "an unreadable answer failed the script"
 [ "$(jq -c . "$work/bad.json")" = '{}' ] || fail "an unreadable answer was accepted"
+# A retry after a busy first try: only the retry's answer counts.
+STUB_RETRY=1 fetch "$work/answer.json" "$work/retried.json"
+jq -e '.balance == 123456' "$work/retried.json" >/dev/null || fail "a retried answer: $(head -c 200 "$work/retried.json")"
+# An empty answer, or two in one: none.
+: >"$work/bad-answer.json"
+fetch "$work/bad-answer.json" "$work/bad.json" || fail "an empty answer failed the script"
+[ "$(jq -c . "$work/bad.json")" = '{}' ] || fail "an empty answer wasn't {}: $(cat "$work/bad.json")"
+cat "$work/answer.json" "$work/answer.json" >"$work/bad-answer.json"
+fetch "$work/bad-answer.json" "$work/bad.json" || fail "two answers in one failed the script"
+[ "$(jq -c . "$work/bad.json")" = '{}' ] || fail "two answers in one were accepted"
 # Why it couldn't, as a warning on the deploy's page.
 jq '.errors = [{message: "Field x is not known"}]' "$work/answer.json" >"$work/bad-answer.json"
 log=$(PATH="$work/bin:$PATH" STUB_ARGS=$work/args STUB_SENT=$work/sent.json STUB_ANSWER=$work/bad-answer.json "$work/site/scripts/fetch-collective.sh" "$work/bad.json")

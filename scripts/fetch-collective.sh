@@ -33,16 +33,20 @@ jq -n --arg slug "$slug" --arg since "$since" '{
 }' >"$tmp/query.json"
 
 echo '{}' >"$tmp/out.json"
-# Bounded: a slow or rate-limited API can't hold the deploy up.
+# Bounded: a slow or rate-limited API can't hold the deploy up. Written by
+# curl itself (-o), which empties the file before each retry: a failed try's
+# body can't end up in front of the next one's.
 if curl -sS --fail-with-body --connect-timeout 10 -m 30 --retry 2 --retry-all-errors --retry-max-time 60 -H 'Content-Type: application/json' \
-  --data-binary "@$tmp/query.json" https://api.opencollective.com/graphql/v2 >"$tmp/answer.json" 2>"$tmp/curl.err"; then
+  --data-binary "@$tmp/query.json" -o "$tmp/answer.json" https://api.opencollective.com/graphql/v2 2>"$tmp/curl.err"; then
   # Every part must be there and well formed, or nothing is shown: a part
   # missing would read as "no donations". Refunded donations are left out.
-  jq --arg now "$now" '
+  # Exactly one JSON document: none, or more than one, is no answer.
+  jq -s --arg now "$now" '
     def cents: type == "number" and . == floor and . > -1e12 and . < 1e12;
     def usd: type == "object" and (.valueInCents | cents) and .currency == "USD";
     def day: type == "string" and test("\\A20[0-9]{2}-[0-9]{2}-[0-9]{2}T")
       and ((.[0:10] + "T00:00:00Z" | try fromdateiso8601 catch null) as $t | $t != null and ($t | strftime("%Y-%m-%d")) == .[0:10]);
+    if length != 1 then {} else .[0] |
     (.data.account // null) as $a
     | if .errors != null or ($a | type) != "object" or $a.currency != "USD"
         or ($a.stats.balance | usd | not) or $a.stats.balance.valueInCents < 0
@@ -58,12 +62,12 @@ if curl -sS --fail-with-body --connect-timeout 10 -m 30 --retry 2 --retry-all-er
           | sort_by(.frequency, -.amount)),
         recent: ([$a.transactions.nodes[] | select(.isRefunded | not) | {date: .createdAt[0:10], amount: .amount.valueInCents}]
           | sort_by(.date, .amount) | reverse)
-      } end' "$tmp/answer.json" >"$tmp/out.json" 2>/dev/null || echo '{}' >"$tmp/out.json"
+      } end end' "$tmp/answer.json" >"$tmp/out.json" 2>/dev/null || echo '{}' >"$tmp/out.json"
 fi
 # Why, for the log: an API error is about the query, never about donors.
 # (A GraphQL error can come with an HTTP error: its body is kept.)
 if [ "$(jq -c . "$tmp/out.json")" = '{}' ]; then
-  if api=$(jq -er 'select((.errors | type) == "array") | .errors[0].message // "" | tostring | .[0:200]' "$tmp/answer.json" 2>/dev/null); then
+  if api=$(jq -ser 'if length == 1 then .[0] else {} end | select((.errors | type) == "array") | .errors[0].message // "" | tostring | .[0:200]' "$tmp/answer.json" 2>/dev/null); then
     why="the API answered with an error: $api"
   elif [ -s "$tmp/curl.err" ]; then
     why="Open Collective couldn't be reached: $(head -c 300 "$tmp/curl.err")"
