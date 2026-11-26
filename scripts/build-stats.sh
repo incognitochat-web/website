@@ -24,8 +24,9 @@ mkdir -p "$(dirname "$out")"
 
 # Plain files only. A link anywhere under stats (stats itself included)
 # could lead outside the store, so the store is refused, and only names
-# collect-stats.sh writes are read (yyyy-mm-dd.json, yyyy-mm.json): nothing
-# with a newline or a path in it.
+# collect-stats.sh writes are read (yyyy-mm-dd.json, yyyy-mm.json, and
+# yyyy-mm-from-dd.json for a month whose costs were read again only from a
+# day on): nothing with a newline or a path in it.
 if [ -e "$store/stats" ] || [ -L "$store/stats" ]; then
   # Assigned first, so a find that fails stops here (set -e).
   links=$(find "$store/stats" -type l -print -quit)
@@ -36,18 +37,23 @@ if [ -e "$store/stats" ] || [ -L "$store/stats" ]; then
 fi
 day='[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].json'
 month='[0-9][0-9][0-9][0-9]-[0-9][0-9].json'
+cut='[0-9][0-9][0-9][0-9]-[0-9][0-9]-from-[0-9][0-9].json'
 files() { find "$store/$1" -maxdepth 1 -type f -name "$2" 2>/dev/null | sort; }
 mapfile -t hourly < <(files stats/hourly "$day")
 mapfile -t production < <(files stats/costs/production "$month")
 mapfile -t dev < <(files stats/costs/dev "$month")
-if [ ${#hourly[@]} -eq 0 ] && [ ${#production[@]} -eq 0 ] && [ ${#dev[@]} -eq 0 ]; then
+mapfile -t production_cut < <(files stats/costs/production "$cut")
+mapfile -t dev_cut < <(files stats/costs/dev "$cut")
+if [ ${#hourly[@]} -eq 0 ] && [ ${#production[@]} -eq 0 ] && [ ${#dev[@]} -eq 0 ] \
+  && [ ${#production_cut[@]} -eq 0 ] && [ ${#dev_cut[@]} -eq 0 ]; then
   echo '{}' >"$out"
   echo "no statistics in $store"
   exit 0
 fi
 
 # Only the newest 13 months are shown: this one and the 12 before it.
-mapfile -t shown < <(for f in ${hourly[@]+"${hourly[@]}"} ${production[@]+"${production[@]}"} ${dev[@]+"${dev[@]}"}; do
+mapfile -t shown < <(for f in ${hourly[@]+"${hourly[@]}"} ${production[@]+"${production[@]}"} ${dev[@]+"${dev[@]}"} \
+  ${production_cut[@]+"${production_cut[@]}"} ${dev_cut[@]+"${dev_cut[@]}"}; do
   b=$(basename "$f"); echo "${b:0:7}"; done | sort -u | tail -n 13)
 within() { # files... -> those of a shown month
   local f b m
@@ -59,14 +65,27 @@ within() { # files... -> those of a shown month
 mapfile -t hourly < <(within ${hourly[@]+"${hourly[@]}"})
 mapfile -t production < <(within ${production[@]+"${production[@]}"})
 mapfile -t dev < <(within ${dev[@]+"${dev[@]}"})
+mapfile -t production_cut < <(within ${production_cut[@]+"${production_cut[@]}"})
+mapfile -t dev_cut < <(within ${dev_cut[@]+"${dev_cut[@]}"})
+
+# A month's -from- file must be one value that says what its name says (the
+# month, and the day it was read from), with no day before that one.
+for f in ${production_cut[@]+"${production_cut[@]}"} ${dev_cut[@]+"${dev_cut[@]}"}; do
+  b=$(basename "$f" .json)
+  jq -e -s --arg m "${b:0:7}" --arg from "${b:0:7}-${b:13:2}" \
+    'length == 1 and (.[0] | type == "object" and .month == $m and .from == $from and (.days | type == "object") and all(.days | keys[]; . >= $from))' \
+    "$f" >/dev/null 2>&1 || { echo "$f doesn't hold what its name says; not read" >&2; exit 1; }
+done
 
 # Every file must have the shape collect-stats.sh writes: counts that are
 # whole numbers or null, real dates, amounts that are numbers. Anything else
 # stops here (the deploy then shows no numbers) instead of breaking the page.
 jq -n -e \
   --slurpfile hourly <(cat /dev/null ${hourly[@]+"${hourly[@]}"}) \
-  --slurpfile production <(cat /dev/null ${production[@]+"${production[@]}"}) \
-  --slurpfile dev <(cat /dev/null ${dev[@]+"${dev[@]}"}) '
+  --slurpfile production <(cat /dev/null ${production[@]+"${production[@]}"} ${production_cut[@]+"${production_cut[@]}"}) \
+  --slurpfile dev <(cat /dev/null ${dev[@]+"${dev[@]}"} ${dev_cut[@]+"${dev_cut[@]}"}) \
+  --slurpfile production_cut <(cat /dev/null ${production_cut[@]+"${production_cut[@]}"}) \
+  --slurpfile dev_cut <(cat /dev/null ${dev_cut[@]+"${dev_cut[@]}"}) '
   # Years 2000 to 2099: a week before year 1000 has a 3-digit year, which
   # Hugo cannot read.
   def isdate: type == "string" and test("\\A20[0-9]{2}-[0-9]{2}-[0-9]{2}\\z")
@@ -78,12 +97,18 @@ jq -n -e \
   all($hourly[]; type == "object" and (.date | isdate) and (.accounts | counts) and (.messages | counts) and (.media_bytes | counts))
   and all($production[]; month(.month) and all(.days[]; type == "object" and all(to_entries[]; (.key | type == "string" and length <= 100) and (.value | amount))))
   and all($dev[]; month(.month) and all(.days[]; amount))
+  # A -from- file: a real day, and only one for a month.
+  and all($production_cut[], $dev_cut[]; .from | isdate)
+  and ($production_cut | map(.month) | length == (unique | length))
+  and ($dev_cut | map(.month) | length == (unique | length))
 ' >/dev/null || { echo "the statistics in $store don't have the expected shape" >&2; exit 1; }
 
 jq -n -S \
   --slurpfile hourly <(cat /dev/null ${hourly[@]+"${hourly[@]}"}) \
   --slurpfile production <(cat /dev/null ${production[@]+"${production[@]}"}) \
-  --slurpfile dev <(cat /dev/null ${dev[@]+"${dev[@]}"}) '
+  --slurpfile dev <(cat /dev/null ${dev[@]+"${dev[@]}"}) \
+  --slurpfile production_cut <(cat /dev/null ${production_cut[@]+"${production_cut[@]}"}) \
+  --slurpfile dev_cut <(cat /dev/null ${dev_cut[@]+"${dev_cut[@]}"}) '
   def sum: map(select(. != null)) | add // 0;
   def round4: . * 10000 | round / 10000;
   def hourname: strftime("%Y-%m-%dT%H");
@@ -110,9 +135,13 @@ jq -n -S \
       accounts: (map(.accounts) | sum), messages: (map(.messages) | sum), media_bytes: (map(.media_bytes) | sum)
     }}) | from_entries) as $counted
   # Costs by day: production by service, dev as one total. A day missing
-  # from a file was not read.
-  | ($production | map(.days) | add // {}) as $prod
-  | ($dev | map(.days) | add // {}) as $devdays
+  # from a file was not read. A month with a -from- file: the month file
+  # until the day it names, the -from- file from that day on.
+  | def joined($files; $cuts): ($cuts | map({key: .month, value: .from}) | from_entries) as $cut
+      | ($files | map(.days) | add // {} | with_entries(select($cut[.key[0:7]] as $c | $c == null or .key < $c)))
+        + ($cuts | map(.days) | add // {});
+  joined($production; $production_cut) as $prod
+  | joined($dev; $dev_cut) as $devdays
   # The last day anything was counted or read; a month shows its days up to it.
   | ([($known[-1].t // "" | .[0:10]), ($prod | keys | max // ""), ($devdays | keys | max // "")] | max) as $lastday
   | (([$all[].t[0:7]] + [$prod | keys[] | .[0:7]] + [$devdays | keys[] | .[0:7]]) | unique | reverse) as $months

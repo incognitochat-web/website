@@ -27,6 +27,18 @@
 # production by service, dev as one total. Cost Explorer charges $0.01 a
 # call, so the workflow reads costs once a day.
 #
+# COSTS_FROM (yyyy-mm-dd, UTC), when set, is the first day costs are read:
+# the day an AWS account moves to another AWS organization, whose Cost
+# Explorer then hides what the account cost before. Reading those days again
+# would overwrite them with nothing, so months before that day are left as
+# stored, and so is that day's month's file: the days from that day on go
+# into their own file, stats/costs/<account>/<yyyy-mm>-from-<dd>.json. So a
+# file this writes (and the workflow signs) holds only what AWS answered,
+# never anything copied from the store. When COSTS_FROM is the 1st of a
+# month, that month is read whole into its usual file. A day in the future
+# is refused; on the day itself there's nothing to read yet. When to set it:
+# .github/workflows/stats.yml.
+#
 # Files are written with sorted keys and fixed formatting, so a run that
 # reads nothing new changes nothing.
 set -euo pipefail
@@ -136,10 +148,52 @@ counts() {
 }
 
 costs() {
-  local first end month file token='' page=0
+  local first end month name file token='' page=0 from=${COSTS_FROM:-} window
   first=$(date -u -d "$(date -u +%Y-%m-01) - 1 month" +%Y-%m-01)
+  window=${first:0:7} # last month, which a run without COSTS_FROM reads from
   # Up to yesterday: End is exclusive, and today isn't over.
   end=$(date -u +%Y-%m-%d)
+  if [ -n "$from" ]; then
+    # A real date, the years the Costs page can show.
+    if [[ ! $from =~ ^20[0-9]{2}-[0-9]{2}-[0-9]{2}$ ]] || [ "$(date -u -d "$from" +%Y-%m-%d 2>/dev/null)" != "$from" ]; then
+      echo "COSTS_FROM isn't a date (yyyy-mm-dd): '$from'; nothing written" >&2
+      exit 1
+    fi
+    # Set ahead of time, it would stop the days before it from being read
+    # while they still can be.
+    if [[ $from > $end ]]; then
+      echo "COSTS_FROM ($from) is in the future: set it on the day of the move, before the move; nothing written" >&2
+      exit 1
+    fi
+    [[ $from > $first ]] && first=$from
+    if [ "$first" = "$end" ]; then
+      echo "costs ($account): from $from, nothing to read yet"
+      return 0
+    fi
+  fi
+  # The month reading starts in, when it starts after the 1st: its own file.
+  name_of() {
+    if [ -n "$from" ] && [ "$1" = "${from:0:7}" ] && [ "${from:8:2}" != 01 ]; then
+      echo "$1-from-${from:8:2}"
+    else
+      echo "$1"
+    fi
+  }
+  local other
+  # A -from- file of last month or this one other than the one COSTS_FROM
+  # names was left by a corrected date, or COSTS_FROM was unset too soon:
+  # writing would leave two files the Costs page can't choose between, or
+  # overwrite the days before the move. Refused before anything is written,
+  # or Cost Explorer asked.
+  for other in "$store/stats/costs/$account/"*-from-*.json; do
+    { [ -e "$other" ] || [ -L "$other" ]; } || continue
+    month=$(basename "$other")
+    month=${month:0:7}
+    if [[ ! $month < $window ]] && [ "$other" != "$store/stats/costs/$account/$(name_of "$month").json" ]; then
+      echo "$other is there, but COSTS_FROM is '${from:-not set}'. If that file's day is the move's, set COSTS_FROM to it; if a wrong date wrote it, delete it from the data branch (.github/workflows/stats.yml says what else). Nothing written" >&2
+      exit 1
+    fi
+  done
   local group=()
   # shellcheck disable=SC2054 # one argument with commas, as the CLI takes it
   [ "$account" = production ] && group=(--group-by Type=DIMENSION,Key=SERVICE)
@@ -158,14 +212,28 @@ costs() {
     token=$(jq -r '.NextPageToken // empty' "$tmp/page.json")
     [ -n "$token" ] || break
   done
-  # Pages can split a day's groups: put each day's back together.
-  jq '{ResultsByTime: (group_by(.TimePeriod.Start) | map({TimePeriod: .[0].TimePeriod, Estimated: (map(.Estimated) | any),
+  # Only the days asked for, whatever the answer holds (never one before
+  # COSTS_FROM, so no month before it is written). Pages can split a day's
+  # groups: put each day's back together.
+  jq --arg first "$first" --arg end "$end" '{ResultsByTime: (map(select(.TimePeriod.Start >= $first and .TimePeriod.Start < $end))
+       | group_by(.TimePeriod.Start) | map({TimePeriod: .[0].TimePeriod, Estimated: (map(.Estimated) | any),
        Total: .[0].Total, Groups: (map(.Groups // []) | add)}))}' "$tmp/results.json" >"$tmp/costs.json"
-  while read -r month; do
-    plain "stats/costs/$account/$month.json"
-    file=$store/stats/costs/$account/$month.json
+  local months
+  mapfile -t months < <(jq -r '.ResultsByTime[].TimePeriod.Start[0:7]' "$tmp/costs.json" | sort -u)
+  # Every file it writes is a plain file or none yet, checked before any is.
+  for month in ${months[@]+"${months[@]}"}; do
+    name=$(name_of "$month")
+    plain "stats/costs/$account/$name.json"
+    if [ -d "$store/stats/costs/$account/$name.json" ]; then
+      echo "$store/stats/costs/$account/$name.json is a folder; nothing written" >&2
+      exit 1
+    fi
+  done
+  for month in ${months[@]+"${months[@]}"}; do
+    name=$(name_of "$month")
+    file=$store/stats/costs/$account/$name.json
     mkdir -p "$(dirname "$file")"
-    jq -S --arg month "$month" --arg account "$account" '
+    jq -S --arg month "$month" --arg account "$account" --arg from "$from" --argjson cut "$([ "$name" = "$month" ] && echo false || echo true)" '
       def amount: tonumber | (. * 10000 | round) / 10000;
       {
         month: $month,
@@ -177,9 +245,9 @@ costs() {
             else (.Total.UnblendedCost.Amount | amount) end)
         }] | from_entries),
         estimated: [.ResultsByTime[] | select(.TimePeriod.Start | startswith($month)) | select(.Estimated) | .TimePeriod.Start]
-      }' "$tmp/costs.json" >"$tmp/month.json"
+      } + (if $cut then {from: $from} else {} end)' "$tmp/costs.json" >"$tmp/month.json"
     mv "$tmp/month.json" "$file"
-  done < <(jq -r '.ResultsByTime[].TimePeriod.Start[0:7]' "$tmp/costs.json" | sort -u)
+  done
   echo "costs ($account): from $first"
 }
 
