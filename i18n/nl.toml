@@ -71,7 +71,6 @@ st_bot_welcome_desc = "De knop in het antwoord van de bot als je hem {{ .Start }
 stats_none = "Nog geen cijfers: de eerste verschijnen na de volgende run, die elk uur draait."
 stats_see_costs = "Wat het kost om de dienst te draaien:"
 costs_none = "Nog geen kostencijfers: de eerste verschijnen na de volgende run, die elke dag draait."
-costs_see_donate = "Donaties helpen deze kosten te betalen:"
 stats_asof = "Tot"
 costs_asof = "Tot"
 stats_last24 = "De afgelopen 24 uur"

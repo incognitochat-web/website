@@ -178,22 +178,15 @@ grep -q '>5</p>' "$page" || fail "the accounts tile isn't 5"
 grep -q '>7</p>' "$page" || fail "the messages tile isn't 7"
 grep -q '2.0 MiB' "$page" || fail "the media tile isn't 2.0 MiB"
 [ "$(grep -o 'class="bar"' "$page" | wc -l)" -ge 3 ] || fail "too few bars"
-# The costs are on their own page; Stats links to it.
-cpage=$work/out/costs/index.html
+# The costs are a section of the Donate page; Stats links to it.
+cpage=$work/out/donate/index.html
 grep -q 'AWS WAF' "$cpage" || fail "no service in the legend"
 grep -q '&lt;b&gt;AWS Lambda&lt;/b&gt;' "$cpage" || fail "a service name isn't escaped"
 if grep -q '<b>AWS Lambda</b>' "$cpage"; then fail "a service name was written as HTML"; fi
 if grep -q 'legend-amount\|AWS WAF\|tile-name">Production\|tile-name">Test environment' "$page"; then fail "costs on the Stats page"; fi
-grep -q 'class="stats-more">What running the service costs: <a href="/costs/">Costs</a>' "$page" || fail "the Stats page doesn't link to Costs"
-# Costs links Donate only once Donate is published (a draft has no page).
-if grep -q '^draft: true' "$root/content/donate.md"; then
-  if grep -q 'href="/donate/"' "$cpage"; then fail "Costs links the unpublished Donate page"; fi
-else
-  grep -q 'href="/donate/"' "$cpage" || fail "Costs doesn't link the published Donate page"
-fi
-hugo --quiet --buildDrafts --source "$work/site" --destination "$work/out-drafts" >/dev/null
-grep -q 'class="stats-more">Donations help pay these costs: <a href="/donate/">Donate</a>' "$work/out-drafts/costs/index.html" \
-  || fail "Costs doesn't link Donate once it's published"
+grep -q 'class="stats-more">What running the service costs: <a href="/donate/#costs">Donations and costs</a>' "$page" || fail "the Stats page doesn't link the costs on the Donate page"
+grep -q '<h2 id="costs">' "$cpage" || fail "the Donate page has no costs section to link to"
+[ ! -e "$work/out/costs" ] || fail "a Costs page was still built"
 grep -q 'class="seg so"' "$cpage" || fail "no Other segment"
 grep -q 'Table: day by day' "$page" || fail "no day-by-day table"
 grep -q "class=\"month newest\" id=\"m-$(jq -r '.months[0].month' "$work/stats.json")\"" "$page" || fail "the newest month isn't the one shown"
@@ -215,7 +208,7 @@ grep -q '<h1>Statystyki</h1>' "$work/out/pl/stats/index.html" || fail "no Polish
 
 # Numbers are written the page's language's way: a decimal point in English,
 # a comma in Dutch (and Russian, Spanish, Portuguese, Indonesian, Turkish).
-en_costs=$(cat "$cpage") nl_costs=$(cat "$work/out/nl/costs/index.html") nl_stats=$(cat "$work/out/nl/stats/index.html")
+en_costs=$(cat "$cpage") nl_costs=$(cat "$work/out/nl/donate/index.html") nl_stats=$(cat "$work/out/nl/stats/index.html")
 # shellcheck disable=SC2016 # a literal dollar sign
 [[ $en_costs == *'>$2.00</p>'* ]] || fail "English costs aren't written as \$2.00"
 # shellcheck disable=SC2016 # a literal dollar sign
@@ -228,7 +221,7 @@ if [[ $nl_stats =~ $dot_mib || $nl_stats =~ $dot_cell ]]; then fail "a Dutch med
 # And thousands are grouped: 1,234.50 in English, 1 234,50 in Russian.
 jq '.months[0].totals.production = 1234.5' "$work/stats.json" >"$work/big.json"
 build "$work/big.json" "$work/out-big" "2026-01-01T00"
-en_big=$(cat "$work/out-big/costs/index.html") ru_big=$(cat "$work/out-big/ru/costs/index.html")
+en_big=$(cat "$work/out-big/donate/index.html") ru_big=$(cat "$work/out-big/ru/donate/index.html")
 # shellcheck disable=SC2016 # a literal dollar sign
 [[ $en_big == *'>$1,234.50</p>'* ]] || fail "English thousands aren't written as \$1,234.50"
 [[ $ru_big == *">1${nbsp}234,50${nbsp}\$</p>"* ]] || fail "Russian thousands aren't written as 1 234,50 \$, with no-break spaces"
@@ -236,7 +229,7 @@ en_big=$(cat "$work/out-big/costs/index.html") ru_big=$(cat "$work/out-big/ru/co
 # Spanish, French, Polish, Russian and Ukrainian: in tiles, tables, chart
 # tooltips, captions and legends alike.
 for l in de es fr pl ru uk; do
-  c=$(cat "$work/out/$l/costs/index.html")
+  c=$(cat "$work/out/$l/donate/index.html")
   [[ $c == *"dir=\"ltr\">2,00${nbsp}\$</p>"* ]] || fail "$l costs aren't written as 2,00 \$"
   sign_first='\$[0-9]'
   if [[ $c =~ $sign_first ]]; then fail "a $l cost is written with the sign first: ${BASH_REMATCH[0]}"; fi
@@ -245,7 +238,7 @@ done
 # and Turkish, and in Persian and Arabic (Western digits, kept left to right).
 for want in fa:'$2.00' ar:'$2.00' pt-br:'$2,00' id:'$2,00' tr:'$2,00'; do
   l=${want%%:*} amount=${want#*:}
-  tile=$(cat "$work/out/$l/costs/index.html")
+  tile=$(cat "$work/out/$l/donate/index.html")
   [[ $tile == *"dir=\"ltr\">$amount</p>"* ]] || fail "$l costs aren't written as $amount, left to right"
 done
 
@@ -307,7 +300,7 @@ grep -q '<h2>Листопад 2026</h2>' "$work/out5/uk/stats/index.html" || fai
 grep -q 'з 1 листопада, <span dir="ltr">05:00 UTC</span>' "$work/out5/uk/stats/index.html" || fail "a Ukrainian day isn't followed by its month in the genitive"
 grep -q '>48</p>' "$work/out5/stats/index.html" || fail "the month's accounts tile isn't 48"
 # Counts alone: Costs has no months.
-grep -q 'No costs yet' "$work/out5/costs/index.html" || fail "months with counts alone are on the Costs page"
+grep -q 'No costs yet' "$work/out5/donate/index.html" || fail "months with counts alone are on the Costs page"
 # A day before counting started is "—" in its chart too.
 grep -q '<title>2026-11-01: —</title>' "$work/out5/stats/index.html" || fail "a day before counting started is charted as counted"
 # The hourly charts only in the newest month; every month has the links, its own marked.
@@ -381,27 +374,27 @@ build "$work/costs.json" "$work/out4" "2026-01-01T00"
 # Costs alone: Stats has no months, Costs has them all.
 grep -q 'No numbers yet' "$work/out4/stats/index.html" || fail "months with costs alone are on the Stats page"
 # shellcheck disable=SC2016 # a literal dollar sign
-grep -qF '$1.00' "$work/out4/costs/index.html" || fail "costs alone aren't shown"
-grep -q 'tile-value" dir="ltr">—' "$work/out4/costs/index.html" || fail "an unread test environment isn't a dash"
-grep -q 'href="#c-2026-01"' "$work/out4/costs/index.html" || fail "no link to an earlier month"
+grep -qF '$1.00' "$work/out4/donate/index.html" || fail "costs alone aren't shown"
+grep -q 'tile-value" dir="ltr">—' "$work/out4/donate/index.html" || fail "an unread test environment isn't a dash"
+grep -q 'href="#c-2026-01"' "$work/out4/donate/index.html" || fail "no link to an earlier month"
 # (The section is read first: grep -q in a pipe can stop sed early, and pipefail would fail.)
-dec=$(sed -n '/id="c-2025-12"/,/<\/section>/p' "$work/out4/costs/index.html")
+dec=$(sed -n '/id="c-2025-12"/,/<\/section>/p' "$work/out4/donate/index.html")
 # shellcheck disable=SC2016 # literal dollar signs
 grep -qF '>$0.00</p><p class="tile-name">Production' <<<"$dec" || fail "a month that cost nothing does not show \$0.00"
 # shellcheck disable=SC2016 # a literal dollar sign
-grep -qF 'legend-amount">$1.00<' "$work/out4/costs/index.html" || fail "the legend does not give a service's month total"
-grep -q 'class="month newest" id="c-2026-02"' "$work/out4/costs/index.html" || fail "the newest month isn't shown first"
-grep -q 'datetime="2026-02-01"' "$work/out4/costs/index.html" || fail "Costs isn't 'up to' the newest day production's costs were read"
+grep -qF 'legend-amount">$1.00<' "$work/out4/donate/index.html" || fail "the legend does not give a service's month total"
+grep -q 'class="month newest" id="c-2026-02"' "$work/out4/donate/index.html" || fail "the newest month isn't shown first"
+grep -q 'datetime="2026-02-01"' "$work/out4/donate/index.html" || fail "Costs isn't 'up to' the newest day production's costs were read"
 # The tables give the day of the month (the month is the heading above),
 # the full date machine-readable.
-grep -q '<td><time datetime="2026-01-31">31</time></td>' "$work/out4/costs/index.html" || fail "the Costs table's days aren't the day of the month"
+grep -q '<td><time datetime="2026-01-31">31</time></td>' "$work/out4/donate/index.html" || fail "the Costs table's days aren't the day of the month"
 # The 10th, 20th and 30th keep their zero.
 tens=$work/tens
 mkdir -p "$tens/stats/costs/production"
 echo '{"month":"2026-03","days":{"2026-03-10":{"A":1},"2026-03-20":{"A":1},"2026-03-30":{"A":1}}}' >"$tens/stats/costs/production/2026-03.json"
 "$root/scripts/build-stats.sh" "$tens" "$work/tens.json" >/dev/null
 build "$work/tens.json" "$work/out12" "2026-01-01T00"
-tens_page=$(cat "$work/out12/costs/index.html")
+tens_page=$(cat "$work/out12/donate/index.html")
 for d in 10 20 30; do
   [[ $tens_page == *"<td><time datetime=\"2026-03-$d\">$d</time></td>"* ]] || fail "the Costs table's $d isn't $d"
 done
@@ -414,10 +407,10 @@ mkdir -p "$havana/stats/hourly"
 jq -n '{date: "2026-03-08", accounts: [range(24) | 1], messages: [range(24) | 0], media_bytes: [range(24) | 0]}' >"$havana/stats/hourly/2026-03-08.json"
 "$root/scripts/build-stats.sh" "$havana" "$work/havana.json" >/dev/null
 HUGO_TIMEZONE=America/Havana build "$work/havana.json" "$work/out13" "2026-01-01T00"
-grep -q '<td><time datetime="2026-03-08">8</time></td>' "$work/out13/costs/index.html" || fail "a day shifts with Hugo's time zone"
+grep -q '<td><time datetime="2026-03-08">8</time></td>' "$work/out13/donate/index.html" || fail "a day shifts with Hugo's time zone"
 grep -q '<td><time datetime="2026-03-08">8</time>' "$work/out13/stats/index.html" || fail "a Stats day shifts with Hugo's time zone"
 # A month with the test environment's costs only is on Costs, production "—".
-dev6=$(sed -n '/id="c-2025-06"/,/<\/section>/p' "$work/out4/costs/index.html")
+dev6=$(sed -n '/id="c-2025-06"/,/<\/section>/p' "$work/out4/donate/index.html")
 grep -qF 'tile-value" dir="ltr">—</p><p class="tile-name">Production' <<<"$dev6" || fail "a month with test-environment costs only isn't on Costs"
 
 # Counts in one month, costs in another: each page lists only its own.
@@ -429,8 +422,8 @@ echo '{"month":"2026-10","days":{"2026-10-31":{"AWS Lambda":1}}}' >"$mixed/stats
 build "$work/mixed.json" "$work/out10" "2026-01-01T00"
 grep -q 'id="m-2026-11"' "$work/out10/stats/index.html" || fail "a month with counts isn't on Stats"
 if grep -q 'id="m-2026-10"' "$work/out10/stats/index.html"; then fail "a month with costs alone is on Stats"; fi
-grep -q 'id="c-2026-10"' "$work/out10/costs/index.html" || fail "a month with costs isn't on Costs"
-if grep -q 'id="c-2026-11"' "$work/out10/costs/index.html"; then fail "a month with counts alone is on Costs"; fi
+grep -q 'id="c-2026-10"' "$work/out10/donate/index.html" || fail "a month with costs isn't on Costs"
+if grep -q 'id="c-2026-11"' "$work/out10/donate/index.html"; then fail "a month with counts alone is on Costs"; fi
 
 # A month with six services: the four biggest by name, the rest as Other,
 # each with its month total in the legend, in that order.
@@ -449,12 +442,12 @@ echo '{"month":"2026-04","days":{"2026-04-01":{"A":1,"B":0}}}' >"$zero/stats/cos
 "$root/scripts/build-stats.sh" "$zero" "$work/zero.json" >/dev/null
 build "$work/zero.json" "$work/out9" "2026-01-01T00"
 # shellcheck disable=SC2016 # a literal dollar sign
-grep -qF '</span>B <span class="legend-amount">$0.00<' "$work/out9/costs/index.html" || fail "a service that cost nothing has no \$0.00 in the legend"
-legend=$(grep -o '</span>[A-Za-z]* <span class="legend-amount">[^<]*' "$work/out8/costs/index.html" | sed 's/<[^>]*>//g' | tr '\n' ',')
+grep -qF '</span>B <span class="legend-amount">$0.00<' "$work/out9/donate/index.html" || fail "a service that cost nothing has no \$0.00 in the legend"
+legend=$(grep -o '</span>[A-Za-z]* <span class="legend-amount">[^<]*' "$work/out8/donate/index.html" | sed 's/<[^>]*>//g' | tr '\n' ',')
 # shellcheck disable=SC2016 # literal dollar signs
 [ "$legend" = 'A $6.00,B $4.00,C $3.00,D $2.00,Other $2.00,' ] || fail "the legend's services and totals: $legend"
 # The sign after the amount in the legend and the chart's tooltips too.
-fr8=$(cat "$work/out8/fr/costs/index.html")
+fr8=$(cat "$work/out8/fr/donate/index.html")
 [[ $fr8 == *"</span>A <span class=\"legend-amount\">6,00${nbsp}\$<"* ]] || fail "the French legend isn't written as 6,00 \$"
 [[ $fr8 == *"<title>2026-04-01: 15,50${nbsp}\$"* ]] || fail "the French chart's tooltip isn't written as 15,50 \$"
 
@@ -476,6 +469,6 @@ jq -e '(.months | length) == 13 and .months[0].month == "2026-03" and .months[-1
 echo '{}' >"$work/empty.json"
 build "$work/empty.json" "$work/out3" ""
 grep -q 'No numbers yet' "$work/out3/stats/index.html" || fail "an empty store isn't said so"
-grep -q 'No costs yet' "$work/out3/costs/index.html" || fail "an empty store isn't said so on Costs"
+grep -q 'No costs yet' "$work/out3/donate/index.html" || fail "an empty store isn't said so on Costs"
 
 echo "ok: statistics pipeline"

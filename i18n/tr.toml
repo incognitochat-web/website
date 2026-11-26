@@ -71,7 +71,6 @@ st_bot_welcome_desc = "Bota {{ .Start }} komutunu gönderdiğinizde botun verdi�
 stats_none = "Henüz sayı yok: ilkleri bir sonraki saatlik çalıştırmayla gelecek."
 stats_see_costs = "Hizmeti çalıştırmanın maliyeti:"
 costs_none = "Henüz maliyet rakamı yok: ilkleri bir sonraki günlük çalıştırmayla gelecek."
-costs_see_donate = "Bağışlar bu maliyetlerin karşılanmasına yardımcı oluyor:"
 stats_asof = "Şu saate kadar:"
 costs_asof = "Şu tarihe kadar:"
 stats_last24 = "Son 24 saat"

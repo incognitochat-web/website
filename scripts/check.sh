@@ -61,17 +61,18 @@ for lang in others:
     if theirs != english:
         fail(f"i18n/{lang}.toml's keys differ from i18n/en.toml's: missing {sorted(english - theirs)}, extra {sorted(theirs - english)}")
 
-# The Status page's rows go into the page as HTML (status.html): no markup in
-# them. And the bot's rows and group line take its handle, link, ID, /start
+# The Status page's rows and the Donate page's amounts go into the page as
+# HTML (status.html, collective.html): no markup in them. And the bot's rows and group line take its handle, link, ID, /start
 # and the app's address as placeholders the page keeps left to right, never
 # typed in.
 needs = {"st_group_bot_desc": ["{{ .Address }}"], "st_bot_bot_desc": ["{{ .Handle }}", "{{ .ID }}"], "st_bot_main_desc": ["{{ .Link }}"],
-         "st_bot_welcome": ["{{ .Start }}"], "st_bot_welcome_desc": ["{{ .Start }}"]}
+         "st_bot_welcome": ["{{ .Start }}"], "st_bot_welcome_desc": ["{{ .Start }}"],
+         "oc_per_month": ["{{ .Amount }}"], "oc_per_year": ["{{ .Amount }}"]}
 for lang in ["en", *others]:
     strings = toml(pathlib.Path(f"i18n/{lang}.toml"))
     for key, value in strings.items():
-        if (key.startswith("st_") or key == "newTab") and any(c in str(value) for c in "<>&"):
-            fail(f"i18n/{lang}.toml: {key} has <, > or &, which the Status page would read as HTML")
+        if (key.startswith(("st_", "oc_")) or key == "newTab") and any(c in str(value) for c in "<>&"):
+            fail(f"i18n/{lang}.toml: {key} has <, > or &, which the page would read as HTML")
         if (key.startswith("st_bot_") or key == "st_group_bot_desc") and any(t in str(value) for t in ("/start", "@", "t.me/", "https://", "github.io")):
             fail(f"i18n/{lang}.toml: {key} types the bot's handle, link, /start or the app's address in; use the placeholders (kept left to right)")
     for key, placeholders in needs.items():

@@ -1,0 +1,54 @@
+{{- /* What the Donate page shows from Open Collective, from
+     data/collective.json (written at deploy time by
+     scripts/fetch-collective.sh): amounts, dates and how often, never who.
+     One part per call, so the page's own text goes around them:
+       {{< collective "balance" >}}     tiles: balance, regular supporters,
+                                        and what they give a month (a year)
+       {{< collective "supporters" >}}  each regular donation's amount
+       {{< collective "recent" >}}      the last 30 days' donations
+     Without the data, each part says it couldn't be loaded. */ -}}
+{{- $c := hugo.Data.collective | default dict -}}
+{{- $part := .Get 0 -}}
+{{- if not (in (slice "balance" "supporters" "recent") $part) }}{{ errorf "collective.html: unknown part %q" $part }}{{ end -}}
+{{- if not $c.as_of }}
+<p class="stats-empty">{{ i18n "oc_unavailable" }}</p>
+{{- else if eq $part "balance" }}
+{{- $month := 0 }}{{ $year := 0 }}{{ $yearly := false }}
+{{- range $c.supporters }}{{ if eq .frequency "monthly" }}{{ $month = add $month .amount }}{{ else }}{{ $year = add $year .amount }}{{ $yearly = true }}{{ end }}{{ end }}
+<div class="tiles">
+  <div class="tile"><p class="tile-value" dir="ltr">{{ partial "money.html" (div (float $c.balance) 100) }}</p><p class="tile-name">{{ i18n "oc_balance" }}</p></div>
+  <div class="tile"><p class="tile-value">{{ lang.FormatNumber 0 (len $c.supporters) }}</p><p class="tile-name">{{ i18n "oc_supporters" }}</p></div>
+  <div class="tile"><p class="tile-value" dir="ltr">{{ partial "money.html" (div (float $month) 100) }}</p><p class="tile-name">{{ i18n "oc_monthly" }}</p></div>
+  {{- if $yearly }}
+  <div class="tile"><p class="tile-value" dir="ltr">{{ partial "money.html" (div (float $year) 100) }}</p><p class="tile-name">{{ i18n "oc_yearly" }}</p></div>
+  {{- end }}
+</div>
+{{- $t := time.AsTime $c.as_of }}
+<p class="stats-asof">{{ i18n "oc_asof" }} <time datetime="{{ $c.as_of }}" dir="ltr">{{ $t.UTC.Format "2006-01-02 15:04" }} UTC</time></p>
+{{- else if eq $part "supporters" }}
+{{- with $c.supporters }}
+<ul class="oc-amounts">
+  {{- range . }}
+  {{- $m := printf `<span dir="ltr">%s</span>` (partial "money.html" (div (float .amount) 100)) }}
+  <li>{{ i18n (cond (eq .frequency "monthly") "oc_per_month" "oc_per_year") (dict "Amount" $m) | safeHTML }}</li>
+  {{- end }}
+</ul>
+{{- else }}
+<p class="stats-empty">{{ i18n "oc_supporters_none" }}</p>
+{{- end }}
+{{- else }}
+{{- with $c.recent }}
+<div class="table-scroll" role="region" tabindex="0" aria-label="{{ i18n "oc_recent" }}">
+<table class="oc-recent">
+  <thead><tr><th>{{ i18n "oc_date" }}</th><th>{{ i18n "oc_amount" }}</th></tr></thead>
+  <tbody>
+    {{- range . }}
+    <tr><td><time datetime="{{ .date }}">{{ time.Format ":date_medium" (time.AsTime (printf "%sT12:00:00Z" .date)) }}</time></td><td dir="ltr">{{ partial "money.html" (div (float .amount) 100) }}</td></tr>
+    {{- end }}
+  </tbody>
+</table>
+</div>
+{{- else }}
+<p class="stats-empty">{{ i18n "oc_recent_none" }}</p>
+{{- end }}
+{{- end -}}

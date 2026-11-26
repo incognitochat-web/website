@@ -1,7 +1,7 @@
 # The Stats and Costs pages: what's counted, and where the numbers come from
 
 How the numbers on [incognitochat.me/stats](https://incognitochat.me/stats/)
-(usage) and [incognitochat.me/costs](https://incognitochat.me/costs/) are
+(usage) and [incognitochat.me/donate](https://incognitochat.me/donate/#costs) are
 counted and collected, and how to check them. How the pipeline is built
 is in the [README](../README.md#statistics).
 

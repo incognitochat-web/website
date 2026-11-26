@@ -71,7 +71,6 @@ st_bot_welcome_desc = "O botão na resposta do bot quando você envia {{ .Start 
 stats_none = "Ainda não há números: os primeiros chegam com a próxima execução de hora em hora."
 stats_see_costs = "Quanto custa manter o serviço no ar:"
 costs_none = "Ainda não há números de custos: os primeiros chegam com a próxima execução diária."
-costs_see_donate = "As doações ajudam a pagar esses custos:"
 stats_asof = "Até"
 costs_asof = "Até"
 stats_last24 = "As últimas 24 horas"

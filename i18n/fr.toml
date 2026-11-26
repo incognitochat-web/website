@@ -71,7 +71,6 @@ st_bot_welcome_desc = "Le bouton dans la réponse du bot quand vous lui envoyez 
 stats_none = "Pas encore de chiffres : les premiers arriveront avec le prochain relevé horaire."
 stats_see_costs = "Ce que coûte le fonctionnement du service :"
 costs_none = "Pas encore de coûts : les premiers arriveront avec le prochain relevé quotidien."
-costs_see_donate = "Les dons aident à payer ces coûts :"
 stats_asof = "Jusqu’au"
 costs_asof = "Jusqu’au"
 stats_last24 = "Les 24 dernières heures"
