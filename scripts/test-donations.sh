@@ -34,6 +34,8 @@ while [ $# -gt 0 ]; do
     *) shift ;;
   esac
 done
+# Unreachable: like curl, a line for each try, and no file at all.
+[ "${STUB_FAIL:-}" != 1 ] || { printf 'stand-in: try 1\nstand-in: try 2\nstand-in: unreachable\n' >&2; exit 7; }
 : >"$to"
 # STUB_RETRY=1: a busy first try, then the answer. Written to a file (-o),
 # curl empties it before the retry; to its output, both would be there.
@@ -43,7 +45,6 @@ if [ "${STUB_RETRY:-}" = 1 ]; then
   cat "$STUB_ANSWER" >>"$to"
   exit 0
 fi
-[ "${STUB_FAIL:-}" != 1 ] || { echo "stand-in: unreachable" >&2; exit 7; }
 # STUB_EXIT=22: an HTTP error. Like curl, the body is written only with
 # --fail-with-body (--fail drops it).
 if [ "${STUB_EXIT:-0}" = 0 ] || [[ $args == *" --fail-with-body "* ]]; then cat "$STUB_ANSWER" >"$to"; fi
@@ -86,7 +87,10 @@ q=$(jq -r .query "$work/sent.json")
 want='query($slug: String!, $since: DateTime!) { account(slug: $slug) { currency stats { balance { valueInCents currency } } orders(filter: INCOMING, status: [ACTIVE], frequency: [MONTHLY, YEARLY], limit: 1000) { totalCount nodes { frequency amount { valueInCents currency } } } transactions(type: CREDIT, kind: [CONTRIBUTION], dateFrom: $since, limit: 1000) { totalCount nodes { createdAt isRefunded amount { valueInCents currency } } } } }'
 [ "$(tr -s ' \n' ' ' <<<"$q" | sed 's/ $//')" = "$want" ] || fail "the query isn't the reviewed one: $q"
 # Bounded, so a slow or rate-limited API can't hold up the deploy.
-[[ $(cat "$work/args") == *"--retry-max-time 60"* && $(cat "$work/args") == *"--connect-timeout 10"* ]] || fail "the request isn't bounded: $(cat "$work/args")"
+# Retried, but bounded, so a slow or rate-limited API can't hold up the deploy.
+for flag in "--retry 2" "--retry-all-errors" "--retry-max-time 60" "--connect-timeout 10" "-m 30"; do
+  [[ " $(cat "$work/args") " == *" $flag "* ]] || fail "the request lacks $flag: $(cat "$work/args")"
+done
 
 # What it keeps: the balance, each regular donation's amount and how often
 # (biggest first, monthly ones first), each donation's day and amount

@@ -70,7 +70,8 @@ if [ "$(jq -c . "$tmp/out.json")" = '{}' ]; then
   if api=$(jq -ser 'if length == 1 then .[0] else {} end | select((.errors | type) == "array") | .errors[0].message // "" | tostring | .[0:200]' "$tmp/answer.json" 2>/dev/null); then
     why="the API answered with an error: $api"
   elif [ -s "$tmp/curl.err" ]; then
-    why="Open Collective couldn't be reached: $(head -c 300 "$tmp/curl.err")"
+    # curl writes a line per failed try: the last says most.
+    why="Open Collective couldn't be reached: $(tail -n 1 "$tmp/curl.err" | head -c 300)"
   else
     why="the answer had an unexpected shape"
   fi
