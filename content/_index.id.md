@@ -48,7 +48,7 @@ roadmap:
     - title: "Server yang membuktikan kode yang dijalankannya"
       text: "Kami berencana memindahkan server ke enclave teratestasi: bagian mesin yang tersegel, yang kodenya bisa diperiksa siapa saja. Dengan begitu, Anda tidak perlu lagi percaya begitu saja pada kata-kata kami tentang apa yang dilakukan server, dan bahkan kami pun tidak akan bisa mengetahui akun Telegram mana yang memiliki sebuah tautan."
     - title: "Angka yang tidak bisa dipalsukan siapa pun"
-      text: "[Halaman statistik](stats/) menampilkan jumlah akun yang dibuat, pesan yang dikirim, dan volume media per jam, sedangkan [halaman biaya](costs/) menampilkan berapa biaya menjalankan layanan ini; semuanya dipublikasikan secara otomatis dan ditandatangani. Setelah enclave aktif, enclave itulah yang akan menghitung dan menandatangani angka-angka ini sendiri, sehingga tidak ada yang bisa memalsukannya, bahkan kami sekalipun."
+      text: "[Halaman statistik](stats/) menampilkan jumlah akun yang dibuat, pesan yang dikirim, dan volume media per jam, sedangkan [halaman Donasi dan biaya](donate/#costs) menampilkan berapa biaya menjalankan layanan ini; semuanya dipublikasikan secara otomatis dan ditandatangani. Setelah enclave aktif, enclave itulah yang akan menghitung dan menandatangani angka-angka ini sendiri, sehingga tidak ada yang bisa memalsukannya, bahkan kami sekalipun."
 
 verify:
   title: "Periksa sendiri"

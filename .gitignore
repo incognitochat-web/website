@@ -7,4 +7,7 @@ data/appcheck.json
 data/botcheck.json
 # Written at deploy time by scripts/build-stats.sh, from the data branch.
 data/stats.json
+# Written at deploy time by scripts/fetch-collective.sh (never committed: no
+# copy outlives what Open Collective shows).
+data/collective.json
 .stats-store/

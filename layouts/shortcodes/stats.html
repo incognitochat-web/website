@@ -5,7 +5,7 @@
      metric counts from params.statsCountedFrom: earlier days show "—", and
      a month or day it started in is marked "*". The newest month also shows
      the last 24 hours and the last 7 days hour by hour. Only months with
-     counts; the costs are on the Costs page (costs.html). */ -}}
+     counts; the costs are on the Donate page (costs.html). */ -}}
 {{- $s := hugo.Data.stats | default dict -}}
 {{- $from := site.Params.statsCountedFrom | default dict -}}
 {{- $starts := dict "accounts" (index $from "accounts" | default "") "messages" (index $from "messages" | default "") "media_bytes" (index $from "media" | default "") -}}
@@ -123,6 +123,6 @@
 </div>
 {{- end }}
 
-{{- with site.GetPage "costs" }}
-<p class="stats-more">{{ i18n "stats_see_costs" }} <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></p>
+{{- with site.GetPage "donate" }}
+<p class="stats-more">{{ i18n "stats_see_costs" }} <a href="{{ .RelPermalink }}#costs">{{ .Title }}</a></p>
 {{- end }}

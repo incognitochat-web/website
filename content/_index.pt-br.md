@@ -48,7 +48,7 @@ roadmap:
     - title: "Um servidor que prova o que executa"
       text: "Planejamos levar o servidor para um enclave atestado: uma parte isolada da máquina cujo código qualquer pessoa pode verificar. Assim, você não precisaria acreditar na nossa palavra sobre o que o servidor faz, e nem nós conseguiríamos saber qual conta do Telegram é dona de um link."
     - title: "Números que ninguém consegue falsificar"
-      text: "A [página de estatísticas](stats/) mostra, hora a hora, as contas criadas, as mensagens enviadas e o volume de mídia, e a [página de custos](costs/), quanto custa manter o serviço, tudo publicado automaticamente e assinado. Quando o enclave estiver no ar, ele mesmo vai contar e assinar esses números, então ninguém vai conseguir falsificá-los, nem nós."
+      text: "A [página de estatísticas](stats/) mostra, hora a hora, as contas criadas, as mensagens enviadas e o volume de mídia, e a [página de doações e custos](donate/#costs), quanto custa manter o serviço, tudo publicado automaticamente e assinado. Quando o enclave estiver no ar, ele mesmo vai contar e assinar esses números, então ninguém vai conseguir falsificá-los, nem nós."
 
 verify:
   title: "Verifique você mesmo"

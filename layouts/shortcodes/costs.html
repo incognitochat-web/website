@@ -1,5 +1,6 @@
-{{- /* What running the service costs, from data/stats.json (written at
-     deploy time by scripts/build-stats.sh from the data branch): one
+{{- /* What running the service costs, a section of the Donate page, from
+     data/stats.json (written at deploy time by scripts/build-stats.sh from
+     the data branch): one
      section per month with costs read, newest first, picked by the links
      above them with no script (the newest shows by default; #c-yyyy-mm
      shows another, site.css). Production by day and service, the test
@@ -22,14 +23,14 @@
 {{- range $i, $m := $months }}
 <section class="month{{ if eq $i 0 }} newest{{ end }}" id="c-{{ $m.month }}">
 {{ partial "month-nav.html" (dict "months" $months "current" $m.month "prefix" "c") }}
-<h2>{{ partial "month-name.html" $m.month }}</h2>
+<h3>{{ partial "month-name.html" $m.month }}</h3>
 <div class="tiles">
   <div class="tile"><p class="tile-value" dir="ltr">{{ if ne $m.totals.production nil }}{{ partial "money.html" $m.totals.production }}{{ else }}—{{ end }}</p><p class="tile-name">{{ i18n "stats_cost_prod" }}</p></div>
   <div class="tile"><p class="tile-value" dir="ltr">{{ if ne $m.totals.dev nil }}{{ partial "money.html" $m.totals.dev }}{{ else }}—{{ end }}</p><p class="tile-name">{{ i18n "stats_cost_dev" }}</p></div>
 </div>
 
 {{- if ne $m.totals.production nil }}
-<h3>{{ i18n "stats_costs_chart" }}</h3>
+<h4>{{ i18n "stats_costs_chart" }}</h4>
 {{ partial "cost-bars.html" $m }}
 {{- end }}
 
@@ -55,10 +56,4 @@
 </section>
 {{- end }}
 </div>
-{{- end }}
-
-{{- /* A link to the Donate page (if it's ever made a draft again, Hugo
-     skips it and this link goes with it). */}}
-{{- with site.GetPage "donate" }}
-<p class="stats-more">{{ i18n "costs_see_donate" }} <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></p>
 {{- end }}

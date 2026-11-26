@@ -57,6 +57,9 @@ jobs:
       - name: Test the Status page
         run: scripts/test-status.sh
 
+      - name: Test the Donate page
+        run: scripts/test-donations.sh
+
       - name: Fetch the latest app checks
         env:
           GH_TOKEN: ${{ github.token }}
@@ -66,6 +69,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: scripts/fetch-bot-checks.sh data/botcheck.json
+
+      # Amounts, dates and how often, from Open Collective's public API: no
+      # token, and nothing about who gave.
+      - name: Fetch the donations
+        run: scripts/fetch-collective.sh data/collective.json
 
       # The statistics the stats workflow keeps in the data branch. Until
       # that branch exists, the Stats page says there are no numbers yet.

@@ -75,7 +75,7 @@ Di server: pesan terenkripsi sampai perangkat Anda menerimanya, lampiran sampai 
 
 ### Apakah gratis? Siapa yang membiayainya?
 
-Gratis, tanpa iklan dan tanpa pelacak. Kami yang membayar biaya untuk menjalankannya (lihat [Biaya](/id/costs/)), dan [donasi](/id/donate/) ikut membantu. Incognito Chat adalah perangkat lunak bebas dengan lisensi AGPL yang dibangun secara terbuka: [kodenya](https://github.com/{{< param "codeRepo" >}}) dan [situs ini](https://github.com/{{< param "siteRepo" >}}) ada di GitHub.
+Gratis, tanpa iklan dan tanpa pelacak. Kami yang membayar biaya untuk menjalankannya (lihat [Biaya](/id/donate/#costs)), dan [donasi](/id/donate/) ikut membantu. Incognito Chat adalah perangkat lunak bebas dengan lisensi AGPL yang dibangun secara terbuka: [kodenya](https://github.com/{{< param "codeRepo" >}}) dan [situs ini](https://github.com/{{< param "siteRepo" >}}) ada di GitHub.
 
 ### Bagaimana saya bisa memeriksa semua ini?
 
