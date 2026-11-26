@@ -86,7 +86,6 @@ q=$(jq -r .query "$work/sent.json")
 # often and whether refunded. A change to it is a change to this test.
 want='query($slug: String!, $since: DateTime!) { account(slug: $slug) { currency stats { balance { valueInCents currency } } orders(filter: INCOMING, status: [ACTIVE], frequency: [MONTHLY, YEARLY], limit: 1000) { totalCount nodes { frequency amount { valueInCents currency } } } transactions(type: CREDIT, kind: [CONTRIBUTION], dateFrom: $since, limit: 1000) { totalCount nodes { createdAt isRefunded amount { valueInCents currency } } } } }'
 [ "$(tr -s ' \n' ' ' <<<"$q" | sed 's/ $//')" = "$want" ] || fail "the query isn't the reviewed one: $q"
-# Bounded, so a slow or rate-limited API can't hold up the deploy.
 # Retried, but bounded, so a slow or rate-limited API can't hold up the deploy.
 for flag in "--retry 2" "--retry-all-errors" "--retry-max-time 60" "--connect-timeout 10" "-m 30"; do
   [[ " $(cat "$work/args") " == *" $flag "* ]] || fail "the request lacks $flag: $(cat "$work/args")"
