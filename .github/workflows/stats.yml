@@ -20,13 +20,14 @@
 #   STATS_COSTS_FROM_PRODUCTION or STATS_COSTS_FROM_DEV, a variable of the
 #   stats environment, to the move's date (UTC). The day of the move then
 #   holds only its hours after the move.
-# - Leave it set. While a month in the last two has a -from- file that the
+# - Leave it set. While last month or this month has a -from- file the
 #   variable doesn't name (a corrected date, or the variable removed), cost
 #   runs refuse to write.
-# - A wrong date: correct it, delete from the data branch the
-#   <yyyy-mm>-from-<dd>.json file it wrote, and restore from the branch's
-#   history any month file a run rewrote. Same for a run that slipped through
-#   before the variable was set.
+# - A wrong date: set the right one, delete from the data branch the
+#   <yyyy-mm>-from-<dd>.json file the wrong one wrote, then restore from the
+#   branch's history any month file its runs rewrote.
+# - A cost run after the move, before the variable was set: set it, then
+#   restore from the branch's history the month files that run rewrote.
 #
 # Anyone can check a file of the data branch:
 #

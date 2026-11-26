@@ -148,8 +148,9 @@ counts() {
 }
 
 costs() {
-  local first end month name file token='' page=0 from=${COSTS_FROM:-}
+  local first end month name file token='' page=0 from=${COSTS_FROM:-} window
   first=$(date -u -d "$(date -u +%Y-%m-01) - 1 month" +%Y-%m-01)
+  window=${first:0:7} # last month, which a run without COSTS_FROM reads from
   # Up to yesterday: End is exclusive, and today isn't over.
   end=$(date -u +%Y-%m-%d)
   if [ -n "$from" ]; then
@@ -203,22 +204,31 @@ costs() {
     fi
   }
   local months other
-  mapfile -t months < <(jq -r '.ResultsByTime[].TimePeriod.Start[0:7]' "$tmp/costs.json" | sort -u)
-  # A month with a -from- file other than the one COSTS_FROM names (a
-  # corrected date, or COSTS_FROM unset too soon): writing it would leave two
-  # files the Costs page can't choose between, or overwrite the days before
-  # the move. Refused before anything is written, until it's sorted out.
-  for month in ${months[@]+"${months[@]}"}; do
-    for other in "$store/stats/costs/$account/$month"-from-*.json; do
-      if { [ -e "$other" ] || [ -L "$other" ]; } && [ "$other" != "$store/stats/costs/$account/$(name_of "$month").json" ]; then
-        echo "$other is there, but COSTS_FROM is '${from:-not set}': correct COSTS_FROM, or delete that file from the data branch; nothing written" >&2
-        exit 1
-      fi
-    done
+  # A -from- file of last month or this one other than the one COSTS_FROM
+  # names was left by a corrected date, or COSTS_FROM was unset too soon:
+  # writing would leave two files the Costs page can't choose between, or
+  # overwrite the days before the move. Refused before anything is written.
+  for other in "$store/stats/costs/$account/"*-from-*.json; do
+    { [ -e "$other" ] || [ -L "$other" ]; } || continue
+    month=$(basename "$other")
+    month=${month:0:7}
+    if [[ ! $month < $window ]] && [ "$other" != "$store/stats/costs/$account/$(name_of "$month").json" ]; then
+      echo "$other is there, but COSTS_FROM is '${from:-not set}'. If that file's day is the move's, set COSTS_FROM to it; if a wrong date wrote it, delete it from the data branch (.github/workflows/stats.yml says what else). Nothing written" >&2
+      exit 1
+    fi
   done
+  mapfile -t months < <(jq -r '.ResultsByTime[].TimePeriod.Start[0:7]' "$tmp/costs.json" | sort -u)
+  # Every file it writes is a plain file or none yet, checked before any is.
   for month in ${months[@]+"${months[@]}"}; do
     name=$(name_of "$month")
     plain "stats/costs/$account/$name.json"
+    if [ -d "$store/stats/costs/$account/$name.json" ]; then
+      echo "$store/stats/costs/$account/$name.json is a folder; nothing written" >&2
+      exit 1
+    fi
+  done
+  for month in ${months[@]+"${months[@]}"}; do
+    name=$(name_of "$month")
     file=$store/stats/costs/$account/$name.json
     mkdir -p "$(dirname "$file")"
     jq -S --arg month "$month" --arg account "$account" --arg from "$from" --argjson cut "$([ "$name" = "$month" ] && echo false || echo true)" '
