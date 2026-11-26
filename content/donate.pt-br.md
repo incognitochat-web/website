@@ -27,7 +27,7 @@ Doações mensais e anuais que continuam ativas, com o valor de cada uma:
 
 ## Quanto custa {#costs}
 
-O que a Amazon Web Services cobra por dia para manter o serviço no ar, antes de descontar qualquer crédito: a produção por serviço, e o ambiente de teste num só total. Os números deste mês são estimativas da AWS, e a AWS ainda revisa os últimos dias por um tempo.
+O que a Amazon Web Services cobra por dia para manter o serviço no ar, antes de descontar qualquer crédito promocional da AWS: a produção por serviço, e o ambiente de teste num só total. Os números deste mês são estimativas da AWS, e a AWS ainda revisa os últimos dias por um tempo.
 
 {{< costs >}}
 

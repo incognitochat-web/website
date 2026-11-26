@@ -34,7 +34,7 @@ jq -n --arg slug "$slug" --arg since "$since" '{
 
 echo '{}' >"$tmp/out.json"
 # Bounded: a slow or rate-limited API can't hold the deploy up.
-if curl -sS --fail --connect-timeout 10 -m 30 --retry 2 --retry-all-errors --retry-max-time 60 -H 'Content-Type: application/json' \
+if curl -sS --fail-with-body --connect-timeout 10 -m 30 --retry 2 --retry-all-errors --retry-max-time 60 -H 'Content-Type: application/json' \
   --data-binary "@$tmp/query.json" https://api.opencollective.com/graphql/v2 >"$tmp/answer.json" 2>"$tmp/curl.err"; then
   # Every part must be there and well formed, or nothing is shown: a part
   # missing would read as "no donations". Refunded donations are left out.
@@ -59,11 +59,19 @@ if curl -sS --fail --connect-timeout 10 -m 30 --retry 2 --retry-all-errors --ret
         recent: ([$a.transactions.nodes[] | select(.isRefunded | not) | {date: .createdAt[0:10], amount: .amount.valueInCents}]
           | sort_by(.date, .amount) | reverse)
       } end' "$tmp/answer.json" >"$tmp/out.json" 2>/dev/null || echo '{}' >"$tmp/out.json"
-  # Why, for the log (an API error is about the query, never about donors).
-  why=$(jq -r 'if (.errors | type) == "array" then "the API answered with an error: \(.errors[0].message // "" | tostring | .[0:200])"
-    else "the answer had an unexpected shape" end' "$tmp/answer.json" 2>/dev/null || echo "the answer wasn't JSON")
-else
-  why="Open Collective couldn't be reached: $(head -c 300 "$tmp/curl.err" | tr '\n' ' ')"
+fi
+# Why, for the log: an API error is about the query, never about donors.
+# (A GraphQL error can come with an HTTP error: its body is kept.)
+if [ "$(jq -c . "$tmp/out.json")" = '{}' ]; then
+  if api=$(jq -er 'select((.errors | type) == "array") | .errors[0].message // "" | tostring | .[0:200]' "$tmp/answer.json" 2>/dev/null); then
+    why="the API answered with an error: $api"
+  elif [ -s "$tmp/curl.err" ]; then
+    why="Open Collective couldn't be reached: $(head -c 300 "$tmp/curl.err")"
+  else
+    why="the answer had an unexpected shape"
+  fi
+  # One plain line: a newline in it would start another workflow command.
+  why=$(printf '%s' "$why" | tr -c '[:print:]' ' ')
 fi
 mv "$tmp/out.json" "$out"
 if [ "$(jq -c . "$out")" = '{}' ]; then

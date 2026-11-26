@@ -27,7 +27,7 @@ Les dons mensuels et annuels toujours en cours, avec le montant de chacun :
 
 ## Ce que cela coûte {#costs}
 
-Ce qu’Amazon Web Services facture chaque jour pour faire fonctionner le service, avant déduction d’éventuels crédits : la production par service, et l’environnement de test en un seul total. Les chiffres de ce mois-ci sont des estimations d’AWS, et AWS révise les derniers jours pendant un certain temps.
+Ce qu’Amazon Web Services facture chaque jour pour faire fonctionner le service, avant déduction d’éventuels crédits AWS : la production par service, et l’environnement de test en un seul total. Les chiffres de ce mois-ci sont des estimations d’AWS, et AWS révise les derniers jours pendant un certain temps.
 
 {{< costs >}}
 

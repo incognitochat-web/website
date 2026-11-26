@@ -26,11 +26,15 @@ mkdir -p "$work/bin"
 cat >"$work/bin/curl" <<'EOF'
 #!/usr/bin/env bash
 echo "$*" >"$STUB_ARGS"
+args=" $* "
 while [ $# -gt 0 ]; do
   case $1 in --data-binary) cp "${2#@}" "$STUB_SENT"; shift 2 ;; *) shift ;; esac
 done
 [ "${STUB_FAIL:-}" != 1 ] || { echo "stand-in: unreachable" >&2; exit 7; }
-cat "$STUB_ANSWER"
+# STUB_EXIT=22: an HTTP error. Like curl, the body is written only with
+# --fail-with-body (--fail drops it).
+if [ "${STUB_EXIT:-0}" = 0 ] || [[ $args == *" --fail-with-body "* ]]; then cat "$STUB_ANSWER"; fi
+exit "${STUB_EXIT:-0}"
 EOF
 chmod +x "$work/bin/curl"
 fetch() { # answer-file output-file
@@ -62,12 +66,11 @@ since=$(jq -r '.variables.since' "$work/sent.json")
 d=$(($(date -u +%s) - $(date -u -d "$since" +%s) - 30 * 86400))
 [ "${d#-}" -lt 120 ] || fail "not the last 30 days: from $since"
 q=$(jq -r .query "$work/sent.json")
-# Every word in the query is one of these (its one account is the
-# collective, by its name), so nothing else can be asked for unnoticed.
-allowed=" query slug String since DateTime account currency stats balance valueInCents orders filter INCOMING status ACTIVE frequency MONTHLY YEARLY limit totalCount nodes amount transactions type CREDIT kind CONTRIBUTION dateFrom createdAt isRefunded "
-while read -r word; do
-  [[ $allowed == *" $word "* ]] || fail "the query asks for '$word': $q"
-done < <(grep -oE '[A-Za-z_]+' <<<"$q" | sort -u)
+# Exactly this query, so nothing more can be asked for unnoticed: its one
+# account is the collective, by its name; the rest is amounts, dates, how
+# often and whether refunded. A change to it is a change to this test.
+want='query($slug: String!, $since: DateTime!) { account(slug: $slug) { currency stats { balance { valueInCents currency } } orders(filter: INCOMING, status: [ACTIVE], frequency: [MONTHLY, YEARLY], limit: 1000) { totalCount nodes { frequency amount { valueInCents currency } } } transactions(type: CREDIT, kind: [CONTRIBUTION], dateFrom: $since, limit: 1000) { totalCount nodes { createdAt isRefunded amount { valueInCents currency } } } } }'
+[ "$(tr -s ' \n' ' ' <<<"$q" | sed 's/ $//')" = "$want" ] || fail "the query isn't the reviewed one: $q"
 # Bounded, so a slow or rate-limited API can't hold up the deploy.
 [[ $(cat "$work/args") == *"--retry-max-time 60"* && $(cat "$work/args") == *"--connect-timeout 10"* ]] || fail "the request isn't bounded: $(cat "$work/args")"
 
@@ -112,7 +115,16 @@ fetch "$work/bad-answer.json" "$work/bad.json" || fail "an unreadable answer fai
 jq '.errors = [{message: "Field x is not known"}]' "$work/answer.json" >"$work/bad-answer.json"
 log=$(PATH="$work/bin:$PATH" STUB_ARGS=$work/args STUB_SENT=$work/sent.json STUB_ANSWER=$work/bad-answer.json "$work/site/scripts/fetch-collective.sh" "$work/bad.json")
 [[ $log == *"::warning::collective: couldn't load (the API answered with an error: Field x is not known)"* ]] || fail "no warning saying why: $log"
-STUB_FAIL=1 fetch "$work/answer.json" "$work/bad.json" 2>/dev/null || fail "an unreachable API failed the script"
+# An error that comes as an HTTP error keeps its message; and a message
+# can't start another workflow command (one line, printable only).
+jq '.errors = [{message: "Bad query\n::error::injected"}]' "$work/answer.json" >"$work/bad-answer.json"
+log=$(PATH="$work/bin:$PATH" STUB_EXIT=22 STUB_ARGS=$work/args STUB_SENT=$work/sent.json STUB_ANSWER=$work/bad-answer.json "$work/site/scripts/fetch-collective.sh" "$work/bad.json")
+[[ $log == *"::warning::collective: couldn't load (the API answered with an error: Bad query ::error::injected)"* ]] || fail "an HTTP error's message: $log"
+if grep -q '^::error' <<<"$log"; then fail "a message started another workflow command: $log"; fi
+[ "$(jq -c . "$work/bad.json")" = '{}' ] || fail "an HTTP error wrote something"
+log=$(PATH="$work/bin:$PATH" STUB_FAIL=1 STUB_ARGS=$work/args STUB_SENT=$work/sent.json STUB_ANSWER=$work/answer.json "$work/site/scripts/fetch-collective.sh" "$work/bad.json" 2>/dev/null) \
+  || fail "an unreachable API failed the script"
+[[ $log == *"couldn't load (Open Collective couldn't be reached: stand-in: unreachable"* ]] || fail "no reason when unreachable: $log"
 [ "$(jq -c . "$work/bad.json")" = '{}' ] || fail "an unreachable API wrote something"
 # A collective's name that could be anything else in hugo.toml: refused.
 cp "$work/site/hugo.toml" "$work/hugo.toml.real"

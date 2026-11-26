@@ -27,7 +27,7 @@ Maandelijkse en jaarlijkse donaties die nog lopen, met het bedrag van elk:
 
 ## Wat het kost {#costs}
 
-Wat Amazon Web Services per dag in rekening brengt om de dienst te draaien, vóór aftrek van eventuele tegoeden: de productie per dienst, en de testomgeving als één totaal. De cijfers van deze maand zijn schattingen van AWS, en AWS past de laatste dagen nog een tijdje aan.
+Wat Amazon Web Services per dag in rekening brengt om de dienst te draaien, vóór aftrek van eventuele AWS-tegoeden: de productie per dienst, en de testomgeving als één totaal. De cijfers van deze maand zijn schattingen van AWS, en AWS past de laatste dagen nog een tijdje aan.
 
 {{< costs >}}
 

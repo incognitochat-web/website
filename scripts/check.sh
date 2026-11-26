@@ -132,8 +132,8 @@ for path, page in pages.items():
         file = target(url.path)
         if file is None:
             bad.append(f"{path.relative_to(out)}: {link} leads to no page")
-        elif url.fragment and file.suffix == ".html" and url.fragment not in pages[file].ids:
-            bad.append(f"{path.relative_to(out)}: {link} has no #{url.fragment} on its page")
+        elif url.fragment and file.suffix == ".html" and urllib.parse.unquote(url.fragment) not in pages[file].ids:
+            bad.append(f"{path.relative_to(out)}: {link} has no #{urllib.parse.unquote(url.fragment)} on its page")
 if bad:
     print("error: links going nowhere:\n  " + "\n  ".join(sorted(set(bad))[:40]), file=sys.stderr)
     sys.exit(1)
