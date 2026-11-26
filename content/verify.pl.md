@@ -2,7 +2,7 @@
 title: "Weryfikacja aplikacji"
 linkTitle: "Weryfikacja"
 description: "Jak każdy może sprawdzić, czy aplikacja otwierana przez Telegram to dokładnie opublikowany kod."
-updated: "2026-11-21"
+updated: "2026-11-26"
 ---
 
 Szyfrowanie chroni cię tylko wtedy, gdy uruchamiana przez ciebie aplikacja to opublikowany kod. W Telegramie nic nie powstrzymuje tego, kto prowadzi bota, przed skierowaniem go na inną stronę, dlatego aplikacja jest publikowana w sposób, który każdy może sprawdzić.
@@ -25,11 +25,30 @@ scripts/verify-site.sh {{< param "appOrigin" >}} {{< param "hostingRepo" >}} --r
 
 Skrypt sprawdza, czy każdy udostępniany plik to dokładnie to, co niezmieniony, sprawdzony workflow zbudował z wydania na `main`, czy wdrożyło go to samo uruchomienie workflow i czy żadna inna strona nie dzieli adresu z aplikacją. Z `--rebuild` sam też buduje to wydanie i porównuje je bajt po bajcie. Szczegóły, a także to, czego skrypt nie dowodzi, są w dokumencie [Verifying the app](https://github.com/{{< param "codeRepo" >}}/blob/main/docs/verifying.md) (po angielsku).
 
+## Sprawdź, co otwiera bot {#bot-check}
+
+O tym, jaki adres otwiera Telegram, decyduje ten, kto prowadzi bota, dlatego [`verify-bot.py`](https://github.com/{{< param "codeRepo" >}}/blob/main/scripts/verify-bot.py) sprawdza drugą połowę tak, jak widzi ją twoje własne konto w Telegramie, bez otwierania aplikacji:
+
+- linki aplikacji (`t.me/{{< param "botUsername" >}}?startapp`),
+- przycisk menu bota,
+- przycisk w odpowiedzi bota na /start (skrypt wysyła /start, a potem usuwa te wiadomości).
+
+Każdy link i każdy przycisk musi otwierać dokładnie `{{< param "appOrigin" >}}/`. Będą ci potrzebne Python 3.11 lub nowszy, twoje własne `api_id` i `api_hash` z [my.telegram.org](https://my.telegram.org) oraz zalogowanie się na twoje konto w Telegramie: wpisujesz swój numer telefonu i kod, który wyśle ci Telegram, sesja pozostaje w pamięci, a na koniec skrypt się wylogowuje. W lokalnej kopii kodu:
+
+```shell
+python3 -m venv ~/.cache/verify-bot
+~/.cache/verify-bot/bin/pip install --require-hashes --only-binary :all: -r scripts/verify-bot.build.txt
+~/.cache/verify-bot/bin/pip install --require-hashes --no-build-isolation -r scripts/verify-bot.requirements.txt
+TG_API_ID=<id> TG_API_HASH=<hash> ~/.cache/verify-bot/bin/python scripts/verify-bot.py {{< param "botUsername" >}} {{< param "appOrigin" >}}
+```
+
+Szczegóły są w dokumencie [Checking what the bot opens](https://github.com/{{< param "codeRepo" >}}/blob/main/docs/verifying.md#checking-what-the-bot-opens) (po angielsku).
+
 ## Sprawdzana automatycznie
 
-Ten sam skrypt sprawdza działającą aplikację co godzinę, a raz dziennie także z `--rebuild`. Wyniki i to, co obejmuje każde sprawdzenie, są na stronie [Status](/pl/status/).
+Oba skrypty są uruchamiane publicznie według harmonogramu: `verify-site.sh` sprawdza działającą aplikację co godzinę, a raz dziennie także z `--rebuild`; `verify-bot.py` co godzinę, przy użyciu konta w Telegramie założonego specjalnie w tym celu. Wyniki są na stronie [Status](/pl/status/).
 
 ## Czego to nie dowodzi
 
-- **Co konkretnej osobie pokazano w Telegramie.** Właściciel bota mógłby skierować aplikację na inny adres, dla wszystkich albo dla wybranych osób. Strona pod innym adresem nie ma żadnego z twoich kluczy; żeby cokolwiek osiągnąć, musiałaby skłonić cię do ponownej konfiguracji, co w widoczny sposób kończy twoje konto na starym urządzeniu i zmienia twój link.
+- **Co jest pokazywane innym osobom w Telegramie.** Właściciel bota mógłby skierować aplikację na inny adres tylko dla wybranych osób albo na kilka minut między sprawdzeniami. Cogodzinne sprawdzenie widzi tylko to, co jest pokazywane jego własnemu kontu, a twoje własne uruchomienie – tylko to, co jest pokazywane tobie. Strona pod innym adresem nie ma żadnego z twoich kluczy; żeby cokolwiek osiągnąć, musiałaby skłonić cię do ponownej konfiguracji, co w widoczny sposób kończy twoje konto na starym urządzeniu i zmienia twój link.
 - **Co działa na serwerze.** Projekt od tego nie zależy: złośliwy serwer może gubić lub opóźniać wiadomości i obserwować, kiedy są przesyłane, ale nie może ich odczytać ani sfałszować, bo aplikacja sama sprawdza każdy klucz. Udowodnienie, jaki kod działa na serwerze, to przyszły krok (atestowana enklawa).

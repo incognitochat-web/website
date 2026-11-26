@@ -2,7 +2,7 @@
 title: "Uygulamayı doğrulayın"
 linkTitle: "Doğrulama"
 description: "Telegram'ın açtığı uygulamanın tam olarak yayımlanan kod olduğunu herkes nasıl kontrol edebilir."
-updated: "2026-11-21"
+updated: "2026-11-26"
 ---
 
 Şifreleme sizi ancak çalıştırdığınız uygulama yayımlanan kodun ta kendisiyse korur. Telegram içinde, botu işleten kişinin onu başka bir sayfaya yönlendirmesini hiçbir şey engellemez; bu yüzden uygulama, herkesin kontrol edebileceği bir şekilde yayımlanır.
@@ -25,11 +25,30 @@ scripts/verify-site.sh {{< param "appOrigin" >}} {{< param "hostingRepo" >}} --r
 
 Betik şunları kontrol eder: sunulan her dosya, değiştirilmemiş ve incelenmiş iş akışının `main` dalındaki bir sürümden derlediği dosyanın tam olarak aynısıdır; onu aynı iş akışı çalıştırması yayına almıştır; uygulamanın adresini başka hiçbir site paylaşmaz. `--rebuild` ile o sürümü kendisi de derler ve bayt bayt karşılaştırır. Ayrıntılar ve betiğin neyi kanıtlamadığı, [Verifying the app](https://github.com/{{< param "codeRepo" >}}/blob/main/docs/verifying.md) belgesinde (İngilizce).
 
+## Botun neyi açtığını kontrol edin {#bot-check}
+
+Telegram'ın hangi adresi açacağına botu işleten kişi karar verir; bu yüzden [`verify-bot.py`](https://github.com/{{< param "codeRepo" >}}/blob/main/scripts/verify-bot.py) betiği diğer yarıyı, kendi Telegram hesabınızın gördüğü şekliyle ve uygulamayı açmadan kontrol eder:
+
+- uygulamanın bağlantıları (`t.me/{{< param "botUsername" >}}?startapp`),
+- botun menü düğmesi,
+- botun /start komutuna verdiği yanıttaki düğme (betik /start gönderir, ardından bu mesajları siler).
+
+Her biri tam olarak `{{< param "appOrigin" >}}/` adresini açmalıdır. Python 3.11 veya daha yeni bir sürüme, [my.telegram.org](https://my.telegram.org) adresinden alacağınız kendi `api_id` ve `api_hash` değerlerinize ve Telegram'a giriş yapmanıza ihtiyacınız var: telefon numaranızı ve Telegram'ın size gönderdiği kodu yazarsınız, oturum bellekte kalır ve betik sonunda oturumu kapatır. Kodun yerel bir kopyasında:
+
+```shell
+python3 -m venv ~/.cache/verify-bot
+~/.cache/verify-bot/bin/pip install --require-hashes --only-binary :all: -r scripts/verify-bot.build.txt
+~/.cache/verify-bot/bin/pip install --require-hashes --no-build-isolation -r scripts/verify-bot.requirements.txt
+TG_API_ID=<id> TG_API_HASH=<hash> ~/.cache/verify-bot/bin/python scripts/verify-bot.py {{< param "botUsername" >}} {{< param "appOrigin" >}}
+```
+
+Ayrıntılar [Checking what the bot opens](https://github.com/{{< param "codeRepo" >}}/blob/main/docs/verifying.md#checking-what-the-bot-opens) belgesinde (İngilizce).
+
 ## Otomatik kontrol
 
-Aynı betik her saat canlı uygulamaya karşı, günde bir kez de `--rebuild` ile çalışır. Sonuçlar ve her kontrolün neyi kapsadığı [Durum](/tr/status/) sayfasında.
+İki betik de zamanlanmış olarak ve herkese açık şekilde çalışır: `verify-site.sh` her saat canlı uygulamaya karşı, günde bir kez de `--rebuild` ile; `verify-bot.py` her saat, bu amaçla oluşturulmuş bir Telegram hesabıyla. Sonuçlar [Durum](/tr/status/) sayfasında.
 
 ## Bunun kanıtlayamadıkları
 
-- **Telegram içinde tek bir kişiye ne gösterildiği.** Botun sahibi uygulamayı herkes için ya da seçtiği kişiler için başka bir adrese yönlendirebilir. Başka bir adresteki sayfada anahtarlarınızın hiçbiri yoktur; bir şey elde edebilmesi için size yeniden kurulum yaptırması gerekir. Bu da eski cihazınızdaki hesabınızı fark edeceğiniz şekilde sona erdirir ve bağlantınızı değiştirir.
+- **Telegram içinde başka kişilere ne gösterildiği.** Botun sahibi uygulamayı yalnızca seçtiği kişiler için ya da kontroller arasındaki birkaç dakika için başka bir adrese yönlendirebilir. Saatlik kontrol yalnızca kendi hesabına gösterileni görür; sizin kendi çalıştırmanız da yalnızca size gösterileni görür. Başka bir adresteki sayfada anahtarlarınızın hiçbiri yoktur; bir şey elde edebilmesi için size yeniden kurulum yaptırması gerekir. Bu da eski cihazınızdaki hesabınızı fark edeceğiniz şekilde sona erdirir ve bağlantınızı değiştirir.
 - **Sunucuda ne çalıştığı.** Tasarım buna bağlı değildir: kötü niyetli bir sunucu mesajları iletmeyebilir ya da geciktirebilir ve zamanlamayı izleyebilir, ancak onları okuyamaz ya da sahtesini üretemez, çünkü uygulama her anahtarı kendisi kontrol eder. Sunucunun kodunu kanıtlamak ileride atılacak bir adım (doğrulanabilir bir güvenli bölge).
