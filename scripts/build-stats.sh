@@ -68,12 +68,12 @@ mapfile -t dev < <(within ${dev[@]+"${dev[@]}"})
 mapfile -t production_cut < <(within ${production_cut[@]+"${production_cut[@]}"})
 mapfile -t dev_cut < <(within ${dev_cut[@]+"${dev_cut[@]}"})
 
-# A month's -from- file must say what its name says (the month, and the day
-# it was read from), with no day before that one.
+# A month's -from- file must be one value that says what its name says (the
+# month, and the day it was read from), with no day before that one.
 for f in ${production_cut[@]+"${production_cut[@]}"} ${dev_cut[@]+"${dev_cut[@]}"}; do
   b=$(basename "$f" .json)
-  jq -e --arg m "${b:0:7}" --arg from "${b:0:7}-${b:13:2}" \
-    'type == "object" and .month == $m and .from == $from and (.days | type == "object") and all(.days | keys[]; . >= $from)' \
+  jq -e -s --arg m "${b:0:7}" --arg from "${b:0:7}-${b:13:2}" \
+    'length == 1 and (.[0] | type == "object" and .month == $m and .from == $from and (.days | type == "object") and all(.days | keys[]; . >= $from))' \
     "$f" >/dev/null 2>&1 || { echo "$f doesn't hold what its name says; not read" >&2; exit 1; }
 done
 
