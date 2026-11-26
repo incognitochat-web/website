@@ -2,7 +2,7 @@
 title: "Preguntas y respuestas"
 linkTitle: "Preguntas"
 description: "Respuestas breves sobre lo que protege Incognito Chat, lo que no puede proteger y cómo usarlo."
-updated: "2026-11-26"
+updated: "2026-11-27"
 ---
 
 ## Privacidad

@@ -2,7 +2,7 @@
 title: "Tanya jawab"
 linkTitle: "Tanya jawab"
 description: "Jawaban singkat tentang apa yang dilindungi Incognito Chat, apa yang tidak bisa dilindunginya, dan cara memakainya."
-updated: "2026-11-26"
+updated: "2026-11-27"
 ---
 
 ## Privasi

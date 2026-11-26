@@ -2,7 +2,7 @@
 title: "Sorular ve yanıtlar"
 linkTitle: "SSS"
 description: "Incognito Chat neyi korur, neyi koruyamaz ve nasıl kullanılır: kısa yanıtlar."
-updated: "2026-11-26"
+updated: "2026-11-27"
 ---
 
 ## Gizlilik
