@@ -9,6 +9,11 @@
 # infra/init/stats_reader.tf), which takes only main. Without a role's
 # secret, that account is skipped.
 #
+# When an account moves to another AWS organization, set its
+# STATS_COSTS_FROM_PRODUCTION or STATS_COSTS_FROM_DEV (a variable of the
+# stats environment) to the day of the move, on that day: from then on its
+# costs are read only from that day (COSTS_FROM in scripts/collect-stats.sh).
+#
 # Anyone can check a file of the data branch:
 #
 #   gh attestation verify <file> --repo incognitochat-web/website \
@@ -101,6 +106,8 @@ jobs:
         id: prod-costs
         if: env.HAS_PRODUCTION == 'true' && env.COSTS == 'true' && steps.prod-creds.outcome == 'success'
         continue-on-error: true
+        env:
+          COSTS_FROM: ${{ vars.STATS_COSTS_FROM_PRODUCTION }}
         run: site/scripts/collect-stats.sh costs production store
 
       - name: Dev credentials
@@ -118,6 +125,8 @@ jobs:
         id: dev-costs
         if: env.HAS_DEV == 'true' && env.COSTS == 'true' && steps.dev-creds.outcome == 'success'
         continue-on-error: true
+        env:
+          COSTS_FROM: ${{ vars.STATS_COSTS_FROM_DEV }}
         run: site/scripts/collect-stats.sh costs dev store
 
       - name: Commit what changed

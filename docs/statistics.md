@@ -53,6 +53,13 @@ the start in the month it falls in.
     --cert-identity https://github.com/incognitochat-web/website/.github/workflows/stats.yml@refs/heads/main
   ```
 
+- When an AWS account moves to another AWS organization, AWS hides from it
+  what it cost before the move, so from the day of the move its costs are read
+  only from that day on (`STATS_COSTS_FROM_PRODUCTION` or
+  `STATS_COSTS_FROM_DEV` in the `stats` environment). The days before stay as
+  they were read. The month of the move keeps its file, and its days from the
+  move on are in a second one, `<month>-from-<day>.json`: a file the job signs
+  holds only what AWS answered.
 - That shows a number came through this public job unchanged. It can't show
   that what AWS holds is true: whoever runs the AWS account could change it.
   Once the server runs in an attested enclave (see the roadmap on the

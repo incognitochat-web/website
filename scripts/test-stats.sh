@@ -43,6 +43,25 @@ J
     ;;
   "ce get-cost-and-usage"*)
     end=$(sed -n 's/.*End=\([0-9-]*\).*/\1/p' <<<"$args")
+    [ -z "${STUB_LOG:-}" ] || echo "$args" >>"$STUB_LOG"
+    if [ "${STUB_DAYS:-}" = all ]; then
+      # Every day asked for, in one page: production $1 a day (AWS Lambda),
+      # dev $0.50; the last day an estimate.
+      # STUB_EARLY=1: a day before the one asked for, too.
+      from=$(sed -n 's/.*Start=\([0-9-]*\),.*/\1/p' <<<"$args") days='' d=$from
+      [ "${STUB_EARLY:-}" != 1 ] || d=$(date -u -d "$from - 1 day" +%Y-%m-%d)
+      while [[ $d < $end ]]; do
+        est=false; [ "$(date -u -d "$d + 1 day" +%Y-%m-%d)" = "$end" ] && est=true
+        if [[ $args == *SERVICE* ]]; then
+          days+="${days:+,}{\"TimePeriod\":{\"Start\":\"$d\"},\"Estimated\":$est,\"Groups\":[{\"Keys\":[\"AWS Lambda\"],\"Metrics\":{\"UnblendedCost\":{\"Amount\":\"1\",\"Unit\":\"USD\"}}}]}"
+        else
+          days+="${days:+,}{\"TimePeriod\":{\"Start\":\"$d\"},\"Estimated\":$est,\"Total\":{\"UnblendedCost\":{\"Amount\":\"0.5\",\"Unit\":\"USD\"}},\"Groups\":[]}"
+        fi
+        d=$(date -u -d "$d + 1 day" +%Y-%m-%d)
+      done
+      echo "{\"ResultsByTime\":[$days]}"
+      exit 0
+    fi
     today=$(date -u +%Y-%m-%d)
     y=$(date -u -d yesterday +%Y-%m-%d)
     tday=''
@@ -161,6 +180,142 @@ b=$work/bad-name && rm -rf "$b" && mkdir -p "$b/stats/hourly"
 cp "$work/real.json" "$b/stats/hourly/x.json"
 "$root/scripts/build-stats.sh" "$b" "$work/name.json" >/dev/null
 [ "$(cat "$work/name.json")" = '{}' ] || fail "a file named other than yyyy-mm-dd.json was read"
+
+# COSTS_FROM, after an account moves to another AWS organization (whose Cost
+# Explorer then hides what it cost before): costs are read only from that
+# day. From the 2nd of last month here: last month's stored file stays as it
+# is, the days from the 2nd on go into their own file, later months into
+# their usual one; the Costs page joins them.
+lastm=$(date -u -d "$(date -u +%Y-%m-01) - 1 month" +%Y-%m)
+thism=$(date -u +%Y-%m)
+from=$lastm-02
+moved=$work/moved
+mkdir -p "$moved/stats/costs/production" "$moved/stats/costs/dev"
+echo "{\"days\":{\"$lastm-01\":{\"Before\":3}},\"estimated\":[],\"month\":\"$lastm\"}" >"$moved/stats/costs/production/$lastm.json"
+echo "{\"days\":{\"$lastm-01\":0.25},\"estimated\":[],\"month\":\"$lastm\"}" >"$moved/stats/costs/dev/$lastm.json"
+cp -r "$moved" "$work/moved-before"
+movedrun() { # COSTS_FROM account store
+  STUB_DAYS=all STUB_LOG=$work/ce.log COSTS_FROM=$1 run costs "$2" "$3"
+}
+: >"$work/ce.log"
+movedrun "$from" production "$moved"
+movedrun "$from" dev "$moved"
+[ "$(grep -c "Start=$from," "$work/ce.log")" = 2 ] && [ "$(wc -l <"$work/ce.log")" = 2 ] \
+  || fail "Cost Explorer wasn't asked from COSTS_FROM: $(cat "$work/ce.log")"
+for a in production dev; do
+  cmp -s "$moved/stats/costs/$a/$lastm.json" "$work/moved-before/stats/costs/$a/$lastm.json" \
+    || fail "$a: the stored file of the month of the move was rewritten"
+done
+f=$moved/stats/costs/production/$lastm-from-02.json
+jq -e --arg m "$lastm" --arg from "$from" '.month == $m and .from == $from and (.days | keys | min == $from and all(.[]; startswith($m)) and length > 25) and all(.days[]; . == {"AWS Lambda": 1})' \
+  "$f" >/dev/null || fail "production's file from the move: $(cat "$f")"
+f=$moved/stats/costs/dev/$lastm-from-02.json
+jq -e --arg m "$lastm" --arg from "$from" '.month == $m and .from == $from and (.days | keys | min == $from and length > 25) and all(.days[]; . == 0.5)' \
+  "$f" >/dev/null || fail "dev's file from the move: $(cat "$f")"
+if [ "$(date -u +%d)" != 01 ]; then
+  for a in production dev; do
+    f=$moved/stats/costs/$a/$thism.json
+    jq -e --arg m "$thism" '.month == $m and (has("from") | not) and (.days | keys | min == ($m + "-01"))' "$f" >/dev/null \
+      || fail "$a: this month isn't in its usual file: $(cat "$f" 2>&1)"
+  done
+fi
+if ls "$moved"/stats/costs/*/"$thism"-from-* >/dev/null 2>&1; then fail "a -from- file for a month after the move"; fi
+f=$moved/stats/costs/dev/$thism.json
+[ "${yesterday:0:7}" = "$lastm" ] && f=$moved/stats/costs/dev/$lastm-from-02.json
+jq -e --arg y "$yesterday" '.estimated == [$y]' "$f" >/dev/null || fail "the estimated day: $(jq -c .estimated "$f")"
+# A second run changes nothing.
+cp -r "$moved" "$work/moved-again"
+movedrun "$from" production "$moved"
+movedrun "$from" dev "$moved"
+diff -r "$work/moved-again" "$moved" >/dev/null || fail "a second run from COSTS_FROM changed the store"
+# The Costs page: the stored day before the move, and the days read after.
+"$root/scripts/build-stats.sh" "$moved" "$work/moved.json" >/dev/null
+n=$((10#$(date -u -d "$thism-01 - 1 day" +%d) - 1)) # the 2nd to the end of last month
+jq -e --arg m "$lastm" --arg one "$lastm-01" --arg from "$from" --argjson n "$n" '
+  .months[] | select(.month == $m)
+  | ([.days[] | select(.date == $one)][0] | .total == 3 and .dev == 0.25)
+    and ([.days[] | select(.date == $from)][0] | .total == 1 and .dev == 0.5)
+    and .totals.production == 3 + $n and .totals.dev == 0.25 + 0.5 * $n' "$work/moved.json" >/dev/null \
+  || fail "the month of the move: $(jq -c --arg m "$lastm" '.months[] | select(.month == $m) | {totals, first: .days[0:2]}' "$work/moved.json")"
+# A day from the move on in the stored file (written before COSTS_FROM was
+# set) is the -from- file's.
+stale=$work/stale && cp -r "$moved" "$stale"
+jq -c --arg from "$from" '.days[$from] = {"Stale": 99}' "$moved/stats/costs/production/$lastm.json" >"$stale/stats/costs/production/$lastm.json"
+"$root/scripts/build-stats.sh" "$stale" "$work/stale.json" >/dev/null
+jq -e --arg m "$lastm" --arg from "$from" '.months[] | select(.month == $m) | ([.days[] | select(.date == $from)][0].total == 1) and (.services | index("Stale") == null)' \
+  "$work/stale.json" >/dev/null || fail "a stored day from the move on wasn't the -from- file's"
+# Even one the -from- file doesn't have: that day wasn't read.
+jq -c --arg from "$from" 'del(.days[$from])' "$moved/stats/costs/production/$lastm-from-02.json" >"$stale/stats/costs/production/$lastm-from-02.json"
+"$root/scripts/build-stats.sh" "$stale" "$work/stale.json" >/dev/null
+jq -e --arg m "$lastm" --arg from "$from" '.months[] | select(.month == $m) | ([.days[] | select(.date == $from)][0].total == null) and (.services | index("Stale") == null)' \
+  "$work/stale.json" >/dev/null || fail "a stored day from the move on, missing from the -from- file, was shown"
+# From the 1st of a month: read into its usual file, and the months before
+# left as stored.
+if [ "$(date -u +%d)" != 01 ]; then
+  first1=$work/first1 && cp -r "$work/moved-before" "$first1"
+  : >"$work/ce.log"
+  movedrun "$thism-01" dev "$first1"
+  grep -q "Start=$thism-01," "$work/ce.log" || fail "Cost Explorer wasn't asked from the 1st: $(cat "$work/ce.log")"
+  cmp -s "$first1/stats/costs/dev/$lastm.json" "$work/moved-before/stats/costs/dev/$lastm.json" || fail "a month before COSTS_FROM was rewritten"
+  jq -e --arg m "$thism" '.month == $m and (has("from") | not) and .days[$m + "-01"] == 0.5' "$first1/stats/costs/dev/$thism.json" >/dev/null \
+    || fail "COSTS_FROM on the 1st: the month isn't in its usual file"
+  if ls "$first1"/stats/costs/dev/*-from-* >/dev/null 2>&1; then fail "COSTS_FROM on the 1st wrote a -from- file"; fi
+fi
+# From today: nothing to read yet. In the future, or not a date: refused.
+# Either way Cost Explorer isn't asked and nothing is written.
+cp -r "$moved" "$work/moved-today"
+: >"$work/ce.log"
+movedrun "$today" dev "$moved" || fail "COSTS_FROM today failed"
+[ ! -s "$work/ce.log" ] || fail "Cost Explorer was asked with COSTS_FROM today"
+diff -r "$work/moved-today" "$moved" >/dev/null || fail "COSTS_FROM today changed the store"
+for bad in "$(date -u -d tomorrow +%Y-%m-%d)" 2026-02-30 2026-13-01 2026-1-05 1999-12-01 x "$from " "$from"$'\n'; do
+  : >"$work/ce.log"
+  if movedrun "$bad" dev "$moved" 2>/dev/null; then fail "COSTS_FROM '$bad' was accepted"; fi
+  [ ! -s "$work/ce.log" ] || fail "Cost Explorer was asked with COSTS_FROM '$bad'"
+  diff -r "$work/moved-today" "$moved" >/dev/null || fail "a refused COSTS_FROM '$bad' changed the store"
+done
+# A day before COSTS_FROM in the answer is never stored.
+early=$work/early && cp -r "$work/moved-before" "$early"
+STUB_EARLY=1 movedrun "$from" dev "$early"
+jq -e --arg from "$from" '.days | keys | min == $from' "$early/stats/costs/dev/$lastm-from-02.json" >/dev/null \
+  || fail "a day before COSTS_FROM in the answer was stored: $(jq -c '.days | keys[0:2]' "$early/stats/costs/dev/$lastm-from-02.json")"
+# A link where the -from- file goes is refused, and nothing outside written.
+linked2=$work/linked2 && cp -r "$work/moved-before" "$linked2"
+echo outside >"$work/outside-cost.json"
+ln -s "$work/outside-cost.json" "$linked2/stats/costs/dev/$lastm-from-02.json"
+if movedrun "$from" dev "$linked2" 2>/dev/null; then fail "a linked -from- file was written through"; fi
+[ "$(cat "$work/outside-cost.json")" = outside ] || fail "a file outside the store changed"
+# What build-stats.sh refuses in a -from- file: a day before its own, a day
+# or month other than its name's, a day that doesn't exist, two in a month.
+for case in valid before name month notaday twice; do
+  b=$work/bad-cut && rm -rf "$b" && mkdir -p "$b/stats/costs/dev"
+  case $case in
+    valid) echo '{"month":"2026-03","from":"2026-03-02","days":{"2026-03-02":1}}' >"$b/stats/costs/dev/2026-03-from-02.json" ;;
+    before) echo '{"month":"2026-03","from":"2026-03-02","days":{"2026-03-01":1}}' >"$b/stats/costs/dev/2026-03-from-02.json" ;;
+    name) echo '{"month":"2026-03","from":"2026-03-03","days":{"2026-03-03":1}}' >"$b/stats/costs/dev/2026-03-from-02.json" ;;
+    month) echo '{"month":"2026-04","from":"2026-03-02","days":{}}' >"$b/stats/costs/dev/2026-03-from-02.json" ;;
+    notaday) echo '{"month":"2026-02","from":"2026-02-30","days":{}}' >"$b/stats/costs/dev/2026-02-from-30.json" ;;
+    twice) echo '{"month":"2026-03","from":"2026-03-02","days":{"2026-03-02":1}}' >"$b/stats/costs/dev/2026-03-from-02.json"
+      echo '{"month":"2026-03","from":"2026-03-03","days":{"2026-03-03":1}}' >"$b/stats/costs/dev/2026-03-from-03.json" ;;
+  esac
+  if "$root/scripts/build-stats.sh" "$b" "$work/bad.json" >/dev/null 2>&1; then
+    [ $case = valid ] || fail "a -from- file ($case) was accepted"
+    jq -e '.months[0].month == "2026-03" and .months[0].totals.dev == 1' "$work/bad.json" >/dev/null \
+      || fail "a -from- file alone isn't shown: $(jq -c '.months' "$work/bad.json")"
+  else
+    [ $case != valid ] || fail "a valid -from- file was refused"
+  fi
+done
+# A -from- file of a month older than the newest 13 isn't shown.
+old=$work/old-cut && mkdir -p "$old/stats/costs/dev"
+for i in $(seq 0 12); do
+  m=$(date -u -d "2026-01-01 + $i month" +%Y-%m)
+  echo "{\"month\":\"$m\",\"days\":{\"$m-01\":1}}" >"$old/stats/costs/dev/$m.json"
+done
+echo '{"month":"2025-12","from":"2025-12-02","days":{"2025-12-02":1}}' >"$old/stats/costs/dev/2025-12-from-02.json"
+"$root/scripts/build-stats.sh" "$old" "$work/old.json" >/dev/null
+jq -e '(.months | length == 13) and all(.months[]; .month != "2025-12")' "$work/old.json" >/dev/null \
+  || fail "a -from- file older than 13 months was shown: $(jq -c '[.months[].month]' "$work/old.json")"
 
 # The site, with the numbers and with none.
 build() { # stats.json output-dir messages-counted-from [media-counted-from] [accounts-counted-from]
