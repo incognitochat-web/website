@@ -309,11 +309,16 @@ cp -r "$moved" "$work/moved-today"
 movedrun "$today" dev "$moved" || fail "COSTS_FROM today failed"
 [ ! -s "$work/ce.log" ] || fail "Cost Explorer was asked with COSTS_FROM today"
 diff -r "$work/moved-today" "$moved" >/dev/null || fail "COSTS_FROM today changed the store"
+# (In a store with no -from- file, so it's the date's own check that refuses.)
 for bad in "$(date -u -d tomorrow +%Y-%m-%d)" 2026-02-30 2026-13-01 2026-1-05 1999-12-01 x "$from " "$from"$'\n'; do
+  nofrom=$work/nofrom && rm -rf "$nofrom" && cp -r "$work/moved-before" "$nofrom"
   : >"$work/ce.log"
-  if movedrun "$bad" dev "$moved" 2>/dev/null; then fail "COSTS_FROM '$bad' was accepted"; fi
+  if movedrun "$bad" dev "$nofrom" 2>"$work/bad.err"; then fail "COSTS_FROM '$bad' was accepted"; fi
+  want="isn't a date"
+  [ "$bad" != "$(date -u -d tomorrow +%Y-%m-%d)" ] || want="is in the future"
+  grep -qF "$want" "$work/bad.err" || fail "COSTS_FROM '$bad' wasn't refused by its own check: $(cat "$work/bad.err")"
   [ ! -s "$work/ce.log" ] || fail "Cost Explorer was asked with COSTS_FROM '$bad'"
-  diff -r "$work/moved-today" "$moved" >/dev/null || fail "a refused COSTS_FROM '$bad' changed the store"
+  diff -r "$work/moved-before" "$nofrom" >/dev/null || fail "a refused COSTS_FROM '$bad' changed the store"
 done
 # A day before COSTS_FROM in the answer is never stored.
 early=$work/early && cp -r "$work/moved-before" "$early"
