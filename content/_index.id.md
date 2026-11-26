@@ -42,14 +42,6 @@ features:
     - title: "Gratis, tanpa iklan, tanpa pelacak"
       text: "Perangkat lunak bebas dengan lisensi AGPL. Tanpa analitik, baik di aplikasi maupun di situs ini. Donasi membantu membiayainya."
 
-roadmap:
-  title: "Rencana ke depan"
-  items:
-    - title: "Server yang membuktikan kode yang dijalankannya"
-      text: "Kami berencana memindahkan server ke enclave teratestasi: bagian mesin yang tersegel, yang kodenya bisa diperiksa siapa saja. Dengan begitu, Anda tidak perlu lagi percaya begitu saja pada kata-kata kami tentang apa yang dilakukan server, dan bahkan kami pun tidak akan bisa mengetahui akun Telegram mana yang memiliki sebuah tautan."
-    - title: "Angka yang tidak bisa dipalsukan siapa pun"
-      text: "[Halaman statistik](stats/) menampilkan jumlah akun yang dibuat, pesan yang dikirim, dan volume media per jam, sedangkan [halaman Donasi dan biaya](donate/#costs) menampilkan berapa biaya menjalankan layanan ini; semuanya dipublikasikan secara otomatis dan ditandatangani. Setelah enclave aktif, enclave itulah yang akan menghitung dan menandatangani angka-angka ini sendiri, sehingga tidak ada yang bisa memalsukannya, bahkan kami sekalipun."
-
 verify:
   title: "Periksa sendiri"
   text: "Kode aplikasi ini publik, setiap build dapat direproduksi dan ditandatangani, dan sebuah skrip memeriksa bahwa aplikasi yang dibuka Telegram persis build tersebut. Kode server juga publik, tetapi untuk saat ini Anda harus memercayai catatan kami tentang apa yang berjalan di server."

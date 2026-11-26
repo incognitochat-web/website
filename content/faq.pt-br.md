@@ -2,7 +2,7 @@
 title: "Perguntas e respostas"
 linkTitle: "Perguntas"
 description: "Respostas curtas sobre o que o Incognito Chat protege, o que ele não consegue proteger e como usá-lo."
-updated: "2026-11-25"
+updated: "2026-11-26"
 ---
 
 ## Privacidade
@@ -21,7 +21,7 @@ Nada do que ele guarda diz isso: as mensagens passam por caixas de entrada aleat
 
 ### Vocês conseguem saber qual conta do Telegram é dona de um link?
 
-Hoje, sim, se resolvêssemos procurar. O servidor guarda uma versão embaralhada do ID do Telegram de cada conta, e quem tem as chaves do servidor consegue descobrir o ID a partir dela. Para a maioria dos links, isso importa pouco: um link é feito para ser publicado ou enviado, então quem está com ele normalmente já sabe de quem ele é. E saber de quem é o link não revela a ninguém quem escreve para você, já que as mensagens são enviadas sem login. Levar o servidor para um enclave, algo que está [nos próximos passos](/pt-br/#roadmap), tiraria essa possibilidade de nós também.
+Hoje, sim, se resolvêssemos procurar. O servidor guarda uma versão embaralhada do ID do Telegram de cada conta, e quem tem as chaves do servidor consegue descobrir o ID a partir dela. Para a maioria dos links, isso importa pouco: um link é feito para ser publicado ou enviado, então quem está com ele normalmente já sabe de quem ele é. E saber de quem é o link não revela a ninguém quem escreve para você, já que as mensagens são enviadas sem login.
 
 ### O que o Telegram vê?
 
@@ -35,7 +35,7 @@ Quem controla o bot decide qual página o Telegram abre, e o Telegram não ofere
 
 ### Alguém observando em tempo real {#live}
 
-Quem administra os servidores, ou a Amazon, que os hospeda, poderia observar as requisições em tempo real e relacionar as pessoas cruzando horários e endereços IP: uma mensagem chegando, depois uma notificação, depois uma resposta ou a marca “Visualizada”. O Telegram também poderia relacionar as pessoas pelos horários. Uma cópia dos dados guardados não mostra isso, mas, com as chaves do servidor, registros mantidos por até um dia, às vezes alguns dias a mais, mostram parte disso. Mesmo com o enclave, os horários e os endereços IP continuariam visíveis.
+Quem administra os servidores, ou a Amazon, que os hospeda, poderia observar as requisições em tempo real e relacionar as pessoas cruzando horários e endereços IP: uma mensagem chegando, depois uma notificação, depois uma resposta ou a marca “Visualizada”. O Telegram também poderia relacionar as pessoas pelos horários. Uma cópia dos dados guardados não mostra isso, mas, com as chaves do servidor, registros mantidos por até um dia, às vezes alguns dias a mais, mostram parte disso.
 
 ### Seu próprio dispositivo
 

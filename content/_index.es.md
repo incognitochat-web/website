@@ -42,14 +42,6 @@ features:
     - title: "Gratis, sin anuncios ni rastreadores"
       text: "Software libre bajo la licencia AGPL. Sin analíticas en la app ni en este sitio. Las donaciones ayudan a pagar los costos."
 
-roadmap:
-  title: "Hoja de ruta"
-  items:
-    - title: "Un servidor que demuestra lo que ejecuta"
-      text: "Planeamos trasladar el servidor a un enclave con atestación: una parte sellada de la máquina cuyo código cualquiera puede comprobar. Así no tendrías que fiarte de nuestra palabra sobre lo que hace el servidor, y ni siquiera nosotros podríamos saber a qué cuenta de Telegram pertenece un enlace."
-    - title: "Cifras que nadie puede falsificar"
-      text: "La [página de estadísticas](stats/) muestra por hora las cuentas creadas, los mensajes enviados y el volumen de multimedia, y la [página de donaciones y costos](donate/#costs), cuánto cuesta mantener el servicio, todo publicado automáticamente y firmado. Cuando el enclave esté en marcha, contará y firmará esas cifras él mismo, así que nadie podrá falsificarlas, ni siquiera nosotros."
-
 verify:
   title: "Compruébalo por tu cuenta"
   text: "El código de la app es público, cada compilación es reproducible y está firmada, y un script comprueba que la app que abre Telegram es exactamente esa compilación. El código del servidor también es público, pero por ahora tienes que confiar en nuestros registros de lo que se ejecuta en él."

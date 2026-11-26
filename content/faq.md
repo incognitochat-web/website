@@ -2,7 +2,7 @@
 title: "Questions and answers"
 linkTitle: "FAQ"
 description: "Short answers about what Incognito Chat protects, what it can't, and how to use it."
-updated: "2026-11-25"
+updated: "2026-11-26"
 ---
 
 ## Privacy
@@ -21,7 +21,7 @@ Nothing it stores says so: messages travel through random mailboxes, not by acco
 
 ### Can you tell which Telegram account owns a link?
 
-Today, yes, if we chose to look. The server keeps a scrambled form of each account's Telegram ID, and whoever holds the server's keys can work the ID out from it. For most links this matters little: a link is made to be posted or sent, so whoever has it usually knows whose it is already. And knowing the owner doesn't tell anyone who writes to you, since messages are sent without a login. Moving the server into an enclave, [on the roadmap](/#roadmap), would take this away from us too.
+Today, yes, if we chose to look. The server keeps a scrambled form of each account's Telegram ID, and whoever holds the server's keys can work the ID out from it. For most links this matters little: a link is made to be posted or sent, so whoever has it usually knows whose it is already. And knowing the owner doesn't tell anyone who writes to you, since messages are sent without a login.
 
 ### What does Telegram see?
 
@@ -35,7 +35,7 @@ Whoever controls the bot decides which page Telegram opens, and Telegram offers 
 
 ### Someone watching live {#live}
 
-Whoever runs the servers, or Amazon, who hosts them, could watch requests as they happen and link people by timing and IP address: a message arriving, then a notice, then a reply or a "seen". Telegram could link people by timing too. A copy of the stored data doesn't show this, but with the server's keys, records kept for up to a day, sometimes a few days more, show some of it. Even with the enclave, timing and IP addresses would still show.
+Whoever runs the servers, or Amazon, who hosts them, could watch requests as they happen and link people by timing and IP address: a message arriving, then a notice, then a reply or a "seen". Telegram could link people by timing too. A copy of the stored data doesn't show this, but with the server's keys, records kept for up to a day, sometimes a few days more, show some of it.
 
 ### Your own device
 

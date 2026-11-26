@@ -42,14 +42,6 @@ features:
     - title: "Gratuito, sem anúncios, sem rastreadores"
       text: "Software livre sob a AGPL. Nenhuma ferramenta de análise no app nem neste site. As doações ajudam a pagar os custos."
 
-roadmap:
-  title: "Próximos passos"
-  items:
-    - title: "Um servidor que prova o que executa"
-      text: "Planejamos levar o servidor para um enclave atestado: uma parte isolada da máquina cujo código qualquer pessoa pode verificar. Assim, você não precisaria acreditar na nossa palavra sobre o que o servidor faz, e nem nós conseguiríamos saber qual conta do Telegram é dona de um link."
-    - title: "Números que ninguém consegue falsificar"
-      text: "A [página de estatísticas](stats/) mostra, hora a hora, as contas criadas, as mensagens enviadas e o volume de mídia, e a [página de doações e custos](donate/#costs), quanto custa manter o serviço, tudo publicado automaticamente e assinado. Quando o enclave estiver no ar, ele mesmo vai contar e assinar esses números, então ninguém vai conseguir falsificá-los, nem nós."
-
 verify:
   title: "Verifique você mesmo"
   text: "O código do app é público, cada compilação é reproduzível e assinada, e um script verifica se o app que o Telegram abre é exatamente essa compilação. O código do servidor também é público, mas, por enquanto, você precisa confiar nos nossos registros do que roda nele."
