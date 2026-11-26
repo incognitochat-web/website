@@ -182,6 +182,11 @@ if grep -rq 'Example' "$work/pub"; then fail "a name is on the site"; fi
 # Newest first; the regular ones monthly first, the biggest first.
 [[ $en =~ 2026-11-25.*2026-11-20 ]] || fail "the donations aren't newest first"
 [[ $en =~ '$25.00</span> a month'.*'$5.00</span> a month'.*'$100.00</span> a year' ]] || fail "the regular donations' order"
+# The footer names the page by its whole title, in each language; the top
+# bar keeps "Donate".
+grep -q '<li><a href="/donate/">Donations and costs</a></li>' "$work/pub/index.html" || fail "the footer doesn't name Donations and costs"
+grep -q '<li><a href="/ru/donate/">Пожертвования и расходы</a></li>' "$work/pub/ru/index.html" || fail "the Russian footer doesn't name its page's title"
+grep -q '>Donate</a>' "$work/pub/index.html" || fail "the top bar lost Donate"
 # The Stats page links the costs section, in each language its own.
 grep -q 'href="/fa/donate/#costs"' "$work/pub/fa/stats/index.html" || fail "the Persian Stats page doesn't link its costs section"
 # In German, the amounts its way; in Persian and Arabic, left to right.
