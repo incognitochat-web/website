@@ -58,12 +58,3 @@ the start in the month it falls in.
   Once the server runs in an attested enclave (see the roadmap on the
   [home page](https://incognitochat.me/)), it will count and sign the
   numbers itself.
-- When an AWS account moves to another AWS organization, AWS hides from it
-  what it cost before the move. So from then on, its costs are read only from
-  the day of the move (`STATS_COSTS_FROM_PRODUCTION` or `STATS_COSTS_FROM_DEV`
-  in the `stats` environment; when to set it is in the
-  [workflow](../.github/workflows/stats.yml)). The days before stay as they
-  were read, and the day of the move has only its hours after the move. The
-  month of the move keeps its file, and (unless the move is on the 1st) its
-  days from the move on are in a second one, `<month>-from-<day>.json`, so a
-  file the job signs still holds only what AWS answered.
