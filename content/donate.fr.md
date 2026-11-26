@@ -13,7 +13,7 @@ Comme il n’y a pas de publicité et rien à vendre, les dons aident à payer l
 
 {{< collective "balance" >}}
 
-Le solde est ce qui reste des dons après déduction des frais et de ce qui a été payé. Seuls les montants et les dates sont affichés ici. Le nom des donateurs qui ont choisi de l’afficher, ainsi que chaque don et chaque dépense depuis le début, se trouvent sur [Open Collective](https://opencollective.com/{{< param "openCollective" >}}/transactions).
+Le solde est ce qui reste des dons après déduction des frais et de ce qui a déjà été versé. Seuls les montants et les dates sont affichés ici. Le nom des donateurs qui ont choisi de l’afficher, ainsi que chaque don et chaque dépense depuis le début, se trouvent sur [Open Collective](https://opencollective.com/{{< param "openCollective" >}}/transactions).
 
 ### Donateurs réguliers
 

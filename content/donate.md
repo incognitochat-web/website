@@ -13,9 +13,9 @@ With no ads and nothing to sell, donations help pay for the service: the servers
 
 {{< collective "balance" >}}
 
-The balance is what's left of the donations after fees and what has been paid out. Only amounts and dates are shown here. Who gave, for donors who chose to be named, and every donation and expense since the start are on [Open Collective](https://opencollective.com/{{< param "openCollective" >}}/transactions).
+The balance is what's left of the donations after fees and what has been paid out; the other amounts are as given, before fees. Only amounts and dates are shown here. Who gave, for donors who chose to be named, and every donation and expense since the start are on [Open Collective](https://opencollective.com/{{< param "openCollective" >}}/transactions).
 
-### Regular supporters
+### Regular donations
 
 Monthly and yearly donations that are still going, each one's amount:
 

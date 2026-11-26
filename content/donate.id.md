@@ -13,7 +13,7 @@ Karena tidak ada iklan dan tidak ada yang kami jual, donasi membantu membiayai l
 
 {{< collective "balance" >}}
 
-Saldo adalah sisa donasi setelah dipotong biaya dan dana yang sudah dibayarkan. Di sini hanya ditampilkan jumlah dan tanggal. Siapa yang berdonasi (bagi donatur yang memilih untuk disebutkan namanya), serta setiap donasi dan setiap pengeluaran sejak awal, ada di [Open Collective](https://opencollective.com/{{< param "openCollective" >}}/transactions).
+Saldo adalah sisa donasi setelah dipotong biaya platform dan pembayaran, serta dana yang sudah dibayarkan. Di sini hanya ditampilkan jumlah dan tanggal. Siapa yang berdonasi (bagi donatur yang memilih untuk disebutkan namanya), serta setiap donasi dan setiap pengeluaran sejak awal, ada di [Open Collective](https://opencollective.com/{{< param "openCollective" >}}/transactions).
 
 ### Pendukung tetap
 
@@ -27,7 +27,7 @@ Donasi bulanan dan tahunan yang masih berjalan, beserta jumlah masing-masing:
 
 ## Berapa biayanya {#costs}
 
-Jumlah yang ditagihkan Amazon Web Services setiap hari untuk menjalankan layanan ini, sebelum dipotong kredit apa pun: produksi per layanan, dan lingkungan uji sebagai satu total. Angka bulan ini adalah perkiraan AWS, dan AWS masih merevisi angka hari-hari terakhir selama beberapa waktu.
+Jumlah yang ditagihkan Amazon Web Services setiap hari untuk menjalankan layanan ini, sebelum dipotong kredit AWS apa pun: produksi per layanan, dan lingkungan uji sebagai satu total. Angka bulan ini adalah perkiraan AWS, dan AWS masih merevisi angka hari-hari terakhir selama beberapa waktu.
 
 {{< costs >}}
 

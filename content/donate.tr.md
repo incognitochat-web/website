@@ -27,7 +27,7 @@ Hâlâ devam eden aylık ve yıllık bağışlar, her birinin tutarıyla:
 
 ## Hizmetin maliyeti {#costs}
 
-Hizmeti çalıştırmak için Amazon Web Services tarafından her gün alınan ücret, varsa krediler düşülmeden önce: canlı ortam hizmete göre, test ortamı ise tek bir toplam olarak. Bu ayın rakamları AWS tahminleridir ve AWS son günlerin rakamlarını bir süre daha düzeltir.
+Hizmeti çalıştırmak için Amazon Web Services tarafından her gün alınan ücret, varsa AWS kredileri düşülmeden önce: canlı ortam hizmete göre, test ortamı ise tek bir toplam olarak. Bu ayın rakamları AWS tahminleridir ve AWS son günlerin rakamlarını bir süre daha düzeltir.
 
 {{< costs >}}
 

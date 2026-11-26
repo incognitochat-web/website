@@ -27,7 +27,7 @@ Comiesięczne i coroczne darowizny, które wciąż są aktywne – kwota każdej
 
 ## Ile to kosztuje {#costs}
 
-Ile Amazon Web Services nalicza każdego dnia za działanie usługi, przed odliczeniem jakichkolwiek kredytów: środowisko produkcyjne według usług, a środowisko testowe jako jedna łączna kwota. Liczby z bieżącego miesiąca to szacunki AWS, a ostatnie dni AWS jeszcze przez jakiś czas koryguje.
+Ile Amazon Web Services nalicza każdego dnia za działanie usługi, przed odliczeniem jakichkolwiek kredytów promocyjnych AWS: środowisko produkcyjne według usług, a środowisko testowe jako jedna łączna kwota. Liczby z bieżącego miesiąca to szacunki AWS, a ostatnie dni AWS jeszcze przez jakiś czas koryguje.
 
 {{< costs >}}
 

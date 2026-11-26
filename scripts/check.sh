@@ -91,6 +91,54 @@ if ! diff -r "$tmp/first" "$out" >/dev/null; then
   exit 1
 fi
 
+# Every link and resource on the site, in every language, leads to a file of
+# the build, and every #anchor to an id on its page: a page removed or
+# renamed (or a heading's anchor) can't leave a link going nowhere.
+python3 -I - "$out" <<'PY'
+import html.parser, pathlib, sys, tomllib, urllib.parse
+out = pathlib.Path(sys.argv[1])
+site = urllib.parse.urlparse(tomllib.load(open("hugo.toml", "rb"))["baseURL"])
+
+class Page(html.parser.HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.links, self.ids = [], set()
+    def handle_starttag(self, tag, attrs):
+        for name, value in attrs:
+            if name == "id" and value:
+                self.ids.add(value)
+            if name in ("href", "src") and value:
+                self.links.append(value)
+
+pages = {}
+for path in out.rglob("*.html"):
+    page = Page()
+    page.feed(path.read_text(encoding="utf-8"))
+    pages[path] = page
+
+def target(path):  # a URL path -> the file it serves, or None
+    file = out / urllib.parse.unquote(path).lstrip("/")
+    if path.endswith("/") or file.is_dir():
+        file = file / "index.html"
+    return file if file.is_file() else None
+
+bad = []
+for path, page in pages.items():
+    here = "/" + str(path.relative_to(out)).removesuffix("index.html")
+    for link in page.links:
+        url = urllib.parse.urlparse(urllib.parse.urljoin(site.geturl().rstrip("/") + here, link))
+        if url.scheme not in ("http", "https") or url.netloc != site.netloc:
+            continue
+        file = target(url.path)
+        if file is None:
+            bad.append(f"{path.relative_to(out)}: {link} leads to no page")
+        elif url.fragment and file.suffix == ".html" and url.fragment not in pages[file].ids:
+            bad.append(f"{path.relative_to(out)}: {link} has no #{url.fragment} on its page")
+if bad:
+    print("error: links going nowhere:\n  " + "\n  ".join(sorted(set(bad))[:40]), file=sys.stderr)
+    sys.exit(1)
+PY
+
 # RFC 9116: Expires is required; keep it more than 30 days ahead, so it is
 # renewed before it lapses, and less than a year ahead.
 expires=$(sed -n 's/^Expires: //p' static/.well-known/security.txt)

@@ -13,7 +13,7 @@ Es gibt keine Werbung und wir verkaufen nichts, daher helfen Spenden, den Dienst
 
 {{< collective "balance" >}}
 
-Der Kontostand ist das, was von den Spenden übrig ist, nach Gebühren und dem, was schon ausgezahlt wurde. Hier stehen nur Beträge und Datumsangaben. Auf [Open Collective](https://opencollective.com/{{< param "openCollective" >}}/transactions) steht, wer gespendet hat (bei Spendern, die sich entschieden haben, genannt zu werden), und jede Spende und jede Ausgabe seit dem Anfang.
+Der Kontostand ist das, was von den Spenden übrig ist, nach Gebühren und dem, was schon ausgezahlt wurde. Hier stehen nur Beträge und Datumsangaben. Auf [Open Collective](https://opencollective.com/{{< param "openCollective" >}}/transactions) steht, wer gespendet hat (bei Spendern, die sich entschieden haben, genannt zu werden), und jede Spende und jede Ausgabe von Anfang an.
 
 ### Regelmäßige Unterstützer
 
