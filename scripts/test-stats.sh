@@ -230,6 +230,16 @@ cp -r "$moved" "$work/moved-again"
 movedrun "$from" production "$moved"
 movedrun "$from" dev "$moved"
 diff -r "$work/moved-again" "$moved" >/dev/null || fail "a second run from COSTS_FROM changed the store"
+# A -from- file COSTS_FROM doesn't name, in a month to write (a corrected
+# date, or the variable removed): refused before anything is written.
+for other in "$lastm-03" ""; do
+  : >"$work/ce.log"
+  if STUB_DAYS=all STUB_LOG=$work/ce.log COSTS_FROM=$other run costs dev "$moved" 2>"$work/stray.err"; then
+    fail "with a -from- file there, COSTS_FROM '$other' wrote"
+  fi
+  grep -qF "$lastm-from-02.json is there" "$work/stray.err" || fail "COSTS_FROM '$other' wasn't refused for the -from- file: $(cat "$work/stray.err")"
+  diff -r "$work/moved-again" "$moved" >/dev/null || fail "COSTS_FROM '$other' changed the store"
+done
 # The Costs page: the stored day before the move, and the days read after.
 "$root/scripts/build-stats.sh" "$moved" "$work/moved.json" >/dev/null
 n=$((10#$(date -u -d "$thism-01 - 1 day" +%d) - 1)) # the 2nd to the end of last month
@@ -312,12 +322,12 @@ if movedrun "$from" dev "$linked2" 2>/dev/null; then fail "a linked -from- file 
 [ "$(cat "$work/outside-cost.json")" = outside ] || fail "a file outside the store changed"
 # What build-stats.sh refuses in a -from- file, for each account: a day
 # before its own, a day or month other than its name's, a day that doesn't
-# exist, an amount out of range, a second value in the file, two in a
-# month; each by its own check.
+# exist, an amount out of range, a second value in the file (after or
+# before), two in a month; each by its own check.
 for acct in dev production; do
   v=1 nan=1e12
   [ $acct = dev ] || v='{"A":1}' nan='{"A":1e12}'
-  for case in valid before name month notaday amount values twice; do
+  for case in valid before name month notaday amount values values2 twice; do
     b=$work/bad-cut && rm -rf "$b" && mkdir -p "$b/stats/costs/$acct"
     d=$b/stats/costs/$acct
     case $case in
@@ -327,7 +337,9 @@ for acct in dev production; do
       month) echo '{"month":"2026-04","from":"2026-03-02","days":{}}' >"$d/2026-03-from-02.json" ;;
       notaday) echo '{"month":"2026-02","from":"2026-02-30","days":{}}' >"$d/2026-02-from-30.json" ;;
       amount) echo "{\"month\":\"2026-03\",\"from\":\"2026-03-02\",\"days\":{\"2026-03-02\":$nan}}" >"$d/2026-03-from-02.json" ;;
-      values) echo "{\"month\":\"2026-04\",\"from\":\"2026-04-02\",\"days\":{\"2026-04-02\":$v}}" >"$d/2026-03-from-02.json"
+      values) echo "{\"month\":\"2026-03\",\"from\":\"2026-03-02\",\"days\":{\"2026-03-02\":$v}}" >"$d/2026-03-from-02.json"
+        echo "{\"month\":\"2026-04\",\"from\":\"2026-04-02\",\"days\":{\"2026-04-02\":$v}}" >>"$d/2026-03-from-02.json" ;;
+      values2) echo "{\"month\":\"2026-04\",\"from\":\"2026-04-02\",\"days\":{\"2026-04-02\":$v}}" >"$d/2026-03-from-02.json"
         echo "{\"month\":\"2026-03\",\"from\":\"2026-03-02\",\"days\":{\"2026-03-02\":$v}}" >>"$d/2026-03-from-02.json" ;;
       twice) echo "{\"month\":\"2026-03\",\"from\":\"2026-03-02\",\"days\":{\"2026-03-02\":$v}}" >"$d/2026-03-from-02.json"
         echo "{\"month\":\"2026-03\",\"from\":\"2026-03-03\",\"days\":{\"2026-03-03\":$v}}" >"$d/2026-03-from-03.json" ;;
@@ -339,7 +351,7 @@ for acct in dev production; do
     else
       case $case in
         valid) fail "a valid $acct -from- file was refused: $(cat "$work/bad.err")" ;;
-        before | name | month | values) want="doesn't hold what its name says" ;;
+        before | name | month | values | values2) want="doesn't hold what its name says" ;;
         *) want="don't have the expected shape" ;;
       esac
       grep -qF "$want" "$work/bad.err" || fail "a $acct -from- file ($case) wasn't refused by its check: $(cat "$work/bad.err")"

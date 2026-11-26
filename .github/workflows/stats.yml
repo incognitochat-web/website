@@ -10,19 +10,23 @@
 # secret, that account is skipped.
 #
 # When an account moves to another AWS organization, its costs are read only
-# from the day of the move (COSTS_FROM in scripts/collect-stats.sh): set its
-# STATS_COSTS_FROM_PRODUCTION or STATS_COSTS_FROM_DEV, a variable of the
-# stats environment, to the move's date (UTC), on that day after the daily
-# cost run (05:50 UTC) and before the move. A cost run without it after the
-# move would overwrite last month's and this month's costs with what the new
-# organization shows: nothing before the move. Then:
-# - Leave it set.
-# - A wrong date: correct it, and delete from the data branch the
-#   <yyyy-mm>-from-<dd>.json file it wrote (with two in a month, the deploy
-#   reads no statistics at all).
-# - A run that slipped through: the data branch's history has the files as
-#   they were.
-# The day of the move then holds only its hours after the move.
+# from the day of the move (COSTS_FROM in scripts/collect-stats.sh). A cost
+# run after the move without it would overwrite last month's and this
+# month's costs with what the new organization shows: nothing before the
+# move. So:
+# - Move once that day's cost run (05:50 UTC, often later) has finished:
+#   check Actions, or run it by hand with costs.
+# - Right after the move, before the next cost run, set the account's
+#   STATS_COSTS_FROM_PRODUCTION or STATS_COSTS_FROM_DEV, a variable of the
+#   stats environment, to the move's date (UTC). The day of the move then
+#   holds only its hours after the move.
+# - Leave it set. While a month in the last two has a -from- file that the
+#   variable doesn't name (a corrected date, or the variable removed), cost
+#   runs refuse to write.
+# - A wrong date: correct it, delete from the data branch the
+#   <yyyy-mm>-from-<dd>.json file it wrote, and restore from the branch's
+#   history any month file a run rewrote. Same for a run that slipped through
+#   before the variable was set.
 #
 # Anyone can check a file of the data branch:
 #

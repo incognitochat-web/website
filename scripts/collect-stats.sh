@@ -194,12 +194,30 @@ costs() {
   jq --arg first "$first" --arg end "$end" '{ResultsByTime: (map(select(.TimePeriod.Start >= $first and .TimePeriod.Start < $end))
        | group_by(.TimePeriod.Start) | map({TimePeriod: .[0].TimePeriod, Estimated: (map(.Estimated) | any),
        Total: .[0].Total, Groups: (map(.Groups // []) | add)}))}' "$tmp/results.json" >"$tmp/costs.json"
-  while read -r month; do
-    # The month reading starts in, when it starts after the 1st: its own file.
-    name=$month
-    if [ -n "$from" ] && [ "$month" = "${from:0:7}" ] && [ "${from:8:2}" != 01 ]; then
-      name=$month-from-${from:8:2}
+  # The month reading starts in, when it starts after the 1st: its own file.
+  name_of() {
+    if [ -n "$from" ] && [ "$1" = "${from:0:7}" ] && [ "${from:8:2}" != 01 ]; then
+      echo "$1-from-${from:8:2}"
+    else
+      echo "$1"
     fi
+  }
+  local months other
+  mapfile -t months < <(jq -r '.ResultsByTime[].TimePeriod.Start[0:7]' "$tmp/costs.json" | sort -u)
+  # A month with a -from- file other than the one COSTS_FROM names (a
+  # corrected date, or COSTS_FROM unset too soon): writing it would leave two
+  # files the Costs page can't choose between, or overwrite the days before
+  # the move. Refused before anything is written, until it's sorted out.
+  for month in ${months[@]+"${months[@]}"}; do
+    for other in "$store/stats/costs/$account/$month"-from-*.json; do
+      if { [ -e "$other" ] || [ -L "$other" ]; } && [ "$other" != "$store/stats/costs/$account/$(name_of "$month").json" ]; then
+        echo "$other is there, but COSTS_FROM is '${from:-not set}': correct COSTS_FROM, or delete that file from the data branch; nothing written" >&2
+        exit 1
+      fi
+    done
+  done
+  for month in ${months[@]+"${months[@]}"}; do
+    name=$(name_of "$month")
     plain "stats/costs/$account/$name.json"
     file=$store/stats/costs/$account/$name.json
     mkdir -p "$(dirname "$file")"
@@ -217,7 +235,7 @@ costs() {
         estimated: [.ResultsByTime[] | select(.TimePeriod.Start | startswith($month)) | select(.Estimated) | .TimePeriod.Start]
       } + (if $cut then {from: $from} else {} end)' "$tmp/costs.json" >"$tmp/month.json"
     mv "$tmp/month.json" "$file"
-  done < <(jq -r '.ResultsByTime[].TimePeriod.Start[0:7]' "$tmp/costs.json" | sort -u)
+  done
   echo "costs ($account): from $first"
 }
 

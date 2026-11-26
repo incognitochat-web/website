@@ -64,6 +64,6 @@ the start in the month it falls in.
   in the `stats` environment; when to set it is in the
   [workflow](../.github/workflows/stats.yml)). The days before stay as they
   were read, and the day of the move has only its hours after the move. The
-  month of the move keeps its file, and its days from the move on are in a
-  second one, `<month>-from-<day>.json`, so a file the job signs still holds
-  only what AWS answered.
+  month of the move keeps its file, and (unless the move is on the 1st) its
+  days from the move on are in a second one, `<month>-from-<day>.json`, so a
+  file the job signs still holds only what AWS answered.
