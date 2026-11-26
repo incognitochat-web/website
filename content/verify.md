@@ -2,7 +2,7 @@
 title: "Verify the app"
 linkTitle: "Verify"
 description: "How anyone can check that the app Telegram opens is exactly the published code."
-updated: "2026-11-21"
+updated: "2026-11-26"
 ---
 
 The encryption only protects you if the app you run is the published code. Inside Telegram, nothing stops whoever runs the bot from pointing it at a different page, so the app is published in a way anyone can check.
@@ -25,11 +25,30 @@ scripts/verify-site.sh {{< param "appOrigin" >}} {{< param "hostingRepo" >}} --r
 
 It checks that every file served is exactly what the unchanged, reviewed workflow built from a release on `main`, that the same workflow run deployed it, and that no other site shares the app's address. With `--rebuild` it also builds that release itself and compares byte for byte. The details, and what it doesn't prove, are in [Verifying the app](https://github.com/{{< param "codeRepo" >}}/blob/main/docs/verifying.md).
 
+## Check what the bot opens {#bot-check}
+
+Whoever runs the bot decides which address Telegram opens, so [`verify-bot.py`](https://github.com/{{< param "codeRepo" >}}/blob/main/scripts/verify-bot.py) checks the other half, as your own Telegram account sees it, without opening the app:
+
+- the app's links (`t.me/{{< param "botUsername" >}}?startapp`),
+- the bot's menu button,
+- the button in the bot's reply to /start (it sends /start, then deletes those messages).
+
+Each must open exactly `{{< param "appOrigin" >}}/`. You need Python 3.11 or later, your own `api_id` and `api_hash` from [my.telegram.org](https://my.telegram.org), and your Telegram login: you type your phone number and the code Telegram sends you, the login stays in memory, and the script logs out at the end. From a checkout of the code:
+
+```shell
+python3 -m venv ~/.cache/verify-bot
+~/.cache/verify-bot/bin/pip install --require-hashes --only-binary :all: -r scripts/verify-bot.build.txt
+~/.cache/verify-bot/bin/pip install --require-hashes --no-build-isolation -r scripts/verify-bot.requirements.txt
+TG_API_ID=<id> TG_API_HASH=<hash> ~/.cache/verify-bot/bin/python scripts/verify-bot.py {{< param "botUsername" >}} {{< param "appOrigin" >}}
+```
+
+The details are in [Checking what the bot opens](https://github.com/{{< param "codeRepo" >}}/blob/main/docs/verifying.md#checking-what-the-bot-opens).
+
 ## Checked automatically
 
-The same script runs against the live app every hour, and once a day with `--rebuild`. The results, and what each check covers, are on the [Status](/status/) page.
+Both scripts run on a schedule, in public: `verify-site.sh` against the live app every hour, and once a day with `--rebuild`; `verify-bot.py` every hour, with a Telegram account made for this. The results are on the [Status](/status/) page.
 
 ## What this can't prove
 
-- **What one person was shown inside Telegram.** The bot's owner could point the app at another address, for everyone or for chosen people. A page on another address has none of your keys; to get anywhere it would have to make you set up again, which ends your account loudly on your old device and changes your link.
+- **What other people are shown inside Telegram.** The bot's owner could point the app at another address for chosen people only, or for a few minutes between checks. The hourly check sees only what its own account is shown, and your own run only what you are shown. A page on another address has none of your keys; to get anywhere it would have to make you set up again, which ends your account loudly on your old device and changes your link.
 - **What the server runs.** The design doesn't depend on it: a malicious server can drop or delay messages and watch timing, but can't read them or forge them, because the app checks every key itself. Proving the server's code is a future step (an attested enclave).
