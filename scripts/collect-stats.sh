@@ -183,7 +183,8 @@ costs() {
   # A -from- file of last month or this one other than the one COSTS_FROM
   # names was left by a corrected date, or COSTS_FROM was unset too soon:
   # writing would leave two files the Costs page can't choose between, or
-  # overwrite the days before the move. Refused before anything is written.
+  # overwrite the days before the move. Refused before anything is written,
+  # or Cost Explorer asked.
   for other in "$store/stats/costs/$account/"*-from-*.json; do
     { [ -e "$other" ] || [ -L "$other" ]; } || continue
     month=$(basename "$other")
