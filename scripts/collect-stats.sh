@@ -171,6 +171,28 @@ costs() {
       return 0
     fi
   fi
+  # The month reading starts in, when it starts after the 1st: its own file.
+  name_of() {
+    if [ -n "$from" ] && [ "$1" = "${from:0:7}" ] && [ "${from:8:2}" != 01 ]; then
+      echo "$1-from-${from:8:2}"
+    else
+      echo "$1"
+    fi
+  }
+  local other
+  # A -from- file of last month or this one other than the one COSTS_FROM
+  # names was left by a corrected date, or COSTS_FROM was unset too soon:
+  # writing would leave two files the Costs page can't choose between, or
+  # overwrite the days before the move. Refused before anything is written.
+  for other in "$store/stats/costs/$account/"*-from-*.json; do
+    { [ -e "$other" ] || [ -L "$other" ]; } || continue
+    month=$(basename "$other")
+    month=${month:0:7}
+    if [[ ! $month < $window ]] && [ "$other" != "$store/stats/costs/$account/$(name_of "$month").json" ]; then
+      echo "$other is there, but COSTS_FROM is '${from:-not set}'. If that file's day is the move's, set COSTS_FROM to it; if a wrong date wrote it, delete it from the data branch (.github/workflows/stats.yml says what else). Nothing written" >&2
+      exit 1
+    fi
+  done
   local group=()
   # shellcheck disable=SC2054 # one argument with commas, as the CLI takes it
   [ "$account" = production ] && group=(--group-by Type=DIMENSION,Key=SERVICE)
@@ -195,28 +217,7 @@ costs() {
   jq --arg first "$first" --arg end "$end" '{ResultsByTime: (map(select(.TimePeriod.Start >= $first and .TimePeriod.Start < $end))
        | group_by(.TimePeriod.Start) | map({TimePeriod: .[0].TimePeriod, Estimated: (map(.Estimated) | any),
        Total: .[0].Total, Groups: (map(.Groups // []) | add)}))}' "$tmp/results.json" >"$tmp/costs.json"
-  # The month reading starts in, when it starts after the 1st: its own file.
-  name_of() {
-    if [ -n "$from" ] && [ "$1" = "${from:0:7}" ] && [ "${from:8:2}" != 01 ]; then
-      echo "$1-from-${from:8:2}"
-    else
-      echo "$1"
-    fi
-  }
-  local months other
-  # A -from- file of last month or this one other than the one COSTS_FROM
-  # names was left by a corrected date, or COSTS_FROM was unset too soon:
-  # writing would leave two files the Costs page can't choose between, or
-  # overwrite the days before the move. Refused before anything is written.
-  for other in "$store/stats/costs/$account/"*-from-*.json; do
-    { [ -e "$other" ] || [ -L "$other" ]; } || continue
-    month=$(basename "$other")
-    month=${month:0:7}
-    if [[ ! $month < $window ]] && [ "$other" != "$store/stats/costs/$account/$(name_of "$month").json" ]; then
-      echo "$other is there, but COSTS_FROM is '${from:-not set}'. If that file's day is the move's, set COSTS_FROM to it; if a wrong date wrote it, delete it from the data branch (.github/workflows/stats.yml says what else). Nothing written" >&2
-      exit 1
-    fi
-  done
+  local months
   mapfile -t months < <(jq -r '.ResultsByTime[].TimePeriod.Start[0:7]' "$tmp/costs.json" | sort -u)
   # Every file it writes is a plain file or none yet, checked before any is.
   for month in ${months[@]+"${months[@]}"}; do

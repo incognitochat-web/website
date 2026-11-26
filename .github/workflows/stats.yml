@@ -22,12 +22,13 @@
 #   holds only its hours after the move.
 # - Leave it set. While last month or this month has a -from- file the
 #   variable doesn't name (a corrected date, or the variable removed), cost
-#   runs refuse to write.
+#   runs refuse to write; a move on the 1st leaves no -from- file, so then
+#   nothing refuses.
 # - A wrong date: set the right one, delete from the data branch the
 #   <yyyy-mm>-from-<dd>.json file the wrong one wrote, then restore from the
 #   branch's history any month file its runs rewrote.
 # - A cost run after the move, before the variable was set: set it, then
-#   restore from the branch's history the month files that run rewrote.
+#   restore from the branch's history the month files those runs rewrote.
 #
 # Anyone can check a file of the data branch:
 #

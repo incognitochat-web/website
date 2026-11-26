@@ -232,14 +232,17 @@ movedrun "$from" dev "$moved"
 diff -r "$work/moved-again" "$moved" >/dev/null || fail "a second run from COSTS_FROM changed the store"
 # A -from- file of last month or this one that COSTS_FROM doesn't name (a
 # corrected date, also one in this month; or the variable removed): refused
-# before anything is written.
+# before anything is written, or Cost Explorer asked.
 others=("$lastm-03" "")
+# (On the 1st, this month has no day to read yet: nothing to test there.)
 [ "$(date -u +%d)" = 01 ] || others+=("$thism-01")
 for acct in dev production; do
   for other in "${others[@]}"; do
-    if STUB_DAYS=all COSTS_FROM=$other run costs $acct "$moved" 2>"$work/stray.err"; then
+    : >"$work/ce.log"
+    if STUB_DAYS=all STUB_LOG=$work/ce.log COSTS_FROM=$other run costs $acct "$moved" 2>"$work/stray.err"; then
       fail "with a $acct -from- file there, COSTS_FROM '$other' wrote"
     fi
+    [ ! -s "$work/ce.log" ] || fail "$acct: Cost Explorer was asked (and paid) before the -from- file was refused"
     grep -qF "$acct/$lastm-from-02.json is there" "$work/stray.err" || fail "$acct: COSTS_FROM '$other' wasn't refused for the -from- file: $(cat "$work/stray.err")"
     diff -r "$work/moved-again" "$moved" >/dev/null || fail "$acct: COSTS_FROM '$other' changed the store"
   done
@@ -332,7 +335,8 @@ if movedrun "$from" dev "$linked2" 2>/dev/null; then fail "a linked -from- file 
 [ -L "$linked2/stats/costs/dev/$lastm-from-02.json" ] || fail "a linked -from- file was replaced"
 [ "$(cat "$work/outside-cost.json")" = outside ] || fail "a file outside the store changed"
 # Every path is checked before anything is written: a link at this month's
-# file leaves last month's as it was; a folder at a file's path is refused.
+# file leaves last month's as it was (on the 1st, there's no day of this
+# month to write); a folder at a file's path is refused.
 if [ "$(date -u +%d)" != 01 ]; then
   linkfirst=$work/linkfirst && cp -r "$work/moved-before" "$linkfirst"
   ln -s "$work/outside-cost.json" "$linkfirst/stats/costs/dev/$thism.json"
