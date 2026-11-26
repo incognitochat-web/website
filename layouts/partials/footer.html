@@ -12,8 +12,10 @@
     <div class="footer-col">
       <h2>{{ i18n "footerProject" }}</h2>
       <ul>
-        {{- range slice "official" "verify" "status" "stats" "faq" "security" "donate" }}
-          {{- with site.GetPage . }}<li><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></li>{{ end }}
+        {{- /* Each page by its short name, as in the top bar; the Donate page by
+             its whole title, "Donations and costs", so the costs are found here. */}}
+        {{- range $name := slice "official" "verify" "status" "stats" "faq" "security" "donate" }}
+          {{- with site.GetPage $name }}<li><a href="{{ .RelPermalink }}">{{ cond (eq $name "donate") .Title .LinkTitle }}</a></li>{{ end }}
         {{- end }}
       </ul>
     </div>
