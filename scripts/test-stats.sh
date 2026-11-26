@@ -166,7 +166,7 @@ cp "$work/real.json" "$b/stats/hourly/x.json"
 build() { # stats.json output-dir messages-counted-from [media-counted-from] [accounts-counted-from]
   rm -rf "$work/site"
   cp -r "$root" "$work/site"
-  rm -rf "$work/site/public" "$work/site/data/stats.json" "$work/site/.git" "$work/site/.stats-store"
+  rm -rf "$work/site/public" "$work/site/data/stats.json" "$work/site/data/collective.json" "$work/site/.git" "$work/site/.stats-store"
   mkdir -p "$work/site/data"
   cp "$1" "$work/site/data/stats.json"
   sed -i "s/^    messages = \".*\"/    messages = \"$3\"/; s/^    media = \".*\"/    media = \"${4-$3}\"/; s/^    accounts = \".*\"/    accounts = \"${5-2000-01-01T00}\"/" "$work/site/hugo.toml"

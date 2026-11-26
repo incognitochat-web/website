@@ -46,11 +46,21 @@ them into the `data` branch, one file per day of counts and per month of
 costs; the workflow signs each file it writes (Sigstore) and redeploys the
 site. The deploy turns the branch into `data/stats.json`
 (`scripts/build-stats.sh`, not committed) for the Stats page (usage) and
-the Costs page: the newest 13 months, one shown at a time. Each count shows
+the costs on the Donate page: the newest 13 months, one shown at a time. Each count shows
 from the hour `params.statsCountedFrom` in `hugo.toml` says production
 first counted it.
 What each number counts, and how to check the signed files, is in
 [`docs/statistics.md`](docs/statistics.md).
+
+## Donations
+
+The Donate page shows the collective's balance, its regular donations and
+the last 30 days' donations, as amounts and dates only. The deploy reads
+them from Open Collective's public API with no token
+(`scripts/fetch-collective.sh`, into `data/collective.json`, not
+committed); the query asks for nothing about who gave, so nothing a donor
+later hides on Open Collective stays here. If it can't read them, the page
+says so.
 
 ## Working on it
 
