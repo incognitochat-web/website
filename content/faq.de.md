@@ -55,6 +55,10 @@ Keine E-Mail-Adresse, keine Telefonnummer, kein Passwort: Öffne den Link einer 
 
 Blockiere die Person: Sie wird nicht darüber informiert, und nichts, was sie sendet, kommt an. Wer ein neues Konto einrichtet, erscheint unter einem neuen Namen, daher musst du die Person vielleicht erneut blockieren. Du kannst deinen Link auch jederzeit gegen einen neuen tauschen: Über den alten kann dann kein neuer Chat mehr beginnen, aber bereits begonnene Chats laufen weiter. Blockiere darin alle, von denen du nichts hören willst.
 
+### Kann ich einem Chat einen eigenen Namen geben?
+
+Ja. Tippe im Chat auf **⋯** und dann auf **Umbenennen** und wähle einen Namen und ein Emoji als Bild (oder halte den Chat in deiner Liste gedrückt und tippe auf ✏️). Dieser Name wird nie gesendet: Weder die andere Person noch der Server sieht ihn. Er bleibt nur auf diesem Gerät, verschlüsselt wie deine Chats und dort genauso sicher wie sie. Wenn du den Chat löschst, wird auch der Name gelöscht, außer du blockierst die Person zusätzlich; schreibt sie wieder, kommt der Chat unter seinem ursprünglichen Namen zurück.
+
 ### Kann ich löschen, was ich gesendet habe?
 
 Ja. Wenn du eine Nachricht löschst, wird sie standardmäßig auf beiden Seiten entfernt, ob gelesen oder nicht. Du kannst auch einen ganzen Chat auf beiden Seiten löschen oder die Chats in deiner Liste, wenn du dein Konto löschst.

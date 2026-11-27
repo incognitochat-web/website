@@ -55,6 +55,10 @@ No email, phone number or password: open someone's link in Telegram, tap **Set u
 
 Block them: they aren't told, and nothing they send arrives. Someone who sets up a new account shows up under a new label, so you may need to block them again. You can also replace your link at any time: no new chats can start through the old one, but chats already started continue: block anyone in them you don't want to hear from.
 
+### Can I give a chat a name of my own?
+
+Yes. In the chat, tap **⋯**, then **Rename**, and choose a name and an emoji for its picture (or hold the chat in your list and tap ✏️). The name is never sent: the other person and the server never see it. It stays only on this device, encrypted like your chats, and as safe as they are there. Deleting the chat deletes the name too, unless you block them as well; if they write again, the chat comes back under its original label.
+
 ### Can I delete what I sent?
 
 Yes. Deleting a message removes it for both sides by default, read or not. You can delete a whole chat for both sides too, or the chats in your list when you delete your account.

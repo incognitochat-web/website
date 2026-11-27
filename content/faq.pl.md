@@ -55,6 +55,10 @@ Bez adresu e-mail, numeru telefonu i hasła: otwórz czyjś link w Telegramie, r
 
 Zablokuj tę osobę: nie zostanie o tym powiadomiona, a nic, co wyśle, nie dotrze. Ktoś, kto skonfiguruje nowe konto, pojawi się pod nową nazwą, więc być może trzeba będzie zablokować go ponownie. W każdej chwili możesz też wymienić swój link na nowy: przez stary nie można już rozpocząć nowego czatu, ale czaty już rozpoczęte trwają dalej, więc zablokuj w nich każdego, od kogo nie chcesz dostawać wiadomości.
 
+### Czy mogę nadać czatowi własną nazwę?
+
+Tak. W czacie stuknij **⋯**, a potem **Zmień nazwę**, i wybierz nazwę oraz emoji jako obraz (albo przytrzymaj czat na liście i stuknij ✏️). Ta nazwa nigdy nie jest wysyłana: nie widzi jej ani druga osoba, ani serwer. Zostaje tylko na tym urządzeniu, zaszyfrowana tak jak twoje czaty, i tam tak samo bezpieczna jak one. Usunięcie czatu usuwa też nazwę, chyba że dodatkowo zablokujesz tę osobę; jeśli napisze ponownie, czat wróci pod swoją pierwotną nazwą.
+
 ### Czy mogę usuwać wysłane wiadomości?
 
 Tak. Usunięcie wiadomości domyślnie usuwa ją po obu stronach, niezależnie od tego, czy została przeczytana. Cały czat też możesz usunąć po obu stronach, a przy usuwaniu konta – czaty z twojej listy.

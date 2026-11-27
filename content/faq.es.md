@@ -55,6 +55,10 @@ Sin correo electrónico, número de teléfono ni contraseña: abre el enlace de 
 
 Bloquea a esa persona: no se le avisa, y no te llega nada de lo que envíe. Si configura una cuenta nueva, aparece con una etiqueta nueva, así que puede que tengas que volver a bloquearla. También puedes cambiar tu enlace por uno nuevo cuando quieras: a través del anterior ya no se pueden iniciar chats nuevos, pero los que ya empezaron continúan; en ellos, bloquea a quien no quieras que te siga escribiendo.
 
+### ¿Puedo ponerle a un chat el nombre que yo quiera?
+
+Sí. En el chat, toca **⋯** y luego **Cambiar nombre**, y elige un nombre y un emoji para su imagen (o mantén pulsado el chat en tu lista y toca ✏️). Ese nombre nunca se envía: no lo ven ni la otra persona ni el servidor. Se queda solo en este dispositivo, cifrado como tus chats, y tan protegido como ellos allí. Eliminar el chat elimina también el nombre, salvo que además bloquees a esa persona; si vuelve a escribir, el chat reaparece con su etiqueta original.
+
 ### ¿Puedo eliminar lo que envié?
 
 Sí. Al eliminar un mensaje, se elimina para ambos de forma predeterminada, se haya leído o no. También puedes eliminar un chat entero para ambos, o los chats de tu lista al eliminar tu cuenta.

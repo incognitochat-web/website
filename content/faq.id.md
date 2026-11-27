@@ -55,6 +55,10 @@ Tidak perlu email, nomor telepon, atau kata sandi: buka tautan seseorang di Tele
 
 Blokir dia: dia tidak diberi tahu, dan apa pun yang dia kirim tidak sampai. Orang yang menyiapkan akun baru akan muncul dengan label baru, jadi Anda mungkin perlu memblokirnya lagi. Anda juga bisa mengganti tautan Anda kapan saja: obrolan baru tidak bisa lagi dimulai lewat tautan lama, tetapi obrolan yang sudah dimulai tetap berlanjut. Blokir siapa pun di obrolan-obrolan itu yang pesannya tidak ingin Anda terima.
 
+### Bisakah saya memberi obrolan nama pilihan sendiri?
+
+Bisa. Di obrolan, ketuk **⋯**, lalu **Ganti nama**, lalu pilih nama dan emoji untuk gambarnya (atau tekan lama obrolan di daftar Anda dan ketuk ✏️). Nama itu tidak pernah dikirim: baik pihak lain maupun server tidak melihatnya. Nama itu hanya tersimpan di perangkat ini, terenkripsi seperti obrolan Anda, dan sama amannya seperti obrolan Anda di sana. Menghapus obrolan juga menghapus namanya, kecuali Anda juga memblokir dia; jika dia menulis lagi, obrolan itu muncul kembali dengan label semulanya.
+
 ### Bisakah saya menghapus pesan yang sudah saya kirim?
 
 Bisa. Secara bawaan, pesan yang Anda hapus terhapus di kedua sisi, baik sudah dibaca maupun belum. Anda juga bisa menghapus seluruh obrolan di kedua sisi, atau obrolan di daftar Anda saat menghapus akun Anda.
