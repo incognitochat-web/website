@@ -2,7 +2,7 @@
 title: "Preguntas y respuestas"
 linkTitle: "Preguntas"
 description: "Respuestas breves sobre lo que protege Incognito Chat, lo que no puede proteger y cómo usarlo."
-updated: "2026-11-26"
+updated: "2026-11-27"
 ---
 
 ## Privacidad
@@ -65,11 +65,11 @@ En un solo dispositivo a la vez. Configurar la app en otro dispositivo reemplaza
 
 ### ¿Cómo elimino mi cuenta?
 
-En la pestaña **Mi enlace**, toca **Eliminar cuenta**. Mientras la app siga abierta, el servidor elimina en cuestión de minutos lo que guarda para ti, y después la app elimina tus chats y tus claves de este dispositivo (en algunos dispositivos, pueden quedar rastros en los archivos de almacenamiento de la app). Los archivos adjuntos que enviaste se quedan disponibles para que la otra persona los descargue hasta que expiren, en un plazo de 30 días, salvo que marques **Eliminar también mis chats para la otra persona**: entonces, en cada chat de tu lista, se le pide a la app de la otra persona que lo elimine, y los archivos adjuntos que enviaste ahí se eliminan del servidor (los que queden expiran de todos modos en un plazo de 30 días).
+En la pestaña **Ajustes**, toca **Eliminar cuenta**. Mientras la app siga abierta, el servidor elimina en cuestión de minutos lo que guarda para ti, y después la app elimina tus chats y tus claves de este dispositivo (en algunos dispositivos, pueden quedar rastros en los archivos de almacenamiento de la app). Los archivos adjuntos que enviaste se quedan disponibles para que la otra persona los descargue hasta que expiren, en un plazo de 30 días, salvo que marques **Eliminar también mis chats para la otra persona**: entonces, en cada chat de tu lista, se le pide a la app de la otra persona que lo elimine, y los archivos adjuntos que enviaste ahí se eliminan del servidor (los que queden expiran de todos modos en un plazo de 30 días).
 
 ### ¿Cuánto tiempo se conserva todo?
 
-En el servidor: los mensajes cifrados, hasta que tu dispositivo los recibe; los archivos adjuntos, hasta que se eliminan; como máximo 30 días en ambos casos. Tu cuenta (incluidos tu enlace, el ID de Telegram ofuscado y el mes en que abriste la app por última vez) se conserva hasta que la eliminas o hasta que pasan 12 meses sin que se abra la app. En tu dispositivo: tus chats, hasta que los eliminas. En **Datos y almacenamiento**, en la pestaña **Mi enlace**, eliges cuánto tiempo se conservan los archivos adjuntos (siempre, 1 mes o 1 semana).
+En el servidor: los mensajes cifrados, hasta que tu dispositivo los recibe; los archivos adjuntos, hasta que se eliminan; como máximo 30 días en ambos casos. Tu cuenta (incluidos tu enlace, el ID de Telegram ofuscado y el mes en que abriste la app por última vez) se conserva hasta que la eliminas o hasta que pasan 12 meses sin que se abra la app. En tu dispositivo: tus chats, hasta que los eliminas. En **Datos y almacenamiento**, en la pestaña **Ajustes**, eliges cuánto tiempo se conservan los archivos adjuntos (siempre, 1 mes o 1 semana).
 
 ## El proyecto
 

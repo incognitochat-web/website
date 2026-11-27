@@ -2,7 +2,7 @@
 title: "Questions and answers"
 linkTitle: "FAQ"
 description: "Short answers about what Incognito Chat protects, what it can't, and how to use it."
-updated: "2026-11-26"
+updated: "2026-11-27"
 ---
 
 ## Privacy
@@ -65,11 +65,11 @@ One device at a time. Setting up on another device replaces your account: your o
 
 ### How do I delete my account?
 
-On the **My link** tab, tap **Delete account**. While the app stays open, the server deletes what it holds for you within minutes, then the app deletes your chats and keys from this device (on some devices, traces can stay in the app's storage files). Attachments you sent stay for the other side to fetch until they expire, within 30 days, unless you tick **Also delete my chats for the other side**: then, for each chat in your list, the other person's app is asked to delete it, and the attachments you sent there are deleted from the server (any left still expire within 30 days).
+On the **Settings** tab, tap **Delete account**. While the app stays open, the server deletes what it holds for you within minutes, then the app deletes your chats and keys from this device (on some devices, traces can stay in the app's storage files). Attachments you sent stay for the other side to fetch until they expire, within 30 days, unless you tick **Also delete my chats for the other side**: then, for each chat in your list, the other person's app is asked to delete it, and the attachments you sent there are deleted from the server (any left still expire within 30 days).
 
 ### How long is anything kept?
 
-On the server: encrypted messages until your device has them, attachments until they're deleted, at most 30 days for both. Your account (including your link, the scrambled Telegram ID, and the month you last opened the app) stays until you delete it, or until the app goes unopened for 12 months. On your device: your chats, until you delete them. You choose how long attachments stay (forever, a month or a week) in **Data and storage**, on the **My link** tab.
+On the server: encrypted messages until your device has them, attachments until they're deleted, at most 30 days for both. Your account (including your link, the scrambled Telegram ID, and the month you last opened the app) stays until you delete it, or until the app goes unopened for 12 months. On your device: your chats, until you delete them. You choose how long attachments stay (forever, a month or a week) in **Data and storage**, on the **Settings** tab.
 
 ## The project
 

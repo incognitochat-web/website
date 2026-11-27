@@ -2,7 +2,7 @@
 title: "Fragen und Antworten"
 linkTitle: "Fragen"
 description: "Kurze Antworten darauf, was Incognito Chat schützt, was die App nicht schützen kann und wie du sie benutzt."
-updated: "2026-11-26"
+updated: "2026-11-27"
 ---
 
 ## Privatsphäre
@@ -65,11 +65,11 @@ Nur auf einem Gerät gleichzeitig. Wenn du die App auf einem anderen Gerät einr
 
 ### Wie lösche ich mein Konto?
 
-Tippe im Tab **Mein Link** auf **Konto löschen**. Solange die App geöffnet bleibt, löscht der Server innerhalb weniger Minuten, was er für dich aufbewahrt, danach löscht die App deine Chats und Schlüssel von diesem Gerät (auf manchen Geräten können Spuren in den Speicherdateien der App bleiben). Anhänge, die du gesendet hast, kann die andere Seite noch abrufen, bis sie ablaufen, spätestens nach 30 Tagen, außer du setzt das Häkchen bei **Auch meine Chats auf der anderen Seite löschen**: Dann wird bei jedem Chat in deiner Liste die App der anderen Seite gebeten, ihn zu löschen, und die Anhänge, die du dort gesendet hast, werden vom Server gelöscht (was übrig ist, läuft trotzdem spätestens nach 30 Tagen ab).
+Tippe im Tab **Einstellungen** auf **Konto löschen**. Solange die App geöffnet bleibt, löscht der Server innerhalb weniger Minuten, was er für dich aufbewahrt, danach löscht die App deine Chats und Schlüssel von diesem Gerät (auf manchen Geräten können Spuren in den Speicherdateien der App bleiben). Anhänge, die du gesendet hast, kann die andere Seite noch abrufen, bis sie ablaufen, spätestens nach 30 Tagen, außer du setzt das Häkchen bei **Auch meine Chats auf der anderen Seite löschen**: Dann wird bei jedem Chat in deiner Liste die App der anderen Seite gebeten, ihn zu löschen, und die Anhänge, die du dort gesendet hast, werden vom Server gelöscht (was übrig ist, läuft trotzdem spätestens nach 30 Tagen ab).
 
 ### Wie lange wird etwas aufbewahrt?
 
-Auf dem Server: verschlüsselte Nachrichten, bis dein Gerät sie hat, Anhänge, bis sie gelöscht werden, beides höchstens 30 Tage lang. Dein Konto (darunter dein Link, die verschleierte Telegram-ID und der Monat, in dem du die App zuletzt geöffnet hast) bleibt, bis du es löschst oder bis die App 12 Monate lang nicht geöffnet wird. Auf deinem Gerät: deine Chats, bis du sie löschst. Wie lange Anhänge bleiben (dauerhaft, einen Monat oder eine Woche), legst du unter **Daten und Speicher** im Tab **Mein Link** fest.
+Auf dem Server: verschlüsselte Nachrichten, bis dein Gerät sie hat, Anhänge, bis sie gelöscht werden, beides höchstens 30 Tage lang. Dein Konto (darunter dein Link, die verschleierte Telegram-ID und der Monat, in dem du die App zuletzt geöffnet hast) bleibt, bis du es löschst oder bis die App 12 Monate lang nicht geöffnet wird. Auf deinem Gerät: deine Chats, bis du sie löschst. Wie lange Anhänge bleiben (dauerhaft, einen Monat oder eine Woche), legst du unter **Daten und Speicher** im Tab **Einstellungen** fest.
 
 ## Das Projekt
 

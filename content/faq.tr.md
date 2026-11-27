@@ -2,7 +2,7 @@
 title: "Sorular ve yanıtlar"
 linkTitle: "SSS"
 description: "Incognito Chat neyi korur, neyi koruyamaz ve nasıl kullanılır: kısa yanıtlar."
-updated: "2026-11-26"
+updated: "2026-11-27"
 ---
 
 ## Gizlilik
@@ -65,11 +65,11 @@ Aynı anda yalnızca bir cihazda. Başka bir cihazda kurulum yapmak hesabınız�
 
 ### Hesabımı nasıl silerim?
 
-**Bağlantım** sekmesinde **Hesabı sil** düğmesine dokunun. Uygulama açık kaldığı sürece sunucu, sizin için tuttuklarını birkaç dakika içinde siler; ardından uygulama sohbetlerinizi ve anahtarlarınızı bu cihazdan siler (bazı cihazlarda uygulamanın depolama dosyalarında izler kalabilir). Gönderdiğiniz ekler, karşı taraf indirebilsin diye süreleri dolana kadar kalır; bu da en geç 30 gün içinde olur. **Sohbetlerimi karşı taraftan da sil** seçeneğini işaretlerseniz ise listenizdeki her sohbet için karşı tarafın uygulamasından o sohbeti silmesi istenir ve oraya gönderdiğiniz ekler sunucudan silinir (kalan ekler yine en geç 30 gün içinde silinir).
+**Ayarlar** sekmesinde **Hesabı sil** düğmesine dokunun. Uygulama açık kaldığı sürece sunucu, sizin için tuttuklarını birkaç dakika içinde siler; ardından uygulama sohbetlerinizi ve anahtarlarınızı bu cihazdan siler (bazı cihazlarda uygulamanın depolama dosyalarında izler kalabilir). Gönderdiğiniz ekler, karşı taraf indirebilsin diye süreleri dolana kadar kalır; bu da en geç 30 gün içinde olur. **Sohbetlerimi karşı taraftan da sil** seçeneğini işaretlerseniz ise listenizdeki her sohbet için karşı tarafın uygulamasından o sohbeti silmesi istenir ve oraya gönderdiğiniz ekler sunucudan silinir (kalan ekler yine en geç 30 gün içinde silinir).
 
 ### Hangi veri ne kadar süre saklanır?
 
-Sunucuda: şifreli mesajlar cihazınız onları alana kadar, ekler silinene kadar; ikisi için de en fazla 30 gün. Hesabınız (bağlantınız, karıştırılmış Telegram kimliğiniz ve uygulamayı en son açtığınız ay dahil), siz onu silene kadar ya da uygulama 12 ay boyunca hiç açılmadan kalana kadar saklanır. Cihazınızda: sohbetleriniz, siz onları silene kadar. Eklerin ne kadar süre kalacağını (süresiz, bir ay ya da bir hafta) **Bağlantım** sekmesindeki **Veri ve depolama** bölümünde siz seçersiniz.
+Sunucuda: şifreli mesajlar cihazınız onları alana kadar, ekler silinene kadar; ikisi için de en fazla 30 gün. Hesabınız (bağlantınız, karıştırılmış Telegram kimliğiniz ve uygulamayı en son açtığınız ay dahil), siz onu silene kadar ya da uygulama 12 ay boyunca hiç açılmadan kalana kadar saklanır. Cihazınızda: sohbetleriniz, siz onları silene kadar. Eklerin ne kadar süre kalacağını (süresiz, bir ay ya da bir hafta) **Ayarlar** sekmesindeki **Veri ve depolama** bölümünde siz seçersiniz.
 
 ## Proje
 

@@ -2,7 +2,7 @@
 title: "Questions et réponses"
 linkTitle: "Questions"
 description: "Des réponses courtes sur ce qu’Incognito Chat protège, ce qu’il ne peut pas protéger et comment l’utiliser."
-updated: "2026-11-26"
+updated: "2026-11-27"
 ---
 
 ## Confidentialité
@@ -65,11 +65,11 @@ Sur un seul appareil à la fois. Configurer l’application sur un autre apparei
 
 ### Comment supprimer mon compte ?
 
-Dans l’onglet **Mon lien**, appuyez sur **Supprimer le compte**. Tant que l’application reste ouverte, le serveur supprime en quelques minutes ce qu’il conserve pour vous, puis l’application supprime vos échanges et vos clés de cet appareil (sur certains appareils, des traces peuvent rester dans les fichiers de stockage de l’application). Les pièces jointes que vous avez envoyées restent disponibles pour que l’autre personne les récupère, jusqu’à ce qu’elles expirent, au plus tard au bout de 30 jours, sauf si vous cochez **Supprimer aussi mes échanges de l’autre côté** : alors, pour chaque échange de votre liste, l’application de l’autre personne reçoit la demande de le supprimer, et les pièces jointes que vous y avez envoyées sont supprimées du serveur (s’il en reste, elles expirent elles aussi au plus tard au bout de 30 jours).
+Dans l’onglet **Paramètres**, appuyez sur **Supprimer le compte**. Tant que l’application reste ouverte, le serveur supprime en quelques minutes ce qu’il conserve pour vous, puis l’application supprime vos échanges et vos clés de cet appareil (sur certains appareils, des traces peuvent rester dans les fichiers de stockage de l’application). Les pièces jointes que vous avez envoyées restent disponibles pour que l’autre personne les récupère, jusqu’à ce qu’elles expirent, au plus tard au bout de 30 jours, sauf si vous cochez **Supprimer aussi mes échanges de l’autre côté** : alors, pour chaque échange de votre liste, l’application de l’autre personne reçoit la demande de le supprimer, et les pièces jointes que vous y avez envoyées sont supprimées du serveur (s’il en reste, elles expirent elles aussi au plus tard au bout de 30 jours).
 
 ### Combien de temps les données sont-elles conservées ?
 
-Sur le serveur : les messages chiffrés jusqu’à ce que votre appareil les ait reçus, les pièces jointes jusqu’à ce qu’elles soient supprimées, 30 jours au maximum dans les deux cas. Votre compte (y compris votre lien, l’identifiant Telegram brouillé et le mois où vous avez ouvert l’application pour la dernière fois) est conservé jusqu’à ce que vous le supprimiez, ou jusqu’à ce que l’application reste 12 mois sans être ouverte. Sur votre appareil : vos échanges, jusqu’à ce que vous les supprimiez. Vous choisissez combien de temps les pièces jointes sont conservées (pour toujours, 1 mois ou 1 semaine) dans **Données et stockage**, sous l’onglet **Mon lien**.
+Sur le serveur : les messages chiffrés jusqu’à ce que votre appareil les ait reçus, les pièces jointes jusqu’à ce qu’elles soient supprimées, 30 jours au maximum dans les deux cas. Votre compte (y compris votre lien, l’identifiant Telegram brouillé et le mois où vous avez ouvert l’application pour la dernière fois) est conservé jusqu’à ce que vous le supprimiez, ou jusqu’à ce que l’application reste 12 mois sans être ouverte. Sur votre appareil : vos échanges, jusqu’à ce que vous les supprimiez. Vous choisissez combien de temps les pièces jointes sont conservées (pour toujours, 1 mois ou 1 semaine) dans **Données et stockage**, sous l’onglet **Paramètres**.
 
 ## Le projet
 

@@ -2,7 +2,7 @@
 title: "Pytania i odpowiedzi"
 linkTitle: "Pytania"
 description: "Krótkie odpowiedzi o tym, co Incognito Chat chroni, przed czym chronić nie może i jak z niego korzystać."
-updated: "2026-11-26"
+updated: "2026-11-27"
 ---
 
 ## Prywatność
@@ -65,11 +65,11 @@ Na jednym urządzeniu naraz. Konfiguracja na innym urządzeniu zastępuje twoje 
 
 ### Jak usunąć konto?
 
-Na karcie **Mój link** dotknij przycisku **Usuń konto**. Dopóki aplikacja jest otwarta, serwer w ciągu kilku minut usuwa to, co dla ciebie przechowuje, a potem aplikacja usuwa twoje czaty i klucze z tego urządzenia (na niektórych urządzeniach ślady mogą pozostać w plikach pamięci aplikacji). Wysłane przez ciebie załączniki druga strona może pobrać, dopóki nie wygasną, czyli w ciągu 30 dni, chyba że zaznaczysz **Usuń też moje czaty u drugiej strony**: wtedy w każdym czacie z twojej listy aplikacja drugiej strony dostanie prośbę o jego usunięcie, a załączniki wysłane przez ciebie w tym czacie zostaną usunięte z serwera (jeśli któreś z nich tam pozostaną, i tak wygasną w ciągu 30 dni).
+Na karcie **Ustawienia** dotknij przycisku **Usuń konto**. Dopóki aplikacja jest otwarta, serwer w ciągu kilku minut usuwa to, co dla ciebie przechowuje, a potem aplikacja usuwa twoje czaty i klucze z tego urządzenia (na niektórych urządzeniach ślady mogą pozostać w plikach pamięci aplikacji). Wysłane przez ciebie załączniki druga strona może pobrać, dopóki nie wygasną, czyli w ciągu 30 dni, chyba że zaznaczysz **Usuń też moje czaty u drugiej strony**: wtedy w każdym czacie z twojej listy aplikacja drugiej strony dostanie prośbę o jego usunięcie, a załączniki wysłane przez ciebie w tym czacie zostaną usunięte z serwera (jeśli któreś z nich tam pozostaną, i tak wygasną w ciągu 30 dni).
 
 ### Co i jak długo jest przechowywane?
 
-Na serwerze: zaszyfrowane wiadomości – dopóki nie trafią na twoje urządzenie, załączniki – dopóki nie zostaną usunięte, jedne i drugie najwyżej przez 30 dni. Twoje konto (w tym twój link, zamaskowane Telegram ID i miesiąc ostatniego otwarcia aplikacji) zostaje, dopóki go nie usuniesz albo dopóki nie minie 12 miesięcy bez otwarcia aplikacji. Na twoim urządzeniu: twoje czaty, dopóki ich nie usuniesz. Jak długo zostają załączniki (na zawsze, miesiąc lub tydzień), wybierasz w sekcji **Dane i przechowywanie** na karcie **Mój link**.
+Na serwerze: zaszyfrowane wiadomości – dopóki nie trafią na twoje urządzenie, załączniki – dopóki nie zostaną usunięte, jedne i drugie najwyżej przez 30 dni. Twoje konto (w tym twój link, zamaskowane Telegram ID i miesiąc ostatniego otwarcia aplikacji) zostaje, dopóki go nie usuniesz albo dopóki nie minie 12 miesięcy bez otwarcia aplikacji. Na twoim urządzeniu: twoje czaty, dopóki ich nie usuniesz. Jak długo zostają załączniki (na zawsze, miesiąc lub tydzień), wybierasz w sekcji **Dane i przechowywanie** na karcie **Ustawienia**.
 
 ## Projekt
 
