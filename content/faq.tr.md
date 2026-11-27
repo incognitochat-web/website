@@ -57,7 +57,7 @@ Onu engelleyin: bundan haberdar edilmez ve gönderdiği hiçbir şey size ulaşm
 
 ### Bir sohbete kendi seçtiğim bir ad verebilir miyim?
 
-Evet. Sohbette **⋯** simgesine, ardından **Yeniden adlandır** seçeneğine dokunun; bir ad ve görseli için bir emoji seçin (ya da listenizde sohbete basılı tutup ✏️ simgesine dokunun). Bu ad hiçbir zaman gönderilmez: Ne karşı taraf ne de sunucu onu görür. Yalnızca bu cihazda, sohbetleriniz gibi şifreli olarak kalır ve orada onlar kadar güvendedir. Sohbeti silerseniz ad da silinir; kişiyi ayrıca engellerseniz ad kalır. Tekrar yazarsa sohbet orijinal etiketiyle geri gelir.
+Evet. Sohbette **⋯** simgesine, ardından **Yeniden adlandır** seçeneğine dokunun; bir ad ve görseli için bir emoji seçin (ya da listenizde sohbete basılı tutup ✏️ simgesine dokunun). Bu ad hiçbir zaman gönderilmez: ne karşı taraf ne de sunucu onu görür. Yalnızca bu cihazda, sohbetleriniz gibi şifreli olarak kalır ve orada onlar kadar güvendedir. Sohbeti silerseniz ad da silinir; kişiyi ayrıca engellerseniz ad kalır. Tekrar yazarsa sohbet orijinal etiketiyle geri gelir.
 
 ### Gönderdiğim bir şeyi silebilir miyim?
 

@@ -57,7 +57,7 @@ Block them: they aren't told, and nothing they send arrives. Someone who sets up
 
 ### Can I give a chat a name of my own?
 
-Yes. In the chat, tap **⋯**, then **Rename**, and choose a name and an emoji for its picture (or hold the chat in your list and tap ✏️). The name is never sent: the other person and the server never see it. It stays on this device, encrypted like your chats, and as safe as they are there. Deleting the chat deletes the name too, unless you block them as well; if they write again, the chat comes back under its original label.
+Yes. In the chat, tap **⋯**, then **Rename**, and choose a name and an emoji for its picture (or hold the chat in your list and tap ✏️). The name is never sent: the other person and the server never see it. It stays only on this device, encrypted like your chats, and as safe as they are there. Deleting the chat deletes the name too, unless you block them as well; if they write again, the chat comes back under its original label.
 
 ### Can I delete what I sent?
 
