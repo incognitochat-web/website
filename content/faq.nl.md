@@ -55,6 +55,10 @@ Geen e-mailadres, telefoonnummer of wachtwoord: open iemands link in Telegram, t
 
 Blokkeer die persoon: die wordt niet ingelicht, en niets wat die stuurt, komt nog aan. Wie een nieuw account instelt, verschijnt onder een nieuw label, dus misschien moet je die persoon opnieuw blokkeren. Je kunt ook op elk moment je link vervangen: via de oude kunnen geen nieuwe chats meer beginnen, maar chats die al begonnen zijn, gaan door: blokkeer daarin iedereen van wie je niets wilt horen.
 
+### Kan ik een chat een eigen naam geven?
+
+Ja. Tik in de chat op **⋯** en dan op **Naam wijzigen**, en kies een naam en een emoji als afbeelding (of houd de chat in je lijst ingedrukt en tik op ✏️). Die naam wordt nooit verstuurd: de ander en de server zien hem niet. Hij blijft alleen op dit apparaat, versleuteld zoals je chats, en daar net zo veilig als zij. Als je de chat verwijdert, verdwijnt de naam ook, tenzij je die persoon ook blokkeert; als die opnieuw schrijft, komt de chat terug met zijn oorspronkelijke label.
+
 ### Kan ik verwijderen wat ik heb gestuurd?
 
 Ja. Als je een bericht verwijdert, wordt het standaard aan beide kanten verwijderd, gelezen of niet. Je kunt ook een hele chat aan beide kanten verwijderen, of de chats in je lijst wanneer je je account verwijdert.

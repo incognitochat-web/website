@@ -55,6 +55,10 @@ E-posta, telefon numarası ya da parola gerekmez: birinin bağlantısını Teleg
 
 Onu engelleyin: bundan haberdar edilmez ve gönderdiği hiçbir şey size ulaşmaz. Yeni bir hesap kuran biri yeni bir etiketle görünür; bu yüzden onu yeniden engellemeniz gerekebilir. Bağlantınızı da istediğiniz zaman yenisiyle değiştirebilirsiniz: eskisi üzerinden artık yeni sohbet başlatılamaz, ancak daha önce başlatılmış sohbetler devam eder; bu sohbetlerde mesajlarını almak istemediğiniz herkesi engelleyin.
 
+### Bir sohbete kendi seçtiğim bir ad verebilir miyim?
+
+Evet. Sohbette **⋯** simgesine, ardından **Yeniden adlandır** seçeneğine dokunun; bir ad ve görseli için bir emoji seçin (ya da listenizde sohbete basılı tutup ✏️ simgesine dokunun). Bu ad hiçbir zaman gönderilmez: Ne karşı taraf ne de sunucu onu görür. Yalnızca bu cihazda, sohbetleriniz gibi şifreli olarak kalır ve orada onlar kadar güvendedir. Sohbeti silerseniz ad da silinir; kişiyi ayrıca engellerseniz ad kalır. Tekrar yazarsa sohbet orijinal etiketiyle geri gelir.
+
 ### Gönderdiğim bir şeyi silebilir miyim?
 
 Evet. Bir mesajı silmek, okunmuş olsun olmasın, onu varsayılan olarak iki taraftan da kaldırır. Bütün bir sohbeti de iki taraftan silebilirsiniz; hesabınızı silerken de listenizdeki sohbetleri.

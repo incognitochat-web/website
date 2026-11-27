@@ -55,6 +55,10 @@ Sem e-mail, sem número de telefone, sem senha: abra o link de alguém no Telegr
 
 Bloqueie a pessoa: ela não é avisada, e nada do que ela enviar chega até você. Se ela configurar uma nova conta, vai aparecer com um novo rótulo, então talvez você precise bloqueá-la de novo. Você também pode trocar seu link por um novo a qualquer momento: nenhum chat novo pode começar pelo antigo, mas os chats já iniciados continuam: neles, bloqueie quem você não quiser que siga falando com você.
 
+### Posso dar a um chat um nome meu?
+
+Sim. No chat, toque em **⋯** e depois em **Renomear**, e escolha um nome e um emoji para a imagem dele (ou mantenha o chat pressionado na sua lista e toque em ✏️). Esse nome nunca é enviado: nem a outra pessoa nem o servidor o veem. Ele fica só neste dispositivo, criptografado como seus chats, e tão protegido quanto eles ali. Apagar o chat apaga também o nome, a não ser que você também bloqueie a pessoa; se ela escrever de novo, o chat volta com o rótulo original.
+
 ### Posso apagar o que enviei?
 
 Sim. Por padrão, quando você apaga uma mensagem, ela é apagada para os dois lados, lida ou não. Você também pode apagar um chat inteiro para os dois lados, ou os chats da sua lista ao apagar sua conta.

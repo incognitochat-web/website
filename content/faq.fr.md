@@ -55,6 +55,10 @@ Ni e-mail, ni numéro de téléphone, ni mot de passe : ouvrez le lien de quelq
 
 Bloquez cette personne : elle n’en est pas informée, et rien de ce qu’elle envoie ne vous parvient. Une personne qui configure un nouveau compte apparaît sous un nouveau nom : vous devrez donc peut-être la bloquer à nouveau. Vous pouvez aussi remplacer votre lien à tout moment : plus aucun nouvel échange ne peut commencer via l’ancien, mais les échanges déjà commencés continuent ; bloquez-y les personnes dont vous ne voulez pas recevoir de messages.
 
+### Puis-je donner mon propre nom à un échange ?
+
+Oui. Dans l’échange, touchez **⋯**, puis **Renommer**, et choisissez un nom et un emoji pour son image (ou maintenez l’échange appuyé dans votre liste et touchez ✏️). Ce nom n’est jamais envoyé : ni l’autre personne ni le serveur ne le voient. Il reste uniquement sur cet appareil, chiffré comme vos échanges, et aussi protégé qu’eux. Supprimer l’échange supprime aussi le nom, sauf si vous bloquez aussi la personne ; si elle écrit à nouveau, l’échange réapparaît sous son nom d’origine.
+
 ### Puis-je supprimer ce que j’ai envoyé ?
 
 Oui. Par défaut, supprimer un message le supprime des deux côtés, qu’il ait été lu ou non. Vous pouvez aussi supprimer tout un échange des deux côtés, ou les échanges de votre liste en supprimant votre compte.
